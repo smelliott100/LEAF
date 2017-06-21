@@ -10,8 +10,6 @@ The Light Electronic Action Framework (LEAF) empowers VA staff in process improv
 * MySQL 5.7+ or compatible
 * Apache 2.4.x or Microsoft IIS
 
-**This branch is to be used to help simplify local testing, and includes patches that should not be merged back into the master branch.**
-
 ## Prerequisites
 
 ## Repository Overview
