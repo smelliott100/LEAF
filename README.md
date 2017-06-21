@@ -1,7 +1,15 @@
 # LEAF (local testing)
+<<<<<<< HEAD
 The Light Electronic Action Framework (LEAF) empowers VA staff in process improvement. LEAF is a solution that enables non-technical users to rapidly digitize paper processes, such as travel and tuition reimbursement, FTE, and many other types of resource requests.
 
 **This branch is to be used to help simplify local testing, and includes patches that should not be merged back into the master branch.**
+=======
+The Light Electronic Action Framework (LEAF) enables staff to rapidly digitize paper processes, such as travel and tuition reimbursement, FTE, and other types of resource requests.
+
+**This branch is to be used to help simplify local testing, and includes patches that should not be merged back into the master branch.**
+
+## Prerequisites
+>>>>>>> 30df8c7903425dac409ff3bb576d7b3de6f77647
 
 ## Dependencies
 * PHP 7.0+
