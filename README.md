@@ -4,9 +4,9 @@ The Light Electronic Action Framework (LEAF) empowers VA staff in process improv
 **This branch is to be used to help simplify local testing, and includes patches that should not be merged back into the master branch.**
 
 ## Dependencies
-* PHP 7.0+
+* PHP 7+
     * php_pdo_mysql
-* MySQL 5.6+ or compatible
+* MySQL 5.7+ or compatible
 * Apache 2.4.x or Microsoft IIS
 
 ## Repository Overview
