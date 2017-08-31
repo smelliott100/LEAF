@@ -7,3 +7,4 @@ libs/dynicons/cache/*.svg
 .buildpath
 libs/qrcode/cache/*.png
 globals.php
+.htaccess
