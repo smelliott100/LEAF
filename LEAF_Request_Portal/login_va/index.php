@@ -38,24 +38,25 @@ function getBaseDir() {
 </div>
 
 <div class="card" style="max-width: 500px; padding: 16px; margin: auto">
-When logging into this system, you agree to the following:<br />
-<br />
-    You are accessing a U.S. Government information system, which includes:<br />
-    <ul>
-    <li>(1) this computer,</li>
-    <li>(2) this computer network,</li>
-    <li>(3) all computers connected to this network, and</li>
-    <li>(4) all devices and storage media attached to this network or to a computer on this network.</li>
-    </ul>
-    This information system is provided for U.S. Government-authorized use only. Unauthorized or improper use of this system may result in disciplinary action, as well as civil and criminal penalties.<br /><br /> 
 
-    <div style="font-size: 150%">
-    <a href="<?php echo '../auth_guest/?' . htmlentities($_SERVER['QUERY_STRING']); ?>" style="text-decoration: none"><div class="buttonNorm" style="text-align: center">I&apos;m looking for a VA Telehealth Care Provider <img src="../../libs/dynicons/?img=system-users.svg&amp;w=32" style="padding-left: 8px" alt="Icon for Volunteers" title="Icon for Volunteers" /></div></a>
+    <form method="POST" action="../auth_new_profile/">
+    First Name<br />
+    <input name="firstName" style="font-size: 150%; width: 75%" type="text"></input><br />
     <br />
-    <a href="<?php echo '../login_va/?' . htmlentities($_SERVER['QUERY_STRING']); ?>" style="text-decoration: none"><div class="buttonNorm" style="text-align: center">I&apos;m a VA employee and want to volunteer</div></a>
+    Last Name<br />
+    <input name="lastName" style="font-size: 150%; width: 75%" type="text"></input><br />
+    <br />
+    Email<br />
+    <input name="email" style="font-size: 150%; width: 75%" type="email"></input><br />
+    <br /><br />
+    <div style="text-align: center">
+    <button class="buttonNorm" style="text-align: center">Sign up as a Volunteer <img src="../../libs/dynicons/?img=system-users.svg&amp;w=32" style="padding-left: 8px" alt="Icon for Volunteers" title="Icon for Volunteers" /></button>
     </div>
+    <br /><br />
+    <a href="<?php echo 'https://' . $_SERVER['SERVER_NAME'] . getBaseDir() . 'auth_domain/?' . htmlentities($_SERVER['QUERY_STRING']); ?>">I have already signed up</a>
 
-    <a href="<?php echo '../login_admin/?' . htmlentities($_SERVER['QUERY_STRING']); ?>" style="text-decoration: none"><div class="buttonNorm" style="text-align: center">admin</div></a>
+
+    </form>
 </div>
 
 </body>

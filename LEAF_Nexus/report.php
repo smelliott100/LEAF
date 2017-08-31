@@ -89,7 +89,12 @@ switch($action) {
     				$t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
     				$t_form->assign('empUID', $login->getEmpUID());
     				$t_form->assign('empMembership', $login->getMembership());
-    			
+
+					require 'sources/Employee.php';
+					$employee = new Orgchart\Employee($db, $login);
+					$currentEmployee = $employee->lookupLogin($login->getUserID());
+					$t_form->assign('employee', $currentEmployee);
+
     				//url
     				$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
     				$qrcodeURL = "{$protocol}://{$_SERVER['HTTP_HOST']}" . $_SERVER['REQUEST_URI'];

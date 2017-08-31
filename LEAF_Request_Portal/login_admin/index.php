@@ -38,24 +38,17 @@ function getBaseDir() {
 </div>
 
 <div class="card" style="max-width: 500px; padding: 16px; margin: auto">
-When logging into this system, you agree to the following:<br />
-<br />
-    You are accessing a U.S. Government information system, which includes:<br />
-    <ul>
-    <li>(1) this computer,</li>
-    <li>(2) this computer network,</li>
-    <li>(3) all computers connected to this network, and</li>
-    <li>(4) all devices and storage media attached to this network or to a computer on this network.</li>
-    </ul>
-    This information system is provided for U.S. Government-authorized use only. Unauthorized or improper use of this system may result in disciplinary action, as well as civil and criminal penalties.<br /><br /> 
 
-    <div style="font-size: 150%">
-    <a href="<?php echo '../auth_guest/?' . htmlentities($_SERVER['QUERY_STRING']); ?>" style="text-decoration: none"><div class="buttonNorm" style="text-align: center">I&apos;m looking for a VA Telehealth Care Provider <img src="../../libs/dynicons/?img=system-users.svg&amp;w=32" style="padding-left: 8px" alt="Icon for Volunteers" title="Icon for Volunteers" /></div></a>
-    <br />
-    <a href="<?php echo '../login_va/?' . htmlentities($_SERVER['QUERY_STRING']); ?>" style="text-decoration: none"><div class="buttonNorm" style="text-align: center">I&apos;m a VA employee and want to volunteer</div></a>
+    <form method="POST" action="../auth_admin/">
+    Admin Password<br />
+    <input name="password" style="font-size: 150%; width: 75%" type="password"></input><br />
+    <br /><br />
+    <div style="text-align: center">
+    <button class="buttonNorm" style="text-align: center">Login</button>
     </div>
 
-    <a href="<?php echo '../login_admin/?' . htmlentities($_SERVER['QUERY_STRING']); ?>" style="text-decoration: none"><div class="buttonNorm" style="text-align: center">admin</div></a>
+
+    </form>
 </div>
 
 </body>
