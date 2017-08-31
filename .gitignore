@@ -2,3 +2,4 @@
 */templates_c/*.tpl.php
 */admin/templates_c/*.tpl.php
 */dynicons/cache/*.svg
+LEAF_Request_Portal/auth_domain/.htaccess
