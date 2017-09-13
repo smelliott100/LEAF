@@ -779,6 +779,7 @@ function getForm(indicatorID, series) {
 
 function formatIndicatorMultiAnswer(multiAnswerValue){
 <<<<<<< HEAD
+<<<<<<< HEAD
     if(multiAnswerValue == null || multiAnswerValue.length === 0){
         return multiAnswerValue;
     }
@@ -794,7 +795,7 @@ function formatIndicatorMultiAnswer(multiAnswerValue){
     });
 
     multiAnswerValue = uniqueNames.join("\n");
-    return (multiAnswerValue.indexOf('no') !== -1) ? multiAnswerValue.replace("no", "No") : multiAnswerValue;
+    return (multiAnswerValue.indexOf('no') !== -1) ? multiAnswerValue.replace(new RegExp('no', 'g'), 'No') : multiAnswerValue;
 }
 
 function mergeForm(categoryID) {
