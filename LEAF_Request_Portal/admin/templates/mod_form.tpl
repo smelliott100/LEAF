@@ -643,6 +643,8 @@ function getForm(indicatorID, series) {
             case 'dropdown':
                 $('#container_indicatorMultiAnswer').css('display', 'block');
                 var buffer = $('#indicatorType').val();
+
+                //check if indicatorMultiAnswer has a 'no' in the string
                 buffer += "\n" + formatIndicatorMultiAnswer($('#indicatorMultiAnswer').val());
                 $('#format').val(buffer);
                 break;
@@ -776,6 +778,7 @@ function getForm(indicatorID, series) {
 }
 
 function formatIndicatorMultiAnswer(multiAnswerValue){
+<<<<<<< HEAD
     if(multiAnswerValue == null || multiAnswerValue.length === 0){
         return multiAnswerValue;
     }
@@ -791,7 +794,7 @@ function formatIndicatorMultiAnswer(multiAnswerValue){
     });
 
     multiAnswerValue = uniqueNames.join("\n");
-    return multiAnswerValue;
+    return (multiAnswerValue.indexOf('no') !== -1) ? multiAnswerValue.replace("no", "No") : multiAnswerValue;
 }
 
 function mergeForm(categoryID) {
