@@ -761,7 +761,7 @@ function getForm(indicatorID, series) {
 }
 
 function formatIndicatorMultiAnswer(multiAnswerValue){
-    return (multiAnswerValue.indexOf('no') !== -1) ? multiAnswerValue.replace("no", "No") : multiAnswerValue;
+    return (multiAnswerValue.indexOf('no') !== -1) ? multiAnswerValue.replace(new RegExp('no', 'g'), 'No') : multiAnswerValue;
 }
 
 function mergeForm(categoryID) {
