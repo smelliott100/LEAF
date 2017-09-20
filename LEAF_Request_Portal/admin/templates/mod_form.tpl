@@ -360,7 +360,7 @@ function newQuestion(parentIndicatorID) {
             case 'dropdown':
                 $('#container_indicatorMultiAnswer').css('display', 'block');
                 var buffer = $('#indicatorType').val();
-                buffer += "\n" + formatIndicatorMultiAnswer($('#indicatorMultiAnswer').val());
+                buffer += "\n" + $('#indicatorMultiAnswer').val();
                 $('#format').val(buffer);
                 break;
             case 'checkbox':
@@ -643,7 +643,7 @@ function getForm(indicatorID, series) {
             case 'dropdown':
                 $('#container_indicatorMultiAnswer').css('display', 'block');
                 var buffer = $('#indicatorType').val();
-                buffer += "\n" + formatIndicatorMultiAnswer($('#indicatorMultiAnswer').val());
+                buffer += "\n" + $('#indicatorMultiAnswer').val();
                 $('#format').val(buffer);
                 break;
             case 'checkbox':
@@ -775,6 +775,7 @@ function getForm(indicatorID, series) {
     });
 }
 
+<<<<<<< HEAD
 function formatIndicatorMultiAnswer(multiAnswerValue){
     if(multiAnswerValue == null || multiAnswerValue.length === 0){
         return multiAnswerValue;
