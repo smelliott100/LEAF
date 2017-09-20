@@ -761,22 +761,7 @@ function getForm(indicatorID, series) {
 }
 
 function formatIndicatorMultiAnswer(multiAnswerValue){
-    if(multiAnswerValue == null || multiAnswerValue.length === 0){
-        return multiAnswerValue;
-    }
-    var uniqueNames = multiAnswerValue.split("\n");
-    uniqueNames = uniqueNames.filter(function(elem, index, self) {
-        return index == self.indexOf(elem.toLowerCase());
-    });
-    
-    $.each(uniqueNames, function(i, el){
-        if(el === "no") { 
-            uniqueNames[i] = "No";
-        }
-    });
-
-    multiAnswerValue = uniqueNames.join("\n");
-    return multiAnswerValue;
+    return (multiAnswerValue.indexOf('no') !== -1) ? multiAnswerValue.replace(new RegExp('no', 'g'), 'No') : multiAnswerValue;
 }
 
 function mergeForm(categoryID) {
