@@ -1,4 +1,4 @@
 AuthType Basic
 AuthName "Login"
-AuthUserFile C:/absolute/path/of/test_logins.txt
+AuthUserFile /var/www/html/LEAF_Nexus/auth_domain/test_logins.txt
 Require valid-user
