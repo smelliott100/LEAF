@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: leaf-ingress-1
+spec:
+  rules:
+    - host: ec2-54-144-45-48.compute-1.amazonaws.com
+      http:
+        paths:
+          - path: /leaf
+            backend:
+              serviceName: leaf
+              servicePort: 8000
+          - path: /leaf-https
+            backend:
+              serviceName: leaf-https
+              servicePort: 4430
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: leaf-ingress-2
+spec:
+  rules:
+    - host: ec2-34-234-73-23.compute-1.amazonaws.com
+      http:
+        paths:
+          - path: /leaf
+            backend:
+              serviceName: leaf
+              servicePort: 8000
+          - path: /leaf-https
+            backend:
+              serviceName: leaf-https
+              servicePort: 4430
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: leaf-ingress-3
+spec:
+  rules:
+    - host: ec2-54-175-18-148.compute-1.amazonaws.com
+      http:
+        paths:
+          - path: /leaf
+            backend:
+              serviceName: leaf
+              servicePort: 8000
+          - path: /leaf-https
+            backend:
+              serviceName: leaf-https
+              servicePort: 4430

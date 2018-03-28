@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: leaf-app
+  labels:
+    app: leaf
+    io.kompose.service: leaf
+spec:
+  ports:
+    - port: 80
+      name: leaf-http
+      nodePort: 30080
+    - port: 443
+      name: leaf-https
+      nodePort: 30443
+  selector:
+    io.kompose.service: leaf
+  type: NodePort
+  externalIPs:
+  - 54.197.129.69

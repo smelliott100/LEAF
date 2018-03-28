@@ -1,0 +1,142 @@
+pipeline{
+	agent any
+
+	tools {
+		maven "M3"
+	 	jdk "JAVA.jdk"
+	}
+
+// This is temporary to prevent scm change builds. Down the road this needs to be enables again.
+/*
+	triggers { pollSCM('H/15 * * * *') }
+	options {
+	 	buildDiscarder(logRotator(numToKeepStr: '10'))
+	}
+*/
+
+	stages {
+	 	stage('Clean up'){
+	 		steps{
+	 			sh '''
+	 				if [ -f $WORKSPACE/LEAF_Nexus/config.php ]; then rm $WORKSPACE/LEAF_Nexus/config.php; fi
+	 			    if [ -f $WORKSPACE/LEAF_Request_Portal/db_config.php]; then rm $WORKSPACE/LEAF_Request_Portal/db_config.php; fi
+	 			    
+	                RUNNING_DOCKER_IMAGE_STATUS=$(sudo docker ps -q)
+	                if [ -n "$RUNNING_DOCKER_IMAGE_STATUS" ]; then
+	                	sudo docker stop $(sudo docker ps -q)
+	                else
+	                	{ printf "\n\n\n No images to stop n\n"; } 2> /dev/null
+	                fi
+
+	                CHECK_DOCKER_IMAGE_STATUS=$(sudo docker images -q)
+	                if [ -n "$CHECK_DOCKER_IMAGE_STATUS" ]; then
+	                	sudo docker rmi -f $(sudo docker images -q)
+	                else
+	                	{ printf "\n\n\n No images to remove n\n"; } 2> /dev/null
+	                fi
+			 		echo "PATH = ${PATH}"
+			 		echo ${WORKSPACE}
+					mvn -v
+
+	                echo "============ Cleaning up old resources that may still be running... ============"
+				    /bin/bash -c "chmod 755 $WORKSPACE/build_automation/pipeline_tools/stop.sh; $WORKSPACE/build_automation/pipeline_tools/stop.sh"
+
+                    find $WORKSPACE/build_automation/ -iname "*.yml" -exec sed -i "s/KUBERNETES_NAMESPACE_VALUE/$KUBERNETES_NAMESPACE/g" {} \\;
+                    find $WORKSPACE/build_automation/ -iname "*.sh" -exec sed -i "s/KUBERNETES_NAMESPACE_VALUE/$KUBERNETES_NAMESPACE/g" {} \\;
+                    sed -i "s/KUBERNETES_NAMESPACE_VALUE/$KUBERNETES_NAMESPACE/g" build_automation/DeployTest/centos7-appbuildtools.yml
+
+				    CENTOSBUILD_JOB_STATUS=$(kubectl get jobs centos7-appbuildtools | grep centos7-appbuildtools | awk -F ' ' '{ print $1 }')
+                    if [ $CENTOSBUILD_JOB_STATUS = centos7-appbuildtools ]; then
+					    kubectl delete job centos7-appbuildtools --grace-period=0 --force
+				    else
+					    echo "centos7-appbuildtools job has already been terminated"
+				    fi
+				    
+				    #cd $WORKSPACE
+                    #echo "============ Cleaning up old Fortify reports ============"
+					#PREVIOUS_REPORTS=$(ls | grep Fortify_Scan_Results | cut -d"_" -f4 | cut -d"." -f1)
+					#diff_num=$(($BUILD_NUMBER - 4))
+					#for line in $PREVIOUS_REPORTS
+					#do
+					#	if [ $line -lt $diff_num ]; then
+					#		rm Fortify_Scan_Results_$line.pdf
+					#	fi
+					#done
+				'''
+		 	}
+		}
+		
+		stage('Deploy Demo'){
+            steps{
+                sh '''
+
+					# Run pre-deploy script, if it exists
+					if [ -f pre-deploy.sh ]; then chmod 755 pre-deploy.sh; ./pre-deploy.sh; fi
+
+					{ printf "\n\n ** DOCKER before stop"; } 2> /dev/null
+					$STARTING_PATH/docker ps
+					$STARTING_PATH/docker images
+
+					# Stop Running Containers:
+					kompose -f $WORKSPACE/build_automation/pipeline_tools/docker-compose-runtime.yml down || { echo "FATAL: Failed on 'docker-compose down'"; exit 1; } 2> /dev/null
+
+					kompose -f $WORKSPACE/build_automation/pipeline_tools/docker-compose-runtime.yml up
+
+					# Run post-deploy script, if it exists
+					if [ -f post-deploy.sh ]; then chmod 755 post-deploy.sh; ./post-deploy.sh; fi
+
+					{ printf "\n\n ** DOCKER check the images"; } 2> /dev/null
+					docker ps
+					docker images
+                    kubectl get po
+
+					{ printf "\n\n\n\n**** COMPLETED DEPLOYMENT PROCESS ********************\n\n"; } 2> /dev/null
+                '''
+            }
+		}
+
+	}
+
+	post {
+		always{
+
+			sh '''
+                sudo build_automation/pipeline_tools/clean_up_old_build_tarballs.sh
+                #sudo chown -R jenkins $WORKSPACE/Katalon_Studio/*
+                #rm -rf $WORKSPACE/Katalon_Studio
+			'''			
+		}
+		failure {
+		 	sh '''
+                CENTOSBUILD_JOB_STATUS=$(kubectl get jobs centos7-appbuildtools | grep centos7-appbuildtools | awk -F ' ' '{ print $1 }')
+                if [ $CENTOSBUILD_JOB_STATUS = centos7-appbuildtools ]; then
+					kubectl delete job centos7-appbuildtools --grace-period=0 --force
+				else
+					echo "centos7-appbuildtools job has already been terminated"
+				fi
+
+				CHECK_DOCKER_IMAGE_STATUS=$(sudo docker images -q)
+				while [ -n "$CHECK_DOCKER_IMAGE_STATUS" ]; do
+					sudo docker rmi $(sudo docker images -q)
+					CHECK_DOCKER_IMAGE_STATUS=$(sudo docker images -q)
+				done
+				/bin/bash -c "chmod 755 $WORSKSPACE/build_automation/pipeline_tools/stop.sh;.$WORKSPACE/build_automation/pipeline_tools/stop.sh"
+			'''
+
+		 	echo 'office365'
+	 	//	office365ConnectorSend message: 'Latest status of build #$env.BUILD_NUMBER', webhookUrl: "https://outlook.office.com/webhook/a53144b0-3020-4578-bbb7-d420fc502815@af16bf88-a652-447e-8dd5-9dd06181c6bd/JenkinsCI/4d958d02e26d43168d51f197a66f0f27/f02d9c24-33b2-42d8-b004-0cfdd376d702"
+
+		}
+		success{
+		 	echo 'office365'
+	 	//	office365ConnectorSend message: 'Latest status of build #$env.BUILD_NUMBER', webhookUrl: "https://outlook.office.com/webhook/a53144b0-3020-4578-bbb7-d420fc502815@af16bf88-a652-447e-8dd5-9dd06181c6bd/JenkinsCI/4d958d02e26d43168d51f197a66f0f27/f02d9c24-33b2-42d8-b004-0cfdd376d702"
+
+		}
+		aborted{
+	 		echo 'office365'
+	 	//	office365ConnectorSend message: 'Latest status of build #$env.BUILD_NUMBER', webhookUrl: "https://outlook.office.com/webhook/a53144b0-3020-4578-bbb7-d420fc502815@af16bf88-a652-447e-8dd5-9dd06181c6bd/JenkinsCI/4d958d02e26d43168d51f197a66f0f27/f02d9c24-33b2-42d8-b004-0cfdd376d702"
+			//closing Python interpreter
+
+		}
+	}
+}

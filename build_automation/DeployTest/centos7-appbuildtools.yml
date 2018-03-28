@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: centos7-appbuildtools
+spec:
+  template:
+    metadata:
+      name: centos7-appbuildtools
+    spec:
+      containers:
+      - name: centos7-appbuildtools
+        image: "181140462490.dkr.ecr.us-east-1.amazonaws.com/ablevets/centos7-appbuildtools"
+        imagePullPolicy: Never
+        command: ["/bin/bash"]
+        args: ["-c","sleep 60; ./build.sh && sleep 300"]
+        env:
+        - name: DTR_PREFIX
+          value: "DTR_PREFIX_VALUE"
+        - name: DTR_ORG
+          value: "DTR_ORG_VALUE"
+        - name: APP_MODE
+          value: "APP_MODE_VALUE"
+        - name: JOB_NAME
+          value: "JOB_NAME_VALUE"
+        - name: BUILD_NUMBER
+          value: "BUILD_NUMBER_VALUE"
+        volumeMounts:
+        - mountPath: /var/lib/jenkins
+          name: jenkins-home
+        - mountPath: /home/builduser/.m2
+          name: maven
+        - mountPath: /home/builduser/.gradle
+          name: gradle
+        - mountPath: /home/builduser/.npm
+          name: npm
+      volumes:
+      - name: jenkins-home
+        hostPath:
+          path: /srv/mnt/jenkins
+      - name: maven
+        hostPath:
+          path: /srv/mnt/jenkins/.m2
+      - name: gradle
+        hostPath:
+          path: /srv/mnt/jenkins/.gradle
+      - name: npm
+        hostPath:
+          path: /srv/mnt/jenkins/.npm
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 180

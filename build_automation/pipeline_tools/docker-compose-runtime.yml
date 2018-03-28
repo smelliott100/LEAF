@@ -1,0 +1,28 @@
+version: "2"
+
+services:
+  leaf:
+    image: 181140462490.dkr.ecr.us-east-1.amazonaws.com/ablevets/leaf:latest
+    expose:
+      - '443'
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      kompose.service.type: NodePort
+    links:
+      - mysql
+  mysql:
+    image: 181140462490.dkr.ecr.us-east-1.amazonaws.com/ablevets/mysql:latest
+    expose:
+      - '3306'
+    ports:
+      - "3306:3306"
+    restart: 'always'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=${MYSQL_ALLOW_EMPTY_PASSWORD}

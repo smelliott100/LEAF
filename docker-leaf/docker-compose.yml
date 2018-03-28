@@ -4,7 +4,7 @@ services:
   php:
       build:
         context: ../
-        dockerfile: docker/php/Dockerfile
+        dockerfile: ""
       ports:
         - 80:80
         - 443:443
@@ -21,7 +21,7 @@ services:
   mysql:
     build:
       context: ../
-      dockerfile: docker/mysql/Dockerfile
+      dockerfile: ""
     expose:
       - '3306'
     ports:

@@ -1,0 +1,14 @@
+version: '2'
+services:
+  leaf:
+    container_name: "APP_NAME_VALUE"
+    build: ../../
+    image: "DTR_PREFIX_VALUEDTR_ORG_VALUE/APP_NAME_VALUE"
+    ports:
+      - "80:APP_PORT_VALUE"
+    env_file:
+      - ../../app.env
+    environment:
+      - "constraint:nodetype==*application*"
+      - SERVICE_TAGS=local
+      - SERVICE_NAME=leaf

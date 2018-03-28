@@ -1,0 +1,391 @@
+pipeline{
+	agent any
+
+	tools {
+		maven "M3"
+	 	jdk "JAVA.jdk"
+	}
+	/*
+	triggers { pollSCM('H/15 * * * *') }
+	options {
+	 	buildDiscarder(logRotator(numToKeepStr: '10'))
+	}
+	*/
+	stages {
+	 	stage('Clean up'){
+	 		steps{
+	 			sh '''
+	 				if [ -f $WORKSPACE/LEAF_Nexus/config.php ]; then rm $WORKSPACE/LEAF_Nexus/config.php; fi
+	 			    if [ -f $WORKSPACE/LEAF_Request_Portal/db_config.php]; then rm $WORKSPACE/LEAF_Request_Portal/db_config.php; fi
+	 			    
+	                RUNNING_DOCKER_IMAGE_STATUS=$(sudo docker ps -q)
+	                if [ -n "$RUNNING_DOCKER_IMAGE_STATUS" ]; then
+	                	sudo docker stop $(sudo docker ps -q)
+	                else
+	                	{ printf "\n\n\n No images to stop n\n"; } 2> /dev/null
+	                fi
+
+	                CHECK_DOCKER_IMAGE_STATUS=$(sudo docker images -q)
+	                if [ -n "$CHECK_DOCKER_IMAGE_STATUS" ]; then
+	                	sudo docker rmi -f $(sudo docker images -q)
+	                else
+	                	{ printf "\n\n\n No images to remove n\n"; } 2> /dev/null
+	                fi
+			 		echo "PATH = ${PATH}"
+			 		echo ${WORKSPACE}
+					mvn -v
+
+	                echo "============ Cleaning up old resources that may still be running... ============"
+				    /bin/bash -c "chmod 755 $WORKSPACE/build_automation/pipeline_tools/stop.sh; $WORKSPACE/build_automation/pipeline_tools/stop.sh"
+
+                    find $WORKSPACE/build_automation/ -iname "*.yml" -exec sed -i "s/KUBERNETES_NAMESPACE_VALUE/$KUBERNETES_NAMESPACE/g" {} \\;
+                    find $WORKSPACE/build_automation/ -iname "*.sh" -exec sed -i "s/KUBERNETES_NAMESPACE_VALUE/$KUBERNETES_NAMESPACE/g" {} \\;
+                    sed -i "s/KUBERNETES_NAMESPACE_VALUE/$KUBERNETES_NAMESPACE/g" build_automation/DeployTest/centos7-appbuildtools.yml
+
+				    CENTOSBUILD_JOB_STATUS=$(kubectl get jobs centos7-appbuildtools | grep centos7-appbuildtools | awk -F ' ' '{ print $1 }')
+                    if [ $CENTOSBUILD_JOB_STATUS = centos7-appbuildtools ]; then
+					    kubectl delete job centos7-appbuildtools --grace-period=0 --force
+				    else
+					    echo "centos7-appbuildtools job has already been terminated"
+				    fi
+				    
+				    cd $WORKSPACE
+                    echo "============ Cleaning up old Fortify reports ============"
+					PREVIOUS_REPORTS=$(ls | grep Fortify_Scan_Results | cut -d"_" -f4 | cut -d"." -f1)
+					diff_num=$(($BUILD_NUMBER - 4))
+					for line in $PREVIOUS_REPORTS
+					do
+						if [ $line -lt $diff_num ]; then
+							rm Fortify_Scan_Results_$line.pdf
+						fi
+					done
+				'''
+		 	}
+		}
+
+		stage('App Build'){
+		 	steps{
+	 			echo "Verify"
+	 			sh '''
+	 			    #sudo $WORKSPACE/deploy_katalon.sh $WORKSPACE
+
+	 				git status
+	 				#mv $WORKSPACE/build_automation/pipeline_tools/clean_up_old_build_tarballs.sh ../
+	 				#mv $WORKSPACE/build_automation/pipeline_tools/install_docker_compose.sh ../
+
+					{ printf "\n\n ** SOURCING app.env\n\n"; } 2> /dev/null
+					. ./app.env
+					. ./jenkins.env
+
+					{ printf "\n\n ** COMPILING\n\n"; } 2> /dev/null
+
+					docker_login=$(aws ecr get-login --no-include-email --region us-east-1)
+					sudo $docker_login
+	  				APPBUILDTOOLS_LOCATION=$(find $WORKSPACE -iname "centos7-appbuildtools.yml")
+
+	  				sed -i "s@DTR_PREFIX_VALUE@${DTR_PREFIX}@g" $APPBUILDTOOLS_LOCATION
+                    sed -i "s/DTR_ORG_VALUE/$DTR_ORG/g" $APPBUILDTOOLS_LOCATION
+					sed -i "s/APP_MODE_VALUE/$APP_MODE/g" $APPBUILDTOOLS_LOCATION
+					sed -i "s/JOB_NAME_VALUE/$JOB_NAME/g" $APPBUILDTOOLS_LOCATION
+					sed -i "s/BUILD_NUMBER_VALUE/$BUILD_NUMBER/g" $APPBUILDTOOLS_LOCATION
+					sed -i "s@WORKSPACE_VALUE@/srv/mnt/jenkins/workspace/$JOB_NAME@g" $APPBUILDTOOLS_LOCATION
+
+	 				#replace information in Leaf nexus globals.php
+					sed -i "s/HOSTNAME/$HOSTNAME/g" $WORKSPACE/LEAF_Nexus/globals.php
+	 				sed -i "s/DB_NAME/$DB_NAME/g" $WORKSPACE/LEAF_Nexus/globals.php
+					sed -i "s/USERNAME/$USERNAME/g" $WORKSPACE/LEAF_Nexus/globals.php
+					sed -i "s/PASSWORD/$PASSWORD/g" $WORKSPACE/LEAF_Nexus/globals.php
+
+					#Rename config file
+					cp $WORKSPACE/LEAF_Nexus/config-example.php $WORKSPACE/LEAF_Nexus/config.php
+
+					#replace information in Leaf Nexus config.php
+					sed -i  "s/SERVER_HOSTNAME/$SERVER_HOSTNAME/g" $WORKSPACE/LEAF_Nexus/config.php
+					sed -i  "s/DATABASE_NAME/$DATABASE_NAME/g" $WORKSPACE/LEAF_Nexus/config.php
+					sed -i  "s/DATABASE_USERNAME/$DATABASE_USERNAME/g" $WORKSPACE/LEAF_Nexus/config.php
+					sed -i  "s/DATABASE_PASSWORD/$DATABASE_PASSWORD/g" $WORKSPACE/LEAF_Nexus/config.php
+					sed -i  "s/CONFIG_USER/$CONFIG_USER/g" $WORKSPACE/LEAF_Nexus/config.php
+
+					#replace information in Leaf Request portal globls.php
+					sed -i  "s/LRP_HOSTNAME/$LRP_HOSTNAME/g" $WORKSPACE/LEAF_Request_Portal/globals.php
+					sed -i  "s/LRP_DB_NAME/$LRP_DB_NAME/g" $WORKSPACE/LEAF_Request_Portal/globals.php
+					sed -i  "s/LRP_USERNAME/$LRP_USERNAME/g" $WORKSPACE/LEAF_Request_Portal/globals.php
+					sed -i  "s/LRP_PASSWORD/$LRP_PASSWORD/g" $WORKSPACE/LEAF_Request_Portal/globals.php
+
+					#Rename config file 
+					cp $WORKSPACE/LEAF_Request_Portal/db_config-example.php $WORKSPACE/LEAF_Request_Portal/db_config.php
+
+					#replace information in Leaf Reqeust portal dbconfig
+					sed -i  "s/LRP_SERVER_HOSTNAME/$LRP_SERVER_HOSTNAME/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+					sed -i  "s/LRP_DATABASE_NAME/$LRP_DATABASE_NAME/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+					sed -i  "s/LRP_DATABASE_USERNAME/$LRP_DATABASE_USERNAME/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+					sed -i  "s/LRP_DATABASE_PASSWORD/$LRP_DATABASE_PASSWORD/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+					sed -i  "s/LRP_phoneSERVER_HOSTNAME/$LRP_phoneSERVER_HOSTNAME/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+					sed -i  "s/LRP_phoneDATABASE_NAME/$LRP_phoneDATABASE_NAME/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+					sed -i  "s/LRP_phoneDATABASE_USERNAME/$LRP_phoneDATABASE_USERNAME/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+					sed -i  "s/LRP_phoneDATABASE_PASSWORD/$LRP_phoneDATABASE_PASSWORD/g" $WORKSPACE/LEAF_Request_Portal/db_config.php
+
+                    CENTOSBUILD_JOB_STATUS=$(kubectl get jobs centos7-appbuildtools | grep centos7-appbuildtools | awk -F ' ' '{ print $1 }')
+                    if [ $CENTOSBUILD_JOB_STATUS = centos7-appbuildtools ]; then
+						kubectl delete job centos7-appbuildtools
+					else
+						echo "creating centos7-appbuildtools job"
+					fi
+
+					whoami
+					sudo chmod -R 777 ${WORKSPACE}
+					ls -la ${WORKSPACE}
+
+                    kubectl create -f $WORKSPACE/build_automation/DeployTest/centos7-appbuildtools.yml && \
+                    sleep 25 && \
+                    CENTOS_POD_NAME=$(kubectl get po | grep centos | awk -F ' ' '{ print $1 }') && \
+                    { printf "\n\n****************check**************\n\n"; } 2> /dev/null && \
+                    kubectl exec -it $CENTOS_POD_NAME -- /bin/ls -la /workspace && \
+              		kubectl exec -it $CENTOS_POD_NAME -- /usr/bin/whoami && \
+                    { printf "\n\n****************done***************\n\n"; } 2> /dev/null && \
+
+                    kubectl cp $WORKSPACE $CENTOS_POD_NAME:/ -c centos7-appbuildtools -v=2 && \
+                    kubectl exec -it $CENTOS_POD_NAME -- /bin/ls -la /workspace/ && \
+                    echo -e "\n (tput setaf 1)\nWaiting for build to complete \n"
+
+                    sudo chmod 777 $WORKSPACE/build_automation/pipeline_tools/appbuild_status.sh
+                    $WORKSPACE/build_automation/pipeline_tools/appbuild_status.sh $WORKSPACE $CENTOS_POD_NAME $BUILD_NUMBER
+
+					{ printf "\n\n ** PACKAGING\n\n"; } 2> /dev/null
+					if [ -f package.sh ]; then chmod 755 package.sh; ./package.sh; fi
+
+					{ printf "\n\n**** COMPLETED BUILD PROCESS ********************\n\n\n\n"; } 2> /dev/null
+			 	'''
+	 		}
+		}	
+
+		stage('Docker Image Build'){
+	        steps{
+	           echo "Build Docker image"
+               sh '''
+					tar -zxvf ${WORKSPACE}/${JOB_NAME}.BUILD-${BUILD_NUMBER}.tar.gz .
+                	ls
+                	
+                	cat Dockerfile
+
+                	{ printf "\n\n ** SOURCING app.env\n\n"; } 2> /dev/null
+					. ./app.env
+
+					DOCKER_INSTALL_LOCATION=$(find $WORKSPACE/build_automation/pipeline_tools/install_docker_compose.sh -iname "install_docker_compose.sh")
+                    sudo $DOCKER_INSTALL_LOCATION
+
+  					DOCKERCOMPOSE_LOCATION=$(find $WORKSPACE/build_automation/DeployTest/docker-compose.yml -iname "docker-compose.yml")
+
+					sed -i "s/APP_NAME_VALUE/$APP_NAME/g" $DOCKERCOMPOSE_LOCATION
+                    sed -i "s@DTR_PREFIX_VALUE@$DTR_PREFIX@g" $DOCKERCOMPOSE_LOCATION
+					sed -i "s/DTR_ORG_VALUE/$DTR_ORG/g" $DOCKERCOMPOSE_LOCATION
+					sed -i "s/APP_PORT_VALUE/$APP_PORT/g" $DOCKERCOMPOSE_LOCATION
+
+					sudo docker rmi $DTR_HOST/$DTR_ORG/var-web:latest || true
+					sudo docker-compose -f $DOCKERCOMPOSE_LOCATION build --no-cache || { echo "FATAL: Failed on 'docker-compose build'"; exit 1; } 2> /dev/null
+					docker images
+
+					# docker tag
+					sudo docker tag $DTR_HOST/$DTR_ORG/${JOB_NAME}:latest $DTR_HOST/$DTR_ORG/${JOB_NAME}:0.${BUILD_NUMBER} || { echo "FATAL: Failed on 'docker tag'"; exit 1; } 2> /dev/null
+
+					# push to DTR
+					sudo docker push $DTR_HOST/$DTR_ORG/${JOB_NAME}:0.${BUILD_NUMBER} || { echo "FATAL: Failed on 'docker push'"; exit 1; } 2> /dev/null
+					sudo docker push $DTR_HOST/$DTR_ORG/${JOB_NAME}:latest || { echo "FATAL: Failed on 'docker push'"; exit 1; } 2> /dev/null
+
+					# remove cached images
+					sudo docker rmi -f $DTR_HOST/$DTR_ORG/${JOB_NAME}:latest || { echo "FATAL: Failed on 'docker rmi'"; exit 1; } 2> /dev/null
+					sudo docker rmi -f $DTR_HOST/$DTR_ORG/${JOB_NAME}:0.${BUILD_NUMBER} || { echo "FATAL: Failed on 'docker rmi'"; exit 1; } 2> /dev/null
+
+					{ printf "\n\n**** COMPLETED BUILD PROCESS ********************\n\n\n\n"; } 2> /dev/null
+                '''
+	            }
+			}
+
+		stage('Deploy Dev'){
+			steps{
+				sh '''
+	                    $WORKSPACE/build_automation/pipeline_tools/create_leaf_svc.sh
+
+				        #this is filler
+						kubectl get po
+						#sudo docker pull $DTR_HOST/$DTR_ORG/leaf:0.${BUILD_NUMBER}
+						#docker tag 181140462490.dkr.ecr.us-east-1.amazonaws.com/ablevets/leaf:0.${BUILD_NUMBER} 181140462490.dkr.ecr.us-east-1.amazonaws.com/ablevets/leaf:latest
+				'''
+			}
+		}
+
+		stage('Acceptance Test'){
+			steps{
+	           	echo 'Run Script'
+
+	          	sh '''
+	          		sudo docker ps
+					sudo docker images
+	           	'''
+			}
+		}
+
+		stage('Fortify Scan'){
+			steps{
+				sh '''
+					docker_login=$(aws ecr get-login --no-include-email --region us-east-1)
+					sudo $docker_login
+
+					docker pull ${DTR_PREFIX}${DTR_ORG}/centos7-appbuildtools
+
+					FORTIFY_DOCKER_COMPOSE_LOCATION=$(find $WORKSPACE -iname "docker-compose-fortify.yml")
+
+					sed -i "s/JOB_NAME_VALUE/${JOB_NAME}/g" $FORTIFY_DOCKER_COMPOSE_LOCATION
+					sed -i "s/BUILD_NUMBER_VALUE/${BUILD_NUMBER}/g" $FORTIFY_DOCKER_COMPOSE_LOCATION
+					sed -i "s@WORKSPACE_VALUE@${WORKSPACE}@g" $FORTIFY_DOCKER_COMPOSE_LOCATION
+					sed -i "s@DTR_PREFIX_VALUE@$DTR_PREFIX@g" $FORTIFY_DOCKER_COMPOSE_LOCATION
+					sed -i "s/DTR_ORG_VALUE/${DTR_ORG}/g" $FORTIFY_DOCKER_COMPOSE_LOCATION
+
+					cat $FORTIFY_DOCKER_COMPOSE_LOCATION
+
+					#sudo docker-compose -f docker-compose-fortify.yml up || { echo "FATAL: Failed on 'docker-compose-fortify build'"; exit 1; } 2> /dev/null
+
+					#sudo docker-compose -f docker-compose-fortify.yml run -u 112 
+					sudo chgrp -R 1000 .
+					sudo chmod -R 777 .
+
+					unset DOCKER_HOST;
+					unset DOCKER_TLS_VERIFY;
+					unset DOCKER_CERT_PATH;
+					docker run -i --rm \
+                       -v $PWD:/workspace  \
+                       -e DTR_PREFIX=$DTR_PREFIX -e DTR_ORG=$DTR_ORG -e WORKSPACE=$WORKSPACE \
+                       -e JOB_NAME=$JOB_NAME -e BUILD_NUMBER=$BUILD_NUMBER \
+                       $DTR_PREFIX$DTR_ORG/centos7-appbuildtools /bin/bash -c "ls -la .;chmod 755 fortify/FortifyReportGenerator.sh;./fortify/FortifyReportGenerator.sh -r /workspace"
+
+					sudo docker images
+				'''
+			}
+		}
+
+		stage('Tenable.IO Scan'){
+			steps{
+				sh '''
+
+					TAG=0.${BUILD_NUMBER}
+				    IMAGE_NAME=$DTR_HOST/$DTR_ORG/leaf
+				    REPO_NAME=$DTR_ORG/leaf
+				    #REPO_URI=$(aws ecr describe-repositories | grep $DTR_ORG/leaf | grep repositoryUri | awk '{print $2}')
+				    REPO_URI="181140462490.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME"
+				    docker pull ${REPO_URI}:${TAG}
+
+				    echo "Pushing Image to TenableIO Cloud"
+				    #AbleVets_User account
+				    export TENABLE_IO_ACCESS_KEY=6046a7db1ad82603e603c12b477ba60c60343a163ea707d48460b65e2686a13b
+				    export TENABLE_IO_SECRET_KEY=2f0483b11e1f0eb1ecc7c862be2c08b2863cb885024a7a9cf59745e070a8c6ee
+				    docker login -u $TENABLE_IO_ACCESS_KEY -p $TENABLE_IO_SECRET_KEY registry.cloud.tenable.com
+
+					LEAF_IMAGE_ID=$(docker images | grep ${IMAGE_NAME} | grep ${TAG} | awk -F ' ' '{ print $3 }')
+					docker tag $LEAF_IMAGE_ID registry.cloud.tenable.com/${REPO_NAME}
+					#echo "docker push registry.cloud.tenable.com/${REPO_NAME}:${TAG}"
+					docker push registry.cloud.tenable.com/${REPO_NAME}
+
+					echo "Python Installation"
+					if [ -e $(which python3.5) ]; then
+						echo "Python already installed"
+					else
+						#sudo add-apt-repository -y ppa:jonathonf/python-3.6
+						#sudo apt-get -y update
+						#sudo apt-get install -y python3.6
+						sudo apt-cache show python3
+						sudo apt-get install -y python3=3.5.2*
+						#sudo pip3 install requests
+						#sudo pip3 install json
+					fi
+	 			    sudo pip3 install --upgrade requests urllib3
+	 			    sudo pip3 install python-dateutil
+
+	 			    echo "Pulling Scan Results"
+					export TAG=${TAG}
+					sudo python3.5 build_automation/DeployTest/TenableIO/tenable_scan_results.py leaf $TENABLE_IO_ACCESS_KEY $TENABLE_IO_SECRET_KEY
+
+					if [ $? == 1 ]; then
+						exit 1
+					fi
+				'''
+			}
+		}
+
+		stage('Deploy Demo'){
+            steps{
+                sh '''
+
+					# Run pre-deploy script, if it exists
+					if [ -f pre-deploy.sh ]; then chmod 755 pre-deploy.sh; ./pre-deploy.sh; fi
+
+					{ printf "\n\n ** DOCKER before stop"; } 2> /dev/null
+					$STARTING_PATH/docker ps
+					$STARTING_PATH/docker images
+
+					# Stop Running Containers:
+					kompose -f build_automation/pipeline_tools/docker-compose-runtime.yml down || { echo "FATAL: Failed on 'docker-compose down'"; exit 1; } 2> /dev/null
+
+					kompose -f build_automation/pipeline_tools/docker-compose-runtime.yml up
+
+					# Run post-deploy script, if it exists
+					if [ -f post-deploy.sh ]; then chmod 755 post-deploy.sh; ./post-deploy.sh; fi
+
+					{ printf "\n\n ** DOCKER check the images"; } 2> /dev/null
+					docker ps
+					docker images
+                    kubectl get po
+
+					{ printf "\n\n\n\n**** COMPLETED DEPLOYMENT PROCESS ********************\n\n"; } 2> /dev/null
+                '''
+            }
+		}
+	}
+
+	post {
+		always{
+
+			sh '''
+                $WORKSPACE/build_automation/pipeline_tools/clean_up_old_build_tarballs.sh
+                #sudo chown -R jenkins $WORKSPACE/Katalon_Studio/*
+                #rm -rf $WORKSPACE/Katalon_Studio
+			'''			
+		}
+		failure {
+		 	sh '''
+                CENTOSBUILD_JOB_STATUS=$(kubectl get jobs centos7-appbuildtools | grep centos7-appbuildtools | awk -F ' ' '{ print $1 }')
+                if [ $CENTOSBUILD_JOB_STATUS = centos7-appbuildtools ]; then
+					kubectl delete job centos7-appbuildtools --grace-period=0 --force
+				else
+					echo "centos7-appbuildtools job has already been terminated"
+				fi
+
+				CHECK_DOCKER_IMAGE_STATUS=$(sudo docker images -q)
+				while [ -n "$CHECK_DOCKER_IMAGE_STATUS" ]; do
+					sudo docker rmi $(sudo docker images -q)
+					CHECK_DOCKER_IMAGE_STATUS=$(sudo docker images -q)
+				done
+				/bin/bash -c "chmod 755 $WORKSPACE/build_automation/pipeline_tools/stop.sh;./$WORKSPACE/build_automation/pipeline_tools/stop.sh"
+			'''
+
+		 	echo 'office365'
+	 	//	office365ConnectorSend message: 'Latest status of build #$env.BUILD_NUMBER', webhookUrl: "https://outlook.office.com/webhook/a53144b0-3020-4578-bbb7-d420fc502815@af16bf88-a652-447e-8dd5-9dd06181c6bd/JenkinsCI/4d958d02e26d43168d51f197a66f0f27/f02d9c24-33b2-42d8-b004-0cfdd376d702"
+
+		}
+		success{
+		 	echo 'office365'
+	 	//	office365ConnectorSend message: 'Latest status of build #$env.BUILD_NUMBER', webhookUrl: "https://outlook.office.com/webhook/a53144b0-3020-4578-bbb7-d420fc502815@af16bf88-a652-447e-8dd5-9dd06181c6bd/JenkinsCI/4d958d02e26d43168d51f197a66f0f27/f02d9c24-33b2-42d8-b004-0cfdd376d702"
+			sh '''
+				TENABLE_REPORT_LOCATION=$(find $WORKSPACE -iname "Tenable_Scan_Output.txt")
+				mv "$TENABLE_REPORT_LOCATION" "$WORKSPACE/build_automation/DeployTest/TenableIO/Tenable_Scan_Output_${BUILD_NUMBER}.txt"
+			'''
+			archiveArtifacts artifacts: '**/Tenable_Scan_Output_${BUILD_NUMBER}.txt', caseSensitive: false, defaultExcludes: false
+			archiveArtifacts artifacts: '**/Fortify_Scan_Results_${BUILD_NUMBER}.pdf, **/*.fpr', caseSensitive: false, defaultExcludes: false
+		}
+		aborted{
+	 		echo 'office365'
+	 	//	office365ConnectorSend message: 'Latest status of build #$env.BUILD_NUMBER', webhookUrl: "https://outlook.office.com/webhook/a53144b0-3020-4578-bbb7-d420fc502815@af16bf88-a652-447e-8dd5-9dd06181c6bd/JenkinsCI/4d958d02e26d43168d51f197a66f0f27/f02d9c24-33b2-42d8-b004-0cfdd376d702"
+			//closing Python interpreter
+
+		}
+	}
+}
