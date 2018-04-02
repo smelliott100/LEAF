@@ -7,13 +7,13 @@ services:
         dockerfile: docker/php/Dockerfile
       ports:
         - 80:80
-        - 443:443
+        #- 443:443
       links:
         - mysql
-      volumes:
-        - ../LEAF_Nexus:/var/www/html/LEAF_Nexus
-        - ../LEAF_Request_Portal:/var/www/html/LEAF_Request_Portal
-        - ../libs:/var/www/html/libs
+#      volumes:
+#        - ../LEAF_Nexus:/var/www/html/LEAF_Nexus:z
+#        - ../LEAF_Request_Portal:/var/www/html/LEAF_Request_Portal:z
+#        - ../libs:/var/www/html/libs:z
       networks:
         code-network:
           aliases:
@@ -28,7 +28,7 @@ services:
       - "3306:3306"
     restart: 'always'
     volumes:
-      - leaf-mysql-data:/var/lib/mysql
+      - leaf-mysql-data:/var/lib/mysql:z
     networks:
       code-network:
         aliases:
@@ -43,7 +43,7 @@ services:
 
 volumes:
   leaf-mysql-data:
-  leaf-php-data:
+#  leaf-php-data:
 
 
 networks:
