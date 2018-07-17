@@ -68,7 +68,7 @@
 function save() { 
 	$('#saveIndicator').attr('src', '../images/indicator.gif');
 	var data = '';
-	if(codeEditor.getValue == undefined) {
+	if(codeEditor.getValue === undefined) {
 	    data = codeEditor.edit.getValue();
 	}
 	else {
@@ -82,7 +82,7 @@ function save() {
 		success: function(res) {
 			$('#saveIndicator').attr('src', '../../libs/dynicons/?img=media-floppy.svg&w=32');
 			$('.modifiedTemplate').css('display', 'block');
-			if($('#btn_compareStop').css('display') != 'none') {
+			if($('#btn_compareStop').css('display') !== 'none') {
 			    $('#btn_compare').css('display', 'none');
 			}
 
@@ -148,7 +148,7 @@ function compare() {
 var currentFile = '';
 var currentFileContent = '';
 function loadContent(file) {
-    if(file == undefined) {
+    if(file === undefined) {
         file = currentFile;
     }
     $('.CodeMirror').remove();
@@ -167,7 +167,7 @@ function loadContent(file) {
 		    currentFileContent = res.file;
 			$('#codeContainer').fadeIn();
 			codeEditor.setValue(res.file);
-			if(res.modified == 1) {
+			if(res.modified === 1) {
 				$('.modifiedTemplate').css('display', 'block');
 			}
 			else {

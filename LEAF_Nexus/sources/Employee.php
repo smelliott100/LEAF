@@ -88,7 +88,10 @@ class Employee extends Data
         }
 
         if($userName == '') {
-        	$userName = 'NOACCOUNT-' . random_int(7, 9999999);
+            try {
+                $userName = 'NOACCOUNT-' . random_int(7, 9999999);
+            } catch (\Exception $e) {
+            }
         }
         
         $vars = array(':firstName' => $this->sanitizeInput($firstName),
@@ -200,6 +203,7 @@ class Employee extends Data
      * Marks employee as deleted
      * @param int $empUID
      * @return bool
+     * @throws Exception
      */
     public function disableAccount($empUID)
     {
@@ -221,6 +225,7 @@ class Employee extends Data
      * Marks employee as not deleted
      * @param int $empUID
      * @return bool
+     * @throws Exception
      */
     public function enableAccount($empUID)
     {
@@ -491,11 +496,12 @@ class Employee extends Data
         return $res;
     }
 
-	/**
-	 * Sets one employee to be the backup of another, and inheirts their access privileges
-	 * @param int $primaryEmpUID
-	 * @param int $backupEmpUID
-	 */
+    /**
+     * Sets one employee to be the backup of another, and inheirts their access privileges
+     * @param int $primaryEmpUID
+     * @param int $backupEmpUID
+     * @throws Exception
+     */
 	public function setBackup($primaryEmpUID, $backupEmpUID)
 	{
 		$memberships = $this->login->getMembership();
@@ -512,11 +518,12 @@ class Employee extends Data
 		return true;
 	}
 
-	/**
-	 * Removes an employee's backup
-	 * @param int $primaryEmpUID
-	 * @param int $backupEmpUID
-	 */
+    /**
+     * Removes an employee's backup
+     * @param int $primaryEmpUID
+     * @param int $backupEmpUID
+     * @throws Exception
+     */
 	public function removeBackup($primaryEmpUID, $backupEmpUID)
 	{
 		$memberships = $this->login->getMembership();

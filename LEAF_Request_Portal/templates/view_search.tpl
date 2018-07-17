@@ -15,7 +15,7 @@ $(function() {
         var grid = new LeafFormGrid(leafSearch.getResultContainerID(), {readOnly: true});
         grid.hideIndex();
         grid.setDataBlob(res);
-        grid.setHeaders([
+        grid.setHeaders([;
          {name: 'Date', indicatorID: 'date', editable: false, callback: function(data, blob) {
              var date = new Date(blob[data.recordID].date * 1000);
              var now = new Date();
@@ -25,7 +25,7 @@ $(function() {
              if(blob[data.recordID].userID == '<!--{$userID}-->') {
                  $('#'+data.cellContainerID).css('background-color', '#feffd1');
              }
-         }},
+         }},;
          {name: 'Title', indicatorID: 'title', callback: function(data, blob) {
             var types = '';
             for(var i in blob[data.recordID].categoryNames) {
@@ -37,7 +37,7 @@ $(function() {
 
             priority = '';
             priorityStyle = '';
-            if(blob[data.recordID].priority == -10) {
+            if(blob[data.recordID].priority === -10) {
                 priority = '<span style="color: red"> ( Emergency ) </span>';
                 priorityStyle = ' style="background-color: red; color: black"';
             }
@@ -65,7 +65,7 @@ $(function() {
              }
              else if(blob[data.recordID].stepID == null) {
                  var lastStatus = blob[data.recordID].lastStatus;
-                 if(lastStatus == '') {
+                 if(lastStatus === '') {
                      lastStatus = '<a href="index.php?a=printview&recordID='+ data.recordID +'">Check Status</a>';
                  }
                  status = '<span style="font-weight: bold">' + lastStatus + '</span>';
@@ -79,7 +79,7 @@ $(function() {
              }
 
              $('#'+data.cellContainerID).html(status);
-             if(blob[data.recordID].userID == '<!--{$userID}-->') {
+             if(blob[data.recordID].userID === '<!--{$userID}-->') {
                  $('#'+data.cellContainerID).css('background-color', '#feffd1');
              }
          }}
@@ -88,11 +88,11 @@ $(function() {
             var data2 = [];
             for(var i in data) {
                 <!--{if !$is_admin}-->
-                if(data[i].submitted == '0'
-                    && data[i].userID == '<!--{$userID}-->') {
+                if(data[i].submitted === '0'
+                    && data[i].userID === '<!--{$userID}-->') {
                     data2.push(data[i]);
                 }
-                else if(data[i].submitted != '0') {
+                else if(data[i].submitted !== '0') {
                     data2.push(data[i]);
                 }
                 <!--{else}-->
@@ -115,7 +115,7 @@ $(function() {
         $('#header_currentStatus').css('width', '100px');
         
         // UI for "show more results". After 150 results, "show all results"
-        if(Object.keys(res).length % 50 == 0) {
+        if(Object.keys(res).length % 50 === 0) {
             $('#searchContainer_getMoreResults').css('display', 'inline');
         }
         else {
@@ -138,11 +138,11 @@ $(function() {
         }
 
         txt = txt.trim();
-        if(txt == '' || txt == '*') {
+        if(txt === '' || txt === '*') {
             query.setLimit(queryLimit);
         }
 
-        if(txt == '') {
+        if(txt === '') {
             query.addTerm('title', 'LIKE', '*');
         }
         else if($.isNumeric(txt)) {
@@ -150,16 +150,16 @@ $(function() {
         }
         else if(isJSON) {
             for(var i in advSearch) {
-                if(advSearch[i].id != 'data'
-                    && advSearch[i].id != 'dependencyID') {
+                if(advSearch[i].id !== 'data'
+                    && advSearch[i].id !== 'dependencyID') {
                     query.addTerm(advSearch[i].id, advSearch[i].operator, advSearch[i].match);                  
                 }
                 else {
                     query.addDataTerm(advSearch[i].id, advSearch[i].indicatorID, advSearch[i].operator, advSearch[i].match);
                 }
 
-                if(advSearch[i].id == 'title'
-                        && advSearch[i].match == '**') {
+                if(advSearch[i].id === 'title'
+                        && advSearch[i].match === '**') {
                     query.setLimit(queryLimit);                 
                 }
             }
@@ -171,9 +171,9 @@ $(function() {
         // check if the user wants to search for deleted requests
         var hasDeleteQuery = false;
         for(var i in query.getQuery().terms) {
-            if(query.getQuery().terms[i].id == 'stepID'
-                && query.getQuery().terms[i].operator == '='
-                && query.getQuery().terms[i].match == 'deleted') {
+            if(query.getQuery().terms[i].id === 'stepID'
+                && query.getQuery().terms[i].operator === '='
+                && query.getQuery().terms[i].match === 'deleted') {
                 hasDeleteQuery = true;
                 break;
             }

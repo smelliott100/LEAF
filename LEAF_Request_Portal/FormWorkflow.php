@@ -49,7 +49,7 @@ class FormWorkflow
     
     /**
      * Retrieves current steps of a form's workflow, controls access to steps
-     * @return array database result
+     * @return array|int
      * @return null if no database result
      */
     public function getCurrentSteps()

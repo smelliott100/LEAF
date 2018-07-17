@@ -6,9 +6,9 @@ var LeafPreview = function(domID) {
     $('#' + domID).html('');
 
     function renderField(field, isChild) {
-        var required = field.required == 1 ? '<span style="color: red">* Required</span>': '';
+        var required = field.required === 1 ? '<span style="color: red">* Required</span>': '';
         var style_isChild = '';
-        if(isChild == undefined) {
+        if(isChild === undefined) {
             style_isChild = 'font-weight: bold';
         }
         var out = '<span style="'+style_isChild+'">' + field.name +'</span> '+ required + '<br />';
@@ -55,7 +55,7 @@ var LeafPreview = function(domID) {
                 out += '<input type="text" />';
                 break;
         }
-        if(field.format != '') {
+        if(field.format !== '') {
         	out += '<br /><br />';
         }
         else {
@@ -85,12 +85,12 @@ var LeafPreview = function(domID) {
             success: function(res) {
             	rawForm = res;
                 var form = res.packet.form;
-                numSection = 1
+                numSection = 1;
             	for(var i in form) {
     				var field = renderSection(form[i]);
                     $('#' + domID).append(field);
                 }
-                if(callback != undefined) {
+                if(callback !== undefined) {
                 	callback();
                 }
             }
@@ -102,4 +102,4 @@ var LeafPreview = function(domID) {
         getRawForm: function() { return rawForm; },
         setNexusURL: function(url) { LEAF_NEXUS_URL = url; }
     };
-}
+};

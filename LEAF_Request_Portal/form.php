@@ -1061,7 +1061,7 @@ class Form
     /**
      * Submit a request and start the workflow if it has not already been submitted
      * @param int $recordID
-     * @return array {status(int), errors[string]}
+     * @return array|int
      */
     public function doSubmit($recordID)
     {

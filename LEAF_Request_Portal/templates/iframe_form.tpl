@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
 function iframeTrigger(func) {
-    if(dialog.isValid() == 1) {
+    if(dialog.isValid() === 1) {
         $.ajax({
             type: 'POST',
             url: 'ajaxIndex.php?a=domodify',

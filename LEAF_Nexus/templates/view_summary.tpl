@@ -41,7 +41,7 @@ $.ajax({
                 pdNumber: data[i].pdNumber
             });
 
-            if(parsedDataByService[data[i].service] == undefined) {
+            if(parsedDataByService[data[i].service] === undefined) {
                 parsedDataByService[data[i].service] = {};
                 parsedDataByService[data[i].service].service = data[i].service;
                 parsedDataByService[data[i].service].authorized = 0;
@@ -51,7 +51,7 @@ $.ajax({
                 parsedDataByService[data[i].service].indicatorID = i;
             }
             parsedDataByService[data[i].service].authorized = new BigNumber(parsedDataByService[data[i].service].authorized).plus(data[i].fteCeiling).round(3).toString();
-            if(data[i].currentFte == 0) {
+            if(data[i].currentFte === 0) {
                 parsedDataByService[data[i].service].vacant = new BigNumber(parsedDataByService[data[i].service].vacant).plus(data[i].fteCeiling).round(3).toString();
             }
             else {
@@ -69,7 +69,7 @@ $.ajax({
         var cf = crossfilter(parsedData);
         var serviceDim = cf.dimension(function(d) { return d.service; });
         var vacancyDim = cf.dimension(function(d) {
-            if(d.currentFte == 0) {
+            if(d.currentFte === 0) {
             	return 'Vacant';
             }
             return 'On Board';
@@ -79,7 +79,7 @@ $.ajax({
         var numFTEGroup = cf.groupAll().reduce(
             function(p, v) {
                 p.total += Number(v.fteCeiling);
-                if(v.currentFte == 0) {
+                if(v.currentFte === 0) {
                     p.vacant += Number(v.fteCeiling);
                 }
                 else {
@@ -89,7 +89,7 @@ $.ajax({
             },
             function(p, v) {
                 p.total -= Number(v.fteCeiling);
-                if(v.currentFte == 0) {
+                if(v.currentFte === 0) {
                     p.vacant -= Number(v.fteCeiling);
                 }
                 else {
@@ -98,7 +98,7 @@ $.ajax({
                 return p;
             },
             function(p, v) {
-                return {total: 0, vacant: 0, onBoard: 0};
+
             }
         );
 
@@ -131,15 +131,15 @@ $.ajax({
         grid.hideIndex();
         grid.enableToolbar();
         grid.setData(tGridData);
-        grid.setHeaders([{name: 'Service', indicatorID: 'service', callback: function(data, blob) {
+        grid.setHeaders([;{name: 'Service', indicatorID: 'service', callback: function(data, blob) {
             $('#'+data.cellContainerID).html(grid.getDataByIndex(data.index).service);
         }},
         {name: 'Authorized FTE', indicatorID: 'authorizedFTE', callback: function(data, blob) {
             $('#'+data.cellContainerID).html(grid.getDataByIndex(data.index).authorized);
-        }},
+        }},;
         {name: 'On Board FTE', indicatorID: 'onboardFTE', callback: function(data, blob) {
             $('#'+data.cellContainerID).html(grid.getDataByIndex(data.index).onBoard);
-        }},
+        }},;
         {name: 'Vacant FTE', indicatorID: 'vacantFTE', callback: function(data, blob) {
             $('#'+data.cellContainerID).html(grid.getDataByIndex(data.index).vacant);
         }}]);

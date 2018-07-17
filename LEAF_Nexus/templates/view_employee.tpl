@@ -78,7 +78,7 @@ function getBackupInfo() {
     $.ajax({
         url: "./api/?a=employee/" + <!--{$empUID}--> + "/backup",
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 for(var key in response) {
                     $('#backupBody').append('<div id="backup_'+ response[key].backupEmpUID +'">'+response[key].backupEmpUID+'</div>');
                     $.ajax({
@@ -104,7 +104,7 @@ function getBackupForInfo() {
     $.ajax({
         url: "./api/?a=employee/" + <!--{$empUID}--> + "/backupFor",
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 for(var key in response) {
                     $('#backupForBody').append('<div id="backupFor_'+ response[key].empUID +'">'+response[key].empUID+'</div>');
                     $.ajax({
@@ -151,7 +151,7 @@ function assignBackup() {
     empSel.clearSearch();
 
     dialog.setSaveHandler(function() {
-        if(empSel.selection != '') {
+        if(empSel.selection !== '') {
             dialog.indicateBusy();
             var selectedUserName = empSel.selectionData[empSel.selection].userName;
             $.ajax({
@@ -193,7 +193,7 @@ function disableAccount(backupEmpUID) {
             url: './api/?a=employee/<!--{$empUID}-->' + '&' + $.param({CSRFToken: '<!--{$CSRFToken}-->'}),
             success: function(response) {
                 confirm_dialog.hide();
-                if(response == true) {
+                if(response === true) {
                     alert('The account has been disabled.');
                     window.location.reload();
                 }
@@ -214,7 +214,7 @@ function enableAccount(backupEmpUID) {
             data: {CSRFToken: '<!--{$CSRFToken}-->'},
             success: function(response) {
                 confirm_dialog.hide();
-                if(response == true) {
+                if(response === true) {
                     alert('The account has been enabled.');
                     window.location.reload();
                 }
@@ -235,7 +235,7 @@ $(function() {
     $.ajax({
         url: "ajaxEmployee.php?a=getForm&empUID=<!--{$empUID}-->",
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 $('#employeeName').html('<!--{$summary.employee.firstName|escape}--> <!--{$summary.employee.lastName|escape}--> <!--{if $summary.employee.deleted != 0}-->(Disabled account)<!--{/if}-->');
                 $('#employeeAccount').html('<!--{$summary.employee.userName}-->');
                 $('#employeeBody').html(response);
@@ -253,7 +253,7 @@ $(function() {
     $.ajax({
         url: "./api/?a=position/" + <!--{$position.positionID}-->,
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 $("#pos_" + <!--{$position.positionID}-->).html('<a href="?a=view_position&positionID=<!--{$position.positionID}-->">' + response.title + '</a>');
             }
         },

@@ -15,7 +15,7 @@
 </div>
 
 <!--{foreach from=$bookmarks item=record}-->
-<div id="bookmark_<!--{$record.recordID|strip_tags}-->" style="float: left; border: 1px solid black; margin: 8px; padding: 0px; background-color: <!--{$record.stepBgColor|strip_tags}-->; color: <!--{$record.stepFontColor|strip_tags}-->; width: 370px">    
+<div id="bookmark_<!--{$record.recordID|strip_tags}-->" style="float: left; border: 1px solid black; margin: 8px; padding: 0; background-color: <!--{$record.stepBgColor|strip_tags}-->; color: <!--{$record.stepFontColor|strip_tags}-->; width: 370px">
     <div style="float: left; cursor: pointer; background-color: black; font-size: 150%; font-weight: bold; color: white; padding: 8px; text-align: center" onclick="window.location='?a=printview&amp;recordID=<!--{$record.recordID|strip_tags}-->'">
         <!--{$record.recordID}--><br />
         <!--{if $record.actionIcon != ''}-->
@@ -51,7 +51,7 @@
 
 <!--{if count($bookmarks) == 0}-->
 <br style="clear: both" />
-<div style="width: 50%; margin: 0px auto; border: 1px solid black; padding: 16px; background-color: #fffcc9">
+<div style="width: 50%; margin: 0 auto; border: 1px solid black; padding: 16px; background-color: #fffcc9">
 <img src="../libs/dynicons/?img=help-browser.svg&amp;w=96" alt="empty" style="float: left"/><span style="font-size: 200%"> You do not have any requests bookmarked!<br /><br />To bookmark a request, open a request and select "Add Bookmark".</span>
 </div>
 <!--{/if}-->
@@ -74,7 +74,7 @@ function removeBookmark(recordID) {
 var lastScreenSize = null;
 function sideBar() {
 //    console.log(dojo.body().clientWidth);
-    if(lastScreenSize != dojo.body().clientWidth) {
+    if(lastScreenSize !== dojo.body().clientWidth) {
         lastScreenSize = dojo.body().clientWidth;
 
         if(lastScreenSize < 700) {

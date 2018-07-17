@@ -68,7 +68,10 @@ switch($action) {
         $t_form->assign('dbversion', $rev[0]['data']);
     
         $main->assign('hideFooter', true);
-        $main->assign('body', $t_form->fetch('view_about.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('view_about.tpl'));
+        } catch (SmartyException $e) {
+        }
         break;
     default:
     	if($action != ''
@@ -76,9 +79,12 @@ switch($action) {
     			$main->assign('useUI', true);
 //    			$main->assign('javascripts', array('js/form.js', 'js/workflow.js', 'js/formGrid.js', 'js/formQuery.js', 'js/formSearch.js'));
     			if($login->isLogin()) {
-    				$o_login = $t_login->fetch('login.tpl');
-    			
-    				$t_form = new Smarty;
+                    try {
+                        $o_login = $t_login->fetch('login.tpl');
+                    } catch (SmartyException $e) {
+                    }
+
+                    $t_form = new Smarty;
     				$t_form->left_delimiter = '<!--{';
     				$t_form->right_delimiter= '}-->';
     				$t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
@@ -89,9 +95,12 @@ switch($action) {
     				$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
     				$qrcodeURL = "{$protocol}://{$_SERVER['HTTP_HOST']}" . $_SERVER['REQUEST_URI'];
     				$main->assign('qrcodeURL', urlencode($qrcodeURL));
-    			
-    				$main->assign('body', $t_form->fetch("reports/{$action}.tpl"));
-    				$tabText = '';
+
+                    try {
+                        $main->assign('body', $t_form->fetch("reports/{$action}.tpl"));
+                    } catch (SmartyException $e) {
+                    }
+                    $tabText = '';
     			}
     	}
     	else {
@@ -104,8 +113,14 @@ $memberships = $login->getMembership();
 
 $t_menu->assign('isAdmin', $memberships['groupID'][1]);
 $t_menu->assign('action', $action);
-$main->assign('login', $t_login->fetch('login.tpl'));
-$o_menu = $t_menu->fetch('menu.tpl');
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
+try {
+    $o_menu = $t_menu->fetch('menu.tpl');
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $tabText = $tabText == '' ? '' : $tabText . '&nbsp;';
 $main->assign('tabText', $tabText);

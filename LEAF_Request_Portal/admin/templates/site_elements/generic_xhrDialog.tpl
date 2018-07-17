@@ -1,4 +1,4 @@
-<div id="xhrDialog" style="visibility: hidden; display: none; background-color: white; border-style: none solid solid; border-width: 0 1px 1px; border-color: #e0e0e0; padding: 4px">
+<div id="xhrDialog" style="visibility: hidden; display: none; background-color: white; border: 1px solid #e0e0e0;border-top: 0 none;padding: 4px">
 <form id="record" enctype="multipart/form-data" action="javascript:void(0);">
     <div>
         <button id="button_cancelchange" class="buttonNorm" style="position: absolute; left: 10px"><img src="../../libs/dynicons/?img=process-stop.svg&amp;w=16" alt="cancel" /> Cancel</button>

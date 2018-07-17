@@ -534,7 +534,10 @@ abstract class Data
                     $_POST[$indicatorID] .= $files . "\n";
                 }
             }
-            $this->modify($UID);
+            try {
+                $this->modify($UID);
+            } catch (Exception $e) {
+            }
             if(file_exists($uploadDir . $file)) {
                 unlink($uploadDir . $file);
             }

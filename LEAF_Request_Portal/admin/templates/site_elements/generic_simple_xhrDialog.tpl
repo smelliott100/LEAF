@@ -1,4 +1,4 @@
-<div id="simplexhrDialog" style="visibility: hidden; display: none; background-color: white; border-style: none solid solid; border-width: 0 1px 1px; border-color: #e0e0e0; padding: 4px">
+<div id="simplexhrDialog" style="visibility: hidden; display: none; background-color: white; border: 1px solid #e0e0e0;border-top: 0 none;padding: 4px">
     <div>
         <button id="simplebutton_cancelchange" class="buttonNorm" style="display: none">Cancel</button>
         <button id="simplebutton_save" class="buttonNorm" style="display: none">Save Change</button>

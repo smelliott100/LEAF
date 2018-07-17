@@ -262,7 +262,10 @@ switch ($action) {
                 $t_form->assign('recordID', $recordID);
                 $t_form->assign('series', $series);
                 $t_form->assign('indicatorID', $indicatorID);
-                $main->assign('body', $t_form->fetch('file_form_additional.tpl'));
+                try {
+                    $main->assign('body', $t_form->fetch('file_form_additional.tpl'));
+                } catch (SmartyException $e) {
+                }
             }
             else
             {
@@ -421,13 +424,19 @@ switch ($action) {
                 {
                     $main->assign('emergency', '<span style="position: absolute; right: 0px; top: -28px; padding: 2px; border: 1px solid black; background-color: white; color: red; font-weight: bold; font-size: 20px">EMERGENCY</span> ');
                 }
-                $main->assign('body', $t_form->fetch(customTemplate('print_form_ajax.tpl')));
+                try {
+                    $main->assign('body', $t_form->fetch(customTemplate('print_form_ajax.tpl')));
+                } catch (SmartyException $e) {
+                }
                 $tabText = 'Request #' . (int)$_GET['recordID'];
                 $main->assign('tabText', $tabText);
 
                 $main->assign('logo', '<img src="images/VA_icon_small.png" style="width: 80px" alt="VA logo" />');
 
-                $main->assign('login', $t_login->fetch('login.tpl'));
+                try {
+                    $main->assign('login', $t_login->fetch('login.tpl'));
+                } catch (SmartyException $e) {
+                }
                 $main->display('main.tpl');
             }
         }

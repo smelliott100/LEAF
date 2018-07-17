@@ -22,7 +22,7 @@ workflowModule[1] = (function() {
 	}
 
 	function trigger(callback) {
-		if(callback != undefined) {
+		if(callback !== undefined) {
 			form.setPostModifyCallback(callback);
 		}
 		form.dialog().clickSave();

@@ -98,7 +98,7 @@ function newEmployee() {
 
     dialog.setSaveHandler(function() {
         dialog.indicateBusy();
-        if(empSel.selection == '') {
+        if(empSel.selection === '') {
         	dialog.indicateIdle();
         	alert('You need to select an employee to add.');
         	return false;

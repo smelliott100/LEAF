@@ -1,7 +1,7 @@
 body {
     background-color: #f3f3f3;
     font-family: verdana;
-    margin: 0px;
+    margin: 0;
     font-size: 12px;
 }
 
@@ -24,7 +24,7 @@ button {
 }
 
 img {
-    border: 0px;
+    border: 0;
 }
 
 input {
@@ -43,7 +43,7 @@ h3 {
 }
 
 #body {
-    padding: 0px;
+    padding: 0;
     text-align: center;
     width: 100%;
 }
@@ -147,7 +147,7 @@ span#headerMenu {
     box-shadow: 0 2px 60px #8e8e8e;
     padding: 16px;
     border: 1px solid black;
-    right: 0px;
+    right: 0;
     z-index: 100;
 }
 
@@ -194,7 +194,7 @@ span#headerTab {
 
 #content {
     padding: 4px;
-    margin: 0px auto;
+    margin: 0 auto;
     text-align: left;
 }
 
@@ -356,7 +356,7 @@ span.printsubheading:hover {
 
 div.printResponse {
     float: right;
-    padding: 0px 16px 8px 16px;
+    padding: 0 16px 8px 16px;
 }
 
 span.printResponse {
@@ -516,8 +516,7 @@ span.approval_disapproved {
     width: 96px;
     height: 96px;
     padding-right: 4px;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background: no-repeat center center;
 }
 
 .menuText {
@@ -552,8 +551,7 @@ span.approval_disapproved {
     width: 76px;
     height: 76px;
     padding-right: 4px;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background: no-repeat center center;
 }
 
 .menuTextSmall {
@@ -680,14 +678,11 @@ div#category_list {
 
 button.tools{
   background-color: #e8f2ff;
-  padding: 2px;
-  margin: 0px;
-  padding-right: 6px;
-  border-top: 1px solid black;
-  border-bottom: 1px solid #e8f2ff;
-  border-left: 1px solid #e8f2ff;
-  border-right: 1px solid #e8f2ff;
-  cursor: pointer;
+    margin: 0;
+    padding: 2px 6px 2px 2px;
+    border: 1px solid #e8f2ff;
+    border-top-color: black;
+    cursor: pointer;
   font-family: verdana;
   font-size: 14px;
   text-align: left;
@@ -711,7 +706,7 @@ button.tools:hover, button.tools:focus{
 .toolbar h1 {
     text-align: center;
     font-size: 12px;
-    margin: 0px;
+    margin: 0;
     padding: 2px;
 }
 
@@ -770,14 +765,11 @@ button.tools:hover, button.tools:focus{
 
 button.options{
   background-color: #e8f2ff;
-  padding: 2px;
-  margin: 0px;
-  padding-right: 6px;
-  border-top: 1px solid black;
-  border-bottom: 1px solid #e8f2ff;
-  border-left: 1px solid #e8f2ff;
-  border-right: 1px solid #e8f2ff;
-  cursor: pointer;
+    margin: 0;
+    padding: 2px 6px 2px 2px;
+    border: 1px solid #e8f2ff;
+    border-top-color: black;
+    cursor: pointer;
   font-family: verdana;
   font-size: 14px;
   text-align: left;
@@ -847,7 +839,7 @@ div#search > div {
 
 div.workflowbox {
     padding: 2px;
-    margin: 0px;
+    margin: 0;
 }
 
 .openlate {

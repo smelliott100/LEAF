@@ -18,7 +18,7 @@ li {
     background-color: #caecff;
     width: 200px;
     height: 72px;
-    padding: 0px;
+    padding: 0;
     margin: 20px;
     cursor: pointer;
     position: relative;
@@ -29,12 +29,12 @@ li {
 .groupSmall_title {
     background-color: #a8dfff;
     padding: 4px;
-    margin: 0px;
+    margin: 0;
 }
 
 .groupSmall_data {
     padding: 4px;
-    margin: 0px;
+    margin: 0;
     float: right;
 }
 
@@ -49,7 +49,7 @@ li {
     background-color: #ffe3e3;
     width: 200px;
     height: 72px;
-    padding: 0px;
+    padding: 0;
     margin: 20px;
     cursor: pointer;
     position: relative;
@@ -60,12 +60,12 @@ li {
 .positionSmall_title {
     background-color: #f4bcbc;
     padding: 4px;
-    margin: 0px;
+    margin: 0;
 }
 
 .positionSmall_data {
     padding: 4px;
-    margin: 0px;
+    margin: 0;
 }
 
 .positionPhoto {

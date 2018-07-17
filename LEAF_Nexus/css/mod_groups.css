@@ -4,7 +4,7 @@ div.groupBlock {
     width: 220px;
     min-height: 110px;
     margin: 8px;
-    padding: 0px;
+    padding: 0;
     cursor: pointer;
     background-color: white;
 }
@@ -18,7 +18,7 @@ div.groupBlock div {
 }
 
 div.groupBlock h2 {
-    margin: 0px;
+    margin: 0;
     padding: 2px;
     font-weight: normal;
     background-color: black;

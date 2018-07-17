@@ -88,8 +88,11 @@ switch($action) {
         								   '../' . Config::$orgchartPath . '/css/employeeSelector.css',
         								   '../' . Config::$orgchartPath . '/css/groupSelector.css'
         ));
-        $main->assign('body', $t_form->fetch(customTemplate('mod_groups.tpl')));
-        
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('mod_groups.tpl')));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'User Access Groups';
         break;
     case 'mod_svcChief':
@@ -108,7 +111,10 @@ switch($action) {
         $main->assign('stylesheets', array('css/mod_groups.css',
         		'../' . Config::$orgchartPath . '/css/employeeSelector.css'
         ));
-        $main->assign('body', $t_form->fetch(customTemplate('mod_svcChief.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('mod_svcChief.tpl')));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = 'Service Chiefs';
         break;
@@ -129,9 +135,12 @@ switch($action) {
         $t_form->assign('orgchartPath', '../' . Config::$orgchartPath);
         $t_form->assign('orgchartImportTags', Config::$orgchartImportTags);
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
-        
-        $main->assign('body', $t_form->fetch('mod_workflow.tpl'));
-    
+
+        try {
+            $main->assign('body', $t_form->fetch('mod_workflow.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Workflow Editor';
         break;
     case 'form':
@@ -168,9 +177,12 @@ switch($action) {
         		$t_form->assign('form', $res[0]['categoryID']);
         	}
         }
-        
-        $main->assign('body', $t_form->fetch('mod_form.tpl'));
-        
+
+        try {
+            $main->assign('body', $t_form->fetch('mod_form.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Form Editor';
         break;
     case 'mod_templates':
@@ -204,12 +216,18 @@ switch($action) {
        
        	switch($action) {
        		case 'mod_templates':
-       			$main->assign('body', $t_form->fetch('mod_templates.tpl'));
-       			$tabText = 'Template Editor';
+                try {
+                    $main->assign('body', $t_form->fetch('mod_templates.tpl'));
+                } catch (SmartyException $e) {
+                }
+                $tabText = 'Template Editor';
        			break;
        		case 'mod_templates_reports':
-       			$main->assign('body', $t_form->fetch('mod_templates_reports.tpl'));
-       			$tabText = 'Editor';
+                try {
+                    $main->assign('body', $t_form->fetch('mod_templates_reports.tpl'));
+                } catch (SmartyException $e) {
+                }
+                $tabText = 'Editor';
        			break;
        		default:
        			break;
@@ -222,7 +240,10 @@ switch($action) {
         $t_form->right_delimiter= '}-->';
     
         if($login->checkGroup(1)) {
-            $main->assign('body', $t_form->fetch('admin_update_database.tpl'));
+            try {
+                $main->assign('body', $t_form->fetch('admin_update_database.tpl'));
+            } catch (SmartyException $e) {
+            }
         }
         else {
             $main->assign('body', 'You require System Administrator level access to view this section.');
@@ -236,7 +257,10 @@ switch($action) {
         $t_form->right_delimiter= '}-->';
     
         if($login->checkGroup(1)) {
-            $main->assign('body', $t_form->fetch('admin_sync_services.tpl'));
+            try {
+                $main->assign('body', $t_form->fetch('admin_sync_services.tpl'));
+            } catch (SmartyException $e) {
+            }
         }
         else {
             $main->assign('body', 'You require System Administrator level access to view this section.');
@@ -254,8 +278,11 @@ switch($action) {
        	if($login->checkGroup(1)) {
        		$t_form->assign('LEAF_NEXUS_URL', LEAF_NEXUS_URL);
 
-       		$main->assign('body', $t_form->fetch('view_form_library.tpl'));
-       	}
+            try {
+                $main->assign('body', $t_form->fetch('view_form_library.tpl'));
+            } catch (SmartyException $e) {
+            }
+        }
        	else {
        		$main->assign('body', 'You require System Administrator level access to view this section.');
        	}
@@ -268,8 +295,11 @@ switch($action) {
     	$t_form->right_delimiter= '}-->';
     	
     	if($login->checkGroup(1)) {
-    		$main->assign('body', $t_form->fetch('admin_import_form.tpl'));
-    	}
+            try {
+                $main->assign('body', $t_form->fetch('admin_import_form.tpl'));
+            } catch (SmartyException $e) {
+            }
+        }
     	else {
     		$main->assign('body', 'You require System Administrator level access to view this section.');
     	}
@@ -282,8 +312,11 @@ switch($action) {
     	$t_form->right_delimiter= '}-->';
 
     	if($login->checkGroup(1)) {
-    		$main->assign('body', $t_form->fetch('admin_upload_file.tpl'));
-    	}
+            try {
+                $main->assign('body', $t_form->fetch('admin_upload_file.tpl'));
+            } catch (SmartyException $e) {
+            }
+        }
     	else {
     		$main->assign('body', 'You require System Administrator level access to view this section.');
     	}
@@ -310,9 +343,12 @@ switch($action) {
    		
    		$t_form->assign('importTags', $config::$orgchartImportTags);
 //   		$main->assign('stylesheets', array('css/mod_groups.css'));
-   		$main->assign('body', $t_form->fetch(customTemplate('mod_system.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('mod_system.tpl')));
+        } catch (SmartyException $e) {
+        }
 
-   		$tabText = 'Site Settings';
+        $tabText = 'Site Settings';
    		break;
    	case 'mod_file_manager':
    			$t_form = new Smarty;
@@ -329,9 +365,12 @@ switch($action) {
    			$t_form->assign('requestLabel', $settings['requestLabel'] == '' ? 'Request' : $settings['requestLabel']);
    			$t_form->assign('importTags', $config::$orgchartImportTags);
    			//   		$main->assign('stylesheets', array('css/mod_groups.css'));
-   			$main->assign('body', $t_form->fetch(customTemplate('mod_file_manager.tpl')));
-   		
-   			$tabText = 'File Manager';
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('mod_file_manager.tpl')));
+        } catch (SmartyException $e) {
+        }
+
+        $tabText = 'File Manager';
    			break;
    	case 'disabled_fields':
    		$t_form = new Smarty;
@@ -340,15 +379,21 @@ switch($action) {
    		 
    		$main->assign('useUI', true);
    		$t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
-   		 
-   		$main->assign('body', $t_form->fetch(customTemplate('view_disabled_fields.tpl')));
-   		 
-   		$tabText = 'Recover disabled fields';
+
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('view_disabled_fields.tpl')));
+        } catch (SmartyException $e) {
+        }
+
+        $tabText = 'Recover disabled fields';
    		break;
     default:
 //        $main->assign('useDojo', false);
         if($login->isLogin()) {
-            $o_login = $t_login->fetch('login.tpl');
+            try {
+                $o_login = $t_login->fetch('login.tpl');
+            } catch (SmartyException $e) {
+            }
 
             $t_form = new Smarty;
             $t_form->left_delimiter = '<!--{';
@@ -360,7 +405,10 @@ switch($action) {
                                            '../../libs/js/jquery/jquery-ui.custom.min.js',
                                            '../../libs/js/jsPlumb/dom.jsPlumb-min.js'));
 
-            $main->assign('body', $t_form->fetch(customTemplate('view_admin_menu.tpl')));
+            try {
+                $main->assign('body', $t_form->fetch(customTemplate('view_admin_menu.tpl')));
+            } catch (SmartyException $e) {
+            }
 
             if($action != 'menu' && $action != '') {
                 $main->assign('status', 'The page you are looking for does not exist or may have been moved. Please update your bookmarks.');
@@ -370,14 +418,23 @@ switch($action) {
             $t_login->assign('name', '');
             $main->assign('status', 'Your login session has expired, You must log in again.');
         }
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
         break;
 }
 
-$main->assign('login', $t_login->fetch('login.tpl'));
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
 $t_menu->assign('action', $action);
 $t_menu->assign('orgchartPath', Config::$orgchartPath);
-$o_menu = $t_menu->fetch('menu.tpl');
+try {
+    $o_menu = $t_menu->fetch('menu.tpl');
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $tabText = $tabText == '' ? '' : $tabText . '&nbsp;';
 $main->assign('tabText', $tabText);

@@ -77,20 +77,20 @@ function getGroupList() {
 
             	// only show explicit groups, not ELTs
             	if(res[i].parentGroupID == null
-            		&& res[i].groupID != 1) {
+            		&& res[i].groupID !== 1) {
                     $('#groupList').append('<div id="'+ res[i].groupID +'" title="groupID: '+ res[i].groupID +'" class="groupBlock">\
                             <h2 id="groupTitle'+ res[i].groupID +'">'+ res[i].name +'</h2>\
                             <div id="members'+ res[i].groupID +'"></div>\
                             </div>');
             	}
-            	else if(res[i].groupID == 1) {
+            	else if(res[i].groupID === 1) {
                     $('#adminList').append('<div id="'+ res[i].groupID +'" title="groupID: '+ res[i].groupID +'" class="groupBlock">\
                             <h2 id="groupTitle'+ res[i].groupID +'">'+ res[i].name +'</h2>\
                             <div id="members'+ res[i].groupID +'"></div>\
                             </div>');
             	}
 
-                if(res[i].groupID != 1) { // if not admin
+                if(res[i].groupID !== 1) { // if not admin
                     $('#' + res[i].groupID).on('click', function(groupID, parentGroupID) {
                         return function() {
                         	dialog_simple.setContent('<iframe src="<!--{$orgchartPath}-->/?a=view_group&groupID=' + groupID + '&iframe=1" style="width: 99%; height: 99%; border: 0px; background:url(../images/largespinner.gif) center top no-repeat;"></iframe>');
@@ -120,7 +120,7 @@ function getGroupList() {
                         empSel.initialize();
 
                         dialog.setSaveHandler(function() {
-                        	if(empSel.selection != '') {
+                        	if(empSel.selection !== '') {
                                 var selectedUserName = empSel.selectionData[empSel.selection].userName;
                                 $.ajax({
                                     type: 'POST',
@@ -187,7 +187,7 @@ function tagAndUpdate(groupID, callback) {
                 cache: false
             })
         ).then(function() {
-        	if(callback != undefined) {
+        	if(callback !== undefined) {
         		callback();
         	}
             window.location.reload();
@@ -202,7 +202,7 @@ function importGroup() {
     groupSel.apiPath = '<!--{$orgchartPath}-->/api/?a=';
     groupSel.basePath = '../';
     groupSel.setResultHandler(function() {
-        if(groupSel.numResults == 0) {
+        if(groupSel.numResults === 0) {
             groupSel.hideResults();
         }
         else {
@@ -211,7 +211,7 @@ function importGroup() {
 
         // prevent services from showing up as search results
         for(var i in groupSel.jsonResponse) {
-            if(groupSel.jsonResponse[i].tags.service != undefined) {
+            if(groupSel.jsonResponse[i].tags.service !== undefined) {
                 $('#' + groupSel.prefixID + 'grp' + groupSel.jsonResponse[i].groupID).css('display', 'none');
             }
         }
@@ -219,7 +219,7 @@ function importGroup() {
     groupSel.initialize();
 
     dialog.setSaveHandler(function() {
-        if(groupSel.selection != '') {
+        if(groupSel.selection !== '') {
         	tagAndUpdate(groupSel.selection);
         }
     });

@@ -56,7 +56,7 @@ var LeafFormSearch = function(containerID) {
 			//added for keyboard navigation and accessibility to close advanced search options
 			var searchOrigWidth = 0;
 	    $('#' + prefixID + 'advancedOptionsClose').on('keydown', function(e) {
-				if(e.keyCode == 13){
+				if(e.keyCode === 13){
 	    	localStorage.setItem(localStorageNamespace + '.search', '');
 	    	$('#' + prefixID + 'searchtxt').val('');
 	    	search('');
@@ -97,7 +97,7 @@ var LeafFormSearch = function(containerID) {
 		$('#' + prefixID+ 'searchtxt').on('keydown', function(e) {
 			showBusy();
 			timer = 0;
-			if(e.keyCode == 13) { // enter key
+			if(e.keyCode === 13) { // enter key
 				search($('#' + prefixID+ 'searchtxt').val());
 			}
 		});
@@ -130,7 +130,7 @@ var LeafFormSearch = function(containerID) {
 	            isJSON = false;
 	        }
 
-	        if(lastSearch.substr(0, 1) != '[') {
+	        if(lastSearch.substr(0, 1) !== '[') {
 	        	isJSON = false;
 	        }
 
@@ -139,7 +139,7 @@ var LeafFormSearch = function(containerID) {
 	        	search(lastSearch);
 	        }
 	        else {
-	        	if(lastSearch == '') {
+	        	if(lastSearch === '') {
 	        		search('*');
 	        	}
 	        	$('#' + prefixID+ 'searchtxt').val(lastSearch);
@@ -155,7 +155,7 @@ var LeafFormSearch = function(containerID) {
         var isJSON = true;
         var advSearch = {};
         try {
-        	if(prevQuery != undefined) {
+        	if(prevQuery !== undefined) {
         		advSearch = prevQuery;
         	}
         	else {
@@ -172,10 +172,10 @@ var LeafFormSearch = function(containerID) {
         	for(var i = 0; i < advSearch.length; i++) {
         		$('#' + prefixID + 'widgetTerm_' + i).val(advSearch[i].id);
         		$('#' + prefixID + 'widgetTerm_' + i).trigger('chosen:updated');
-        		if(advSearch[i].indicatorID != undefined
-        			|| advSearch[i].id == 'serviceID'
-        			|| advSearch[i].id == 'categoryID'
-        			|| advSearch[i].id == 'stepID') {
+        		if(advSearch[i].indicatorID !== undefined
+        			|| advSearch[i].id === 'serviceID'
+        			|| advSearch[i].id === 'categoryID'
+        			|| advSearch[i].id === 'stepID') {
             		renderWidget(i, function(widgetID, indicatorID, operator, match) {
             			return function() {
             				$('#' + prefixID + 'widgetIndicator_' + widgetID).val(indicatorID);
@@ -191,7 +191,7 @@ var LeafFormSearch = function(containerID) {
             		renderWidget(i);
         		}
         		$('#' + prefixID + 'widgetCod_' + i).val(advSearch[i].operator);
-        		if(typeof advSearch[i].match == 'string') {
+        		if(typeof advSearch[i].match === 'string') {
         			$('#' + prefixID + 'widgetMat_' + i).val(advSearch[i].match.replace(/\*/g, ''));
 
         		}
@@ -206,7 +206,7 @@ var LeafFormSearch = function(containerID) {
 	 */
 	function getLocalStorageHash() {
 	  var hash = 0, i, chr, len;
-	  if (document.URL.length == 0) return hash;
+	  if (document.URL.length === 0) return hash;
 	  for (i = 0, len = document.URL.length; i < len; i++) {
 	    chr   = document.URL.charCodeAt(i);
 	    hash  = ((hash << 5) - hash) + chr;
@@ -240,7 +240,7 @@ var LeafFormSearch = function(containerID) {
 	 * @memberOf LeafFormSearch
 	 */
 	function search(txt) {
-		if(txt != '*') {
+		if(txt !== '*') {
 			localStorage.setItem(localStorageNamespace + '.search', txt);
 		}
 		return searchFunc(txt);
@@ -258,7 +258,7 @@ var LeafFormSearch = function(containerID) {
 		if(timer > 400) {
 		    var txt = $('#' + prefixID + 'searchtxt').val();
 
-		    if(txt != "" && txt != q) {
+		    if(txt !== "" && txt !== q) {
 		    	q = txt;
 
 		    	if(currRequest != null) {
@@ -267,8 +267,8 @@ var LeafFormSearch = function(containerID) {
 
 		    	currRequest = search(txt);
 		    }
-		    else if(txt == "") {
-		    	if(txt != q) {
+		    else if(txt === "") {
+		    	if(txt !== q) {
 		    		search('');
 		    	}
 		    	q = txt;
@@ -309,10 +309,10 @@ var LeafFormSearch = function(containerID) {
 	 * @memberOf LeafFormSearch
 	 */
 	function createEmployeeSelectorWidget(widgetID, type) {
-		if(type == undefined) {
+		if(type === undefined) {
 			type = 'userName';
 		}
-        if(typeof employeeSelector == 'undefined') {
+        if(typeof employeeSelector === 'undefined') {
             $('head').append('<link type="text/css" rel="stylesheet" href="'+ orgchartPath +'/css/employeeSelector.css" />');
             $.ajax({
                 type: 'GET',
@@ -325,14 +325,14 @@ var LeafFormSearch = function(containerID) {
                     empSel.outputStyle = 'micro';
 
                     empSel.setSelectHandler(function() {
-                    	if(empSel.selectionData[empSel.selection] != undefined) {
-                    		selection = type == 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
+                    	if(empSel.selectionData[empSel.selection] !== undefined) {
+                    		selection = type === 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
                     		$('#' + prefixID + 'widgetMat_' + widgetID).val(selection);
                     	}
                     });
                     empSel.setResultHandler(function() {
-                    	if(empSel.selectionData[empSel.selection] != undefined) {
-                    		selection = type == 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
+                    	if(empSel.selectionData[empSel.selection] !== undefined) {
+                    		selection = type === 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
                     		$('#' + prefixID + 'widgetMat_' + widgetID).val(selection);
                     	}
                     });
@@ -347,14 +347,14 @@ var LeafFormSearch = function(containerID) {
             empSel.outputStyle = 'micro';
 
             empSel.setSelectHandler(function() {
-            	if(empSel.selectionData[empSel.selection] != undefined) {
-            		selection = type == 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
+            	if(empSel.selectionData[empSel.selection] !== undefined) {
+            		selection = type === 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
             		$('#' + prefixID + 'widgetMat_' + widgetID).val(selection);
             	}
             });
             empSel.setResultHandler(function() {
-            	if(empSel.selectionData[empSel.selection] != undefined) {
-            		selection = type == 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
+            	if(empSel.selectionData[empSel.selection] !== undefined) {
+            		selection = type === 'empUID' ? empSel.selection : empSel.selectionData[empSel.selection].userName;
             		$('#' + prefixID + 'widgetMat_' + widgetID).val(selection);
             	}
             });
@@ -366,7 +366,7 @@ var LeafFormSearch = function(containerID) {
 	 * @memberOf LeafFormSearch
 	 */
 	function createPositionSelectorWidget(widgetID) {
-        if(typeof positionSelector == 'undefined') {
+        if(typeof positionSelector === 'undefined') {
             $('head').append('<link type="text/css" rel="stylesheet" href="'+ orgchartPath +'/css/positionSelector.css" />');
             $.ajax({
                 type: 'GET',
@@ -406,7 +406,7 @@ var LeafFormSearch = function(containerID) {
 	 * @memberOf LeafFormSearch
 	 */
 	function createGroupSelectorWidget(widgetID) {
-        if(typeof groupSelector == 'undefined') {
+        if(typeof groupSelector === 'undefined') {
             $('head').append('<link type="text/css" rel="stylesheet" href="'+ orgchartPath +'/css/groupSelector.css" />');
             $.ajax({
                 type: 'GET',
@@ -473,7 +473,7 @@ var LeafFormSearch = function(containerID) {
 						services += '</select>';
 						$('#' + prefixID + 'widgetMatch_' + widgetID).html(services);
 						$('.chosen').chosen({disable_search_threshold: 6});
-						if(callback != undefined) {
+						if(callback !== undefined) {
 							callback();
 						}
 					}
@@ -514,7 +514,7 @@ var LeafFormSearch = function(containerID) {
 						categories += '</select>';
 						$('#' + prefixID + 'widgetMatch_' + widgetID).html(categories);
 						$('.chosen').chosen({disable_search_threshold: 6});
-						if(callback != undefined) {
+						if(callback !== undefined) {
 							callback();
 						}
 					},
@@ -549,7 +549,7 @@ var LeafFormSearch = function(containerID) {
 
 						$('.chosen').chosen({disable_search_threshold: 6});
 						$('#' + prefixID + 'widgetTerm_' + widgetID + '_chosen').css('display', 'none');
-						if(callback != undefined) {
+						if(callback !== undefined) {
 							callback();
 						}
 					},
@@ -576,7 +576,7 @@ var LeafFormSearch = function(containerID) {
 						categories += '</select>';
 						$('#' + prefixID + 'widgetMatch_' + widgetID).html(categories);
 						$('.chosen').chosen({disable_search_threshold: 6});
-						if(callback != undefined) {
+						if(callback !== undefined) {
 							callback();
 						}
 					},
@@ -603,7 +603,7 @@ var LeafFormSearch = function(containerID) {
 							iID = $('#' + prefixID + 'widgetIndicator_' + widgetID).val();
 
 							// set default conditions for "any data field"
-							if(iID == ALL_DATA_FIELDS) {
+							if(iID === ALL_DATA_FIELDS) {
 								$('#' + prefixID + 'widgetCondition_' + widgetID).html('<select id="'+prefixID+'widgetCod_'+widgetID+'" class="chosen" aria-label="condition" style="width: 120px">\
 										<option value="LIKE">CONTAINS</option>\
 										<option value="NOT LIKE">DOES NOT CONTAIN</option>\
@@ -613,17 +613,17 @@ var LeafFormSearch = function(containerID) {
 								$('#' + prefixID + 'widgetMatch_' + widgetID).html('<input type="text" aria-label="text" id="'+prefixID+'widgetMat_'+widgetID+'" style="width: 200px" />');
 								$('.chosen').chosen({disable_search_threshold: 6});
 							}
-							else if(iID == ALL_OC_EMPLOYEE_DATA_FIELDS) { // set conditions for orgchart employee fields
+							else if(iID === ALL_OC_EMPLOYEE_DATA_FIELDS) { // set conditions for orgchart employee fields
 								$('#' + prefixID + 'widgetCondition_' + widgetID).html('<input type="hidden" id="'+prefixID+'widgetCod_'+widgetID+'" value="=" /> IS');
 								$('#' + prefixID + 'widgetMatch_' + widgetID).html('<div id="'+prefixID+'widgetEmp_'+widgetID+'" style="width: 280px"></div><input type="hidden" id="'+prefixID+'widgetMat_'+widgetID+'" />');
 								createEmployeeSelectorWidget(widgetID, 'empUID');
 							}
 
 							for(var i in res) {
-								if(res[i].indicatorID == iID) {
+								if(res[i].indicatorID === iID) {
 									var format = '';
 									var tIdx = res[i].format.indexOf("\n");
-									if(tIdx == -1) {
+									if(tIdx === -1) {
 										format = res[i].format;
 									}
 									else {
@@ -692,7 +692,7 @@ var LeafFormSearch = function(containerID) {
 											resOptions.shift();
 											var options = '<select id="'+prefixID+'widgetMat_'+widgetID+'" class="chosen" aria-label="options" style="width: 250px">';
 											for(var i in resOptions) {
-												var currOption = resOptions[i].indexOf("default:") == -1 ? resOptions[i].trim() : resOptions[i].substr(8).trim();
+												var currOption = resOptions[i].indexOf("default:") === -1 ? resOptions[i].trim() : resOptions[i].substr(8).trim();
 												options += '<option value="'+ currOption +'">'+ currOption +'</option>';
 											}
 											options += '</select>';
@@ -714,7 +714,7 @@ var LeafFormSearch = function(containerID) {
 							}
 						});
 						$('#' + prefixID + 'widgetTerm_' + widgetID + '_chosen').css('display', 'none');
-						if(callback != undefined) {
+						if(callback !== undefined) {
 							callback();
 						}
 					},
@@ -774,14 +774,14 @@ var LeafFormSearch = function(containerID) {
 	function generateSearchQuery() {
 		leafFormQuery.clearTerms();
 		for(var i = 0; i < widgetCounter; i++) {
-			if($('#' + prefixID + 'widgetTerm_' + i).val() != undefined) {
+			if($('#' + prefixID + 'widgetTerm_' + i).val() !== undefined) {
 				term = $('#' + prefixID + 'widgetTerm_' + i).val();
-				if(term != 'data'
-					&& term != 'dependencyID') {
+				if(term !== 'data'
+					&& term !== 'dependencyID') {
 					id = $('#' + prefixID + 'widgetTerm_' + i).val();
 					cod = $('#' + prefixID + 'widgetCod_' + i).val();
 					match = $('#' + prefixID + 'widgetMat_' + i).val();
-					if(cod == 'LIKE') {
+					if(cod === 'LIKE') {
 						match = '*' + match + '*';
 					}
 					leafFormQuery.addTerm(id, cod, match);
@@ -791,7 +791,7 @@ var LeafFormSearch = function(containerID) {
 					indicatorID = $('#' + prefixID + 'widgetIndicator_' + i).val();
 					cod = $('#' + prefixID + 'widgetCod_' + i).val();
 					match = $('#' + prefixID + 'widgetMat_' + i).val();
-					if(cod == 'LIKE') {
+					if(cod === 'LIKE') {
 						match = '*' + match + '*';
 					}
 					leafFormQuery.addDataTerm(id, indicatorID, cod, match);

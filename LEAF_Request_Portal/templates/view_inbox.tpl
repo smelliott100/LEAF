@@ -1,7 +1,7 @@
 The following is a list of requests that are pending your action:
 <!--{if count($inbox) == 0}-->
 <br /><br />
-<div style="width: 50%; margin: 0px auto; border: 1px solid black; padding: 16px; background-color: white">
+<div style="width: 50%; margin: 0 auto; border: 1px solid black; padding: 16px; background-color: white">
 <img src="../libs/dynicons/?img=folder-open.svg&amp;w=96" alt="empty" style="float: left; padding-right: 16px"/><div style="font-size: 200%"> Your inbox is empty.<br /><br />Have a good day!</div>
 </div>
 <!--{/if}-->
@@ -9,7 +9,7 @@ The following is a list of requests that are pending your action:
 <div id="inbox">
 <!--{foreach from=$inbox item=dep}-->
 <br /><br />
-<table id="depTitle_<!--{$dep.dependencyID}-->" class="agenda" style="width: 100%; margin: 0px auto">
+<table id="depTitle_<!--{$dep.dependencyID}-->" class="agenda" style="width: 100%; margin: 0 auto">
     <tr style="background-color: <!--{$dep.dependencyBgColor|strip_tags}-->; cursor: pointer" onclick="toggleDepVisibility('<!--{$dep.dependencyID|strip_tags}-->')">
       <th colspan="3">
       <span style="float: left; font-size: 120%; font-weight: bold">
@@ -40,8 +40,8 @@ The following is a list of requests that are pending your action:
 
 var depVisibility = [];
 function toggleDepVisibility(depID, isDefault) {
-    if(depVisibility[depID] == undefined
-    	|| depVisibility[depID] == 1) {
+    if(depVisibility[depID] === undefined
+    	|| depVisibility[depID] === 1) {
     	depVisibility[depID] = 0;
     	$('#depContainer_' + depID).css({
     		'visibility': 'hidden',
@@ -88,7 +88,7 @@ function loadInboxData(depID) {
             }
 
             formGrid.setDataBlob(res);
-            formGrid.setHeaders([
+            formGrid.setHeaders([;
                  {name: 'Type', indicatorID: 'type', editable: false, callback: function(data, blob) {
                 	 var categoryNames = '';
                 	 if(blob[depID]['records'][data.recordID].categoryNames != undefined) {
@@ -98,7 +98,7 @@ function loadInboxData(depID) {
                 		 categoryNames = '<span style="color: red">Warning: This request is based on an old or deleted form.</span>';
                 	 }
                 	 $('#'+data.cellContainerID).html(categoryNames);
-                 }},
+                 }},;
                  {name: 'Service', indicatorID: 'service', editable: false, callback: function(data, blob) {
                 	 $('#'+data.cellContainerID).html(blob[depID]['records'][data.recordID].service);
                  }},
@@ -132,8 +132,8 @@ function loadInboxData(depID) {
         error: function(err) {
         	alert('Error: ' + err.statusText + ' in api/inbox/dependency/_' + depID);
         },
-        cache: false,
-        timeout: 5000
+        false,
+        timeout;: 5000;
     });
 }
 

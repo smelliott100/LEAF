@@ -96,7 +96,7 @@ function getMembers(groupID) {
 function populateMembers(groupID, members) {
     $('#members' + groupID).html('');
     for(var i in members) {
-    	if(members[i].active == 1) {
+    	if(members[i].active === 1) {
             $('#members' + groupID).append(members[i].Lname + ', ' + members[i].Fname + '<br />');
     	}
     }
@@ -142,10 +142,10 @@ function initiateWidget(serviceID) {
                     for(var i in res) {
                         var removeButton = '<span class="buttonNorm" id="removeMember_'+ counter +'">Remove</span>';
                         var managedBy = '';
-                        if(res[i].locallyManaged != 1) {
+                        if(res[i].locallyManaged !== 1) {
                             managedBy += '<br /> * Managed in Org. Chart';
                         }
-                        if(res[i].active != 1) {
+                        if(res[i].active !== 1) {
                             managedBy += '<br /> * Managed in Org. Chart';
                             managedBy += '<br /> * Override set, and they do not have access';
                             removeButton = '<span class="buttonNorm" id="removeMember_'+ counter +'">Remove Override</span>';
@@ -181,7 +181,7 @@ function initiateWidget(serviceID) {
                     empSel.initialize();
 
                     dialog.setSaveHandler(function() {
-                        if(empSel.selection != '') {
+                        if(empSel.selection !== '') {
                             var selectedUserName = empSel.selectionData[empSel.selection].userName;
                             $.ajax({
                                 type: 'POST',

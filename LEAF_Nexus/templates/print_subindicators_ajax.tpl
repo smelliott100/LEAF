@@ -110,7 +110,7 @@
         <!--{if $indicator.format == 'position'}-->
             <span class="printResponse" id="data_<!--{$indicator.indicatorID|strip_tags|escape}-->_<!--{$categoryID|strip_tags|escape}-->_<!--{$uid|strip_tags|escape}-->">
             <!--{if $indicator.data != ''}-->
-            <div dojoType="dijit.layout.ContentPane" style="padding: 0px">
+            <div dojoType="dijit.layout.ContentPane" style="padding: 0">
             <script type="dojo/method">
                 dojo.xhrGet({
                     url: "./api/?a=position/" + <!--{$indicator.data|strip_tags|escape}-->,

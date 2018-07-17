@@ -33,7 +33,7 @@ var LeafForm = function(containerID) {
 	}
 
 	function doModify() {
-		if(recordID == 0) {
+		if(recordID === 0) {
 			console.log('recordID not set');
 			return 0;
 		}
@@ -51,7 +51,7 @@ var LeafForm = function(containerID) {
 	        data: data,
 	        dataType: 'text',
 	        success: function(res) {
-	        	if(postModifyCallback != undefined) {
+	        	if(postModifyCallback !== undefined) {
 	        		postModifyCallback();
 	        	}
 	            $('#' + dialog.btnSaveID).empty().html(temp);
@@ -61,7 +61,7 @@ var LeafForm = function(containerID) {
 	}
 
 	function getForm(indicatorID, series) {
-		if(recordID == 0) {
+		if(recordID === 0) {
 			console.log('recordID not set');
 			return 0;
 		}

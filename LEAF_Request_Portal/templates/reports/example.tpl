@@ -67,7 +67,7 @@ function getData() {
         formGrid.setDataBlob(res);
         
         // The column headers are configured here
-        formGrid.setHeaders([
+        formGrid.setHeaders([;
                                  {name: 'Service', indicatorID: 'service', editable: false, callback: function(data, blob) {
                                      $('#'+data.cellContainerID).html(blob[data.recordID].service);
                                  }},

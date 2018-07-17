@@ -53,17 +53,31 @@
                 {if is_array($option)}
                     {assign var='option' value=$option[0]}
                     {if $option == $indicator.data}
-                        <br /><input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" checked="checked" />
-                        {$option}
+                        <br />
+                        <label>
+<input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" checked="checked" />
+</label>
+
+{$option}
                     {else}
-                        <br /><input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" />
+                        <br />
+                        <label>
+<input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" />
+</label>
                         {$option}
                     {/if}
                 {elseif $option == $indicator.data}
-                    <br /><input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" checked="checked" />
-                    {$option}
+                    <br />
+                    <label>
+<input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" checked="checked" />
+</label>
+
+{$option}
                 {else}
-                    <br /><input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" />
+                    <br />
+                    <label>
+<input dojoType="dijit.form.RadioButton" type="radio" name="{$indicator.indicatorID}" value="{$option}" />
+</label>
                     {$option}
                 {/if}
             {/foreach}
@@ -90,32 +104,34 @@
         {/if}
         {if $indicator.format == 'text' && ($indicator.isMasked == 0 || $indicator.data == '')}
             <span class="text">
-                <br /><input dojoType="dijit.form.ValidationTextBox" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" trim="true" style="width: 50%" {$indicator.html} />
+                <br /><label for="{$indicator.indicatorID}"></label><input dojoType="dijit.form.ValidationTextBox" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" trim="true" style="width: 50%" {$indicator.html} />
             </span>
         {/if}
         {if $indicator.format == 'number' && ($indicator.isMasked == 0 || $indicator.data == '')}
             <span class="text">
-                <br /><input dojoType="dijit.form.NumberTextBox" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
+                <br /><label for="{$indicator.indicatorID}"></label><input dojoType="dijit.form.NumberTextBox" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
             </span>
         {/if}
         {if $indicator.format == 'numberspinner' && ($indicator.isMasked == 0 || $indicator.data == '')}
             <span class="text">
-                <br /><input dojoType="dijit.form.NumberSpinner" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
+                <br /><label for="{$indicator.indicatorID}"></label><input dojoType="dijit.form.NumberSpinner" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
             </span>
         {/if}
         {if $indicator.format == 'date' && ($indicator.isMasked == 0 || $indicator.data == '')}
             <span class="text">
-                <br /><input dojoType="dijit.form.DateTextBox" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
+                <br /><label for="{$indicator.indicatorID}"></label><input dojoType="dijit.form.DateTextBox" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
             </span>
         {/if}
         {if $indicator.format == 'time' && ($indicator.isMasked == 0 || $indicator.data == '')}
             <span class="text">
-                <br /><input dojoType="dijit.form.TimeTextBox" type="text" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
+                <br /><label>
+<input dojoType="dijit.form.TimeTextBox" type="text" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} />
+</label>
             </span>
         {/if}
         {if $indicator.format == 'currency' && ($indicator.isMasked == 0 || $indicator.data == '')}
             <span class="text">
-                <br /><input dojoType="dijit.form.CurrencyTextBox" currency="USD" invalidMessage="Please enter an amount in USD" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} /> (Amount in USD)
+                <br /><label for="{$indicator.indicatorID}"></label><input dojoType="dijit.form.CurrencyTextBox" currency="USD" invalidMessage="Please enter an amount in USD" type="text" id="{$indicator.indicatorID}" name="{$indicator.indicatorID}" value="{$indicator.data}" {$indicator.html} /> (Amount in USD)
             </span>
         {/if}
         {if $indicator.format == 'checkbox' && ($indicator.isMasked == 0 || $indicator.data == '')}
@@ -123,10 +139,17 @@
                     <input type="hidden" name="{$indicator.indicatorID}" value="no" /> <!-- dumb workaround -->
             {foreach from=$indicator.options item=option}
                 {if $option == $indicator.data}
-                    <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}" value="{$option}" checked="checked" />
-                    {$option}
+                    <br />
+                    <label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}" value="{$option}" checked="checked" />
+</label>
+
+{$option}
                 {else}
-                    <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}" value="{$option}" />
+                    <br />
+                    <label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}" value="{$option}" />
+</label>
                     {$option}
                 {/if}
             {/foreach}
@@ -138,11 +161,18 @@
             {foreach from=$indicator.options item=option}
                     <input type="hidden" name="{$indicator.indicatorID}[{$idx}]" value="no" /> <!-- dumb workaround -->
                     {if $option == $indicator.data[$idx]}
-                        <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}[{$idx}]" value="{$option}" checked="checked" />
-                        {$option}
+                        <br />
+                <label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}[{$idx}]" value="{$option}" checked="checked" />
+</label>
+
+{$option}
                     {else}
-                        <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}[{$idx}]" value="{$option}" />
-                        {$option}
+                        <br />
+                <label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="{$indicator.indicatorID}[{$idx}]" value="{$option}" />
+</label>
+                {$option}
                     {/if}
                     {assign var='idx' value=$idx+1}
             {/foreach}
@@ -174,9 +204,17 @@
             {foreach from=$indicator.options item=option}
                 {if is_array($option)}
                     {assign var='option' value=$option[0]}
-                    {$option} <input type="checkbox" name="{$indicator.indicatorID}[]" value="{$option}" checked="checked" /><br />
+                    {$option}
+                    <label>
+                        <input type="checkbox" name="{$indicator.indicatorID}[]" value="{$option}" checked="checked" />
+                    </label>
+                    <br />
                 {else}
-                    {$option} <input type="checkbox" name="{$indicator.indicatorID}[]" value="{$option}" /><br />
+                    {$option}
+                    <label>
+                        <input type="checkbox" name="{$indicator.indicatorID}[]" value="{$option}" />
+                    </label>
+                    <br />
                 {/if}
             {/foreach}
         {/if}

@@ -87,7 +87,10 @@ switch($action) {
         $main->assign('qrcodeURL', $qrcodeURL);
         $main->assign('stylesheets', array('css/editor.css'));
         $main->assign('stylesheets_print', array('css/editor_printer.css'));
-        $main->assign('body', $t_form->fetch('navigator.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('navigator.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = '';
         break;
@@ -119,7 +122,10 @@ switch($action) {
         $main->assign('stylesheets', array('css/editor.css',
                                            'css/positionSelector.css'));
         $main->assign('stylesheets_print', array('css/editor_printer.css'));
-        $main->assign('body', $t_form->fetch('editor.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('editor.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = '';
         break;
@@ -157,7 +163,10 @@ switch($action) {
             $t_form->assign('ERM_site_resource_management', Orgchart\Config::$ERM_Sites['resource_management']);
 
             if(count($summary['employee']) > 0) {
-                $main->assign('body', $t_form->fetch('view_employee.tpl'));
+                try {
+                    $main->assign('body', $t_form->fetch('view_employee.tpl'));
+                } catch (SmartyException $e) {
+                }
             }
             else {
                 $main->assign('body', 'Employee does not exist');
@@ -201,7 +210,10 @@ switch($action) {
             $t_form->assign('ERM_site_resource_management', Orgchart\Config::$ERM_Sites['resource_management']);
 
             if(count($summary) > 0) {
-                $main->assign('body', $t_form->fetch('view_position.tpl'));
+                try {
+                    $main->assign('body', $t_form->fetch('view_position.tpl'));
+                } catch (SmartyException $e) {
+                }
             }
             else {
                 $main->assign('body', 'Position does not exist');
@@ -242,7 +254,10 @@ switch($action) {
             $t_form->assign('userDomain', $login->getDomain());
 
             if(count($resGroup) > 0) {
-                $main->assign('body', $t_form->fetch('view_group.tpl'));
+                try {
+                    $main->assign('body', $t_form->fetch('view_group.tpl'));
+                } catch (SmartyException $e) {
+                }
             }
             else {
                 $main->assign('body', 'Group does not exist');
@@ -270,8 +285,11 @@ switch($action) {
         $t_form->assign('userID', $_SESSION['userID']);
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
 
-        $main->assign('body', $t_form->fetch('browse_employee.tpl'));
-        
+        try {
+            $main->assign('body', $t_form->fetch('browse_employee.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Employees';
         break;
     case 'browse_position':
@@ -283,8 +301,11 @@ switch($action) {
         $main->assign('javascripts', array('js/positionSelector.js', 'js/dialogController.js', 'js/orgchartForm.js'));
         $main->assign('stylesheets', array('css/positionSelector.css',
                                            'css/view_position.css'));
-        $main->assign('body', $t_form->fetch('browse_position.tpl'));
-    
+        try {
+            $main->assign('body', $t_form->fetch('browse_position.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Positions';
         break;
     case 'browse_group':
@@ -297,8 +318,11 @@ switch($action) {
         $main->assign('javascripts', array('js/groupSelector.js', 'js/dialogController.js', 'js/orgchartForm.js'));
         $main->assign('stylesheets', array('css/groupSelector.css',
                                            'css/view_group.css'));
-        $main->assign('body', $t_form->fetch('browse_group.tpl'));
-    
+        try {
+            $main->assign('body', $t_form->fetch('browse_group.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Groups';
         break;
     case 'browse_search':
@@ -318,8 +342,11 @@ switch($action) {
                                            'css/view_position.css',
                                            'css/groupSelector.css',
                                            'css/view_group.css'));
-        $main->assign('body', $t_form->fetch('browse_search.tpl'));
-    
+        try {
+            $main->assign('body', $t_form->fetch('browse_search.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Search';
         break;
     case 'view_permissions':
@@ -348,7 +375,10 @@ switch($action) {
         $t_form->assign('indicator', $indicators->getIndicator((int)$_GET['indicatorID']));
         $t_form->assign('permissions', $indicators->getPrivileges((int)$_GET['indicatorID']));
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_form->fetch('view_permissions.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('view_permissions.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = 'Permission Editor';
         break;
@@ -378,8 +408,11 @@ switch($action) {
         $t_form->assign('groupTitle', $group->getTitle($groupID));
         $t_form->assign('permissions', $group->getPrivileges($groupID));
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_form->fetch('view_group_permissions.tpl'));
-    
+        try {
+            $main->assign('body', $t_form->fetch('view_group_permissions.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Permission Editor';
         break;
     case 'view_position_permissions':
@@ -408,8 +441,11 @@ switch($action) {
         $t_form->assign('positionTitle', $position->getTitle($positionID));
         $t_form->assign('permissions', $position->getPrivileges($positionID));
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_form->fetch('view_position_permissions.tpl'));
-    
+        try {
+            $main->assign('body', $t_form->fetch('view_position_permissions.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Permission Editor';
         break;
     case 'admin':
@@ -431,7 +467,10 @@ switch($action) {
 
         $memberships = $login->getMembership();
         if(isset($memberships['groupID'][1])) {
-            $main->assign('body', $t_form->fetch('view_admin.tpl'));            
+            try {
+                $main->assign('body', $t_form->fetch('view_admin.tpl'));
+            } catch (SmartyException $e) {
+            }
         }
         else {
             $main->assign('body', 'You require System Administrator level access to view this section.');
@@ -446,7 +485,10 @@ switch($action) {
 
             $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
 
-        	$main->assign('body', $t_form->fetch(customTemplate('view_summary.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('view_summary.tpl')));
+        } catch (SmartyException $e) {
+        }
         break;
     case 'about':
         $t_form = new Smarty;
@@ -457,12 +499,18 @@ switch($action) {
         $t_form->assign('dbversion', $rev[0]['data']);
     
         $main->assign('hideFooter', true);
-        $main->assign('body', $t_form->fetch('view_about.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('view_about.tpl'));
+        } catch (SmartyException $e) {
+        }
         break;
     default:
 //        $main->assign('useDojo', false);
         if($login->isLogin()) {
-            $o_login = $t_login->fetch('login.tpl');
+            try {
+                $o_login = $t_login->fetch('login.tpl');
+            } catch (SmartyException $e) {
+            }
 
             $t_form = new Smarty;
             $t_form->left_delimiter = '<!--{';
@@ -506,7 +554,10 @@ switch($action) {
 
             $t_form->assign('userID', $_SESSION['userID']);
             $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
-            $main->assign('body', $t_form->fetch(customTemplate('view_homepage.tpl')));
+            try {
+                $main->assign('body', $t_form->fetch(customTemplate('view_homepage.tpl')));
+            } catch (SmartyException $e) {
+            }
 
             if($action != 'menu' && $action != '') {
                 $main->assign('status', 'The page you are looking for does not exist or may have been moved. Please update your bookmarks.');
@@ -516,15 +567,24 @@ switch($action) {
             $t_login->assign('name', '');
             $main->assign('status', 'Your login session has expired, You must log in again.');
         }
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
         break;
 }
 
 $memberships = $login->getMembership();
 $t_menu->assign('action', XSSHelpers::xscrub($action));
 $t_menu->assign('isAdmin', $memberships['groupID'][1]);
-$main->assign('login', $t_login->fetch('login.tpl'));
-$o_menu = $t_menu->fetch('menu.tpl');
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
+try {
+    $o_menu = $t_menu->fetch('menu.tpl');
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $tabText = $tabText == '' ? '' : $tabText . '&nbsp;';
 $main->assign('tabText', $tabText);

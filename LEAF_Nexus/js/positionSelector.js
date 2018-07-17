@@ -38,7 +38,7 @@ positionSelector.prototype.initialize = function() {
 	$('#' + this.prefixID+ 'input').on('keydown', function(e) {
 		t.showBusy();
 		t.timer = 0;
-		if(e.keyCode == 13) { // enter key
+		if(e.keyCode === 13) { // enter key
 			t.search();
 		}
 	});
@@ -48,7 +48,7 @@ positionSelector.prototype.initialize = function() {
 };
 
 positionSelector.prototype.showNotBusy = function() {
-	if(this.isBusy == 1) {
+	if(this.isBusy === 1) {
 		$('#' + this.prefixID + 'icon').css('display', 'inline');
 		$('#' + this.prefixID + 'iconBusy').css('display', 'none');
 		this.isBusy = 0;
@@ -118,7 +118,7 @@ positionSelector.prototype.enableNoLimit = function() {
 };
 
 positionSelector.prototype.search = function() {
-	if($('#' + this.prefixID + 'input').val() == undefined
+	if($('#' + this.prefixID + 'input').val() === undefined
 		|| $('#' + this.prefixID + 'input') == null) {
 		clearInterval(this.intervalID);
 		return false;
@@ -128,7 +128,7 @@ positionSelector.prototype.search = function() {
 	if(this.timer > 300) {
 	    var txt = $('#' + this.prefixID + 'input').val().replace(/<[^>]*>/g, '');
 
-	    if(txt != "" && txt != this.q) {
+	    if(txt !== "" && txt !== this.q) {
 	    	this.q = txt;
 
 	    	if(this.currRequest != null) {
@@ -150,7 +150,7 @@ positionSelector.prototype.search = function() {
 	            	var buffer = '<table class="positionSelectorTable"><tr><th>Title</th><th>Incumbent(s)</th></tr><tbody id="' + t.prefixID + 'result_table"></tbody></table>';
 	            	$('#' + t.prefixID + 'result').html(buffer);
 
-	            	if(response.length == 0) {
+	            	if(response.length === 0) {
 	            		$('#' + t.prefixID + 'result_table').append('<tr id="'+ t.prefixID + 'emp0"><td style="font-size: 120%; background-color: white; text-align: center" colspan=2>No results for &quot;<span style="color: red">'+ txt +'</span>&quot;</td></tr>');
 	            	}
 
@@ -159,7 +159,7 @@ positionSelector.prototype.search = function() {
 	                	t.selectionData[item.positionID] = item;
 
 	                	service = '';
-	                	if(item.services != undefined) {
+	                	if(item.services !== undefined) {
 	                		var counter = 0;
 	                		var divide = '';
 	                		for(var i in item.services) {
@@ -177,7 +177,7 @@ positionSelector.prototype.search = function() {
 	                	}
 
 	                	employees =  '';
-	                	if(item.employeeList[0] != undefined) {
+	                	if(item.employeeList[0] !== undefined) {
 	                		for(var id in item.employeeList) {
 	                			if(item.employeeList[id].firstName != null) {
 	                				employees += item.employeeList[id].firstName + ' ' + item.employeeList[id].lastName + ', ';
@@ -186,7 +186,7 @@ positionSelector.prototype.search = function() {
 	                		employees = employees.replace(/, $/, '');
 	                	}
 	                	var payGrade = '';
-	                	if(item.positionData[2].data != '') {
+	                	if(item.positionData[2].data !== '') {
 	                		payGrade = ' <span style="font-weight: normal">(' + item.positionData[2].data + ' ' + item.positionData[14].data + ')</span>';
 	                	}
 
@@ -207,7 +207,7 @@ positionSelector.prototype.search = function() {
 	                	t.numResults++;
 	                });
 
-	            	if(t.numResults == 1) {
+	            	if(t.numResults === 1) {
 	            		t.selection = response[0].positionID;
 	            	}
 
@@ -221,7 +221,7 @@ positionSelector.prototype.search = function() {
 	            preventCache: true
 	        });
 	    }
-	    else if(txt == "") {
+	    else if(txt === "") {
 	    	this.q = txt;
 	    	$('#' + this.prefixID + 'result').html('');
 	    	this.numResults = 0;

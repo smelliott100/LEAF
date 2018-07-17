@@ -6,16 +6,16 @@
 <script type="text/javascript">
 function checkForm() {
     <!--{if count($services) != 0}-->
-    if($("#service").val() == "") {
+    if($("#service").val() === "") {
         alert('Service must not be blank in Step 1.');
         return false;
     }
     <!--{/if}-->
-    if($("#title").val() == "") {
+    if($("#title").val() === "") {
         alert('Title must not be blank in Step 1.');
         return false;
     }
-    if($(".ischecked").is(':checked') == false) {
+    if($(".ischecked").is(':checked') === false) {
         alert('You must select at least one type of resource in Step 2.');
         return false;
     }
@@ -32,12 +32,7 @@ $(function() {
     <!--{/foreach}-->
 
     $('#record').on('submit', function() {
-        if(checkForm() == true) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return checkForm() == true;
     });
 
     // comment out to allow more than one form to be submitted simultaneously
@@ -96,7 +91,8 @@ $(function() {
                 <td>Title of Request</td>
                 <td>
                 <span style="font-size: 80%">Please enter keywords to describe this request.</span><br />
-                    <input class="input" id="title" type="text" name="title" maxlength="100" style="width: 80%"></input>
+                    <label for="title"></label><input class="input" id="title" type="text" name="title" maxlength="100"
+                                                      style="width: 80%"/>
                 </td>
             </tr>
         </table>

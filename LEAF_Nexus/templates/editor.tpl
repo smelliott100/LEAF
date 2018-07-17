@@ -308,11 +308,11 @@ function getSubordinates(positionID, level) {
         positions[subordinate[key].positionID].onLoad = function() {
         	var loadSubordinates = 1;
         	var positionControls = '<div class="button" onclick="hideSubordinates('+subordinate[key].positionID+');"><img src="../libs/dynicons/?img=gnome-system-users.svg&amp;w=32" alt="Hide" title="Hide" /> Hide Subordinates</div>';
-        	if(subordinate[key][15].data != '') {
+        	if(subordinate[key][15].data !== '') {
                 var subData = $.parseJSON(subordinate[key][15].data);
-                if(subData[<!--{$rootID}-->] != undefined
-                	&& subData[<!--{$rootID}-->].hideSubordinates != undefined
-               		&& subData[<!--{$rootID}-->].hideSubordinates == 1) {
+                if(subData[<!--{$rootID}-->] !== undefined
+                	&& subData[<!--{$rootID}-->].hideSubordinates !== undefined
+               		&& subData[<!--{$rootID}-->].hideSubordinates === 1) {
 
                 	positionControls = '<div class="button" onclick="showSubordinates('+subordinate[key].positionID+');"><img src="../libs/dynicons/?img=system-users.svg&amp;w=32" alt="Show" title="Show" /> Show Subordinates</div>';
                 	loadSubordinates = 0;
@@ -324,8 +324,8 @@ function getSubordinates(positionID, level) {
         		undefinedPositionOffset += 80;
         	}
 
-        	if(subordinate[key].hasSubordinates == 1
-       			&& loadSubordinates == 1) {
+        	if(subordinate[key].hasSubordinates === 1
+       			&& loadSubordinates === 1) {
                 $.ajax({
                     url: './api/?a=position/' + subordinate[key].positionID,
                     dataType: 'json',
@@ -338,7 +338,7 @@ function getSubordinates(positionID, level) {
                 });
         	}
 
-        	if(subordinate[key].hasSubordinates == 1) {
+        	if(subordinate[key].hasSubordinates === 1) {
         		   positions[subordinate[key].positionID].addControl(positionControls);
         	}
         	else {
@@ -412,7 +412,7 @@ function removePosition(positionID) {
         	type: 'DELETE',
             url: './api/?a=position/' + positionID + '&' + $.param({CSRFToken: '<!--{$CSRFToken}-->'}),
             success: function(response) {
-                if(response == 1) {
+                if(response === 1) {
                     alert('Position has been deleted.');
                     window.location.reload();
                 }
@@ -507,16 +507,16 @@ $(function() {
 
     positions[<!--{$rootID}-->].onLoad = function() {
     	endPoints[<!--{$rootID}-->] = jsPlumb.addEndpoint(positions[<!--{$rootID}-->].getDomID(), {anchor: 'Center'}, endpointOptions);
-    	if(positions[<!--{$rootID}-->].data[15].data != '') {
+    	if(positions[<!--{$rootID}-->].data[15].data !== '') {
             var positionData = $.parseJSON(positions[<!--{$rootID}-->].data[15].data);
-            if(positionData[<!--{$rootID}-->] != undefined
-                && positionData[<!--{$rootID}-->].zoom != undefined) {
+            if(positionData[<!--{$rootID}-->] !== undefined
+                && positionData[<!--{$rootID}-->].zoom !== undefined) {
                 currentZoomLevel = positionData[<!--{$rootID}-->].zoom; 
             }
         }
 
     	getSubordinates(<!--{$rootID}-->, 0);
-    }
+    };
 
     positions[<!--{$rootID}-->].draw();
 

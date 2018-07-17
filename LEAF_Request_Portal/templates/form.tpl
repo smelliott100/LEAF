@@ -145,14 +145,14 @@ function manualSaveChange()
 //attempt to force a consistent width for the sidebar if there is enough desktop resolution
 var lastScreenSize = null;
 function sideBar() {
-  if(lastScreenSize != window.innerWidth) {
+  if(lastScreenSize !== window.innerWidth) {
       lastScreenSize = window.innerWidth;
 
       var tempNavtree = '';
-      if($('#container_center').html() != '') {
+      if($('#container_center').html() !== '') {
     	  tempNavtree = $('#container_center').html();
       }
-      if($('#container_left').html() != '') {
+      if($('#container_left').html() !== '') {
     	  tempNavtree = $('#container_left').html();
       }
       if(lastScreenSize <= 768) {

@@ -2,8 +2,8 @@
 /*  SECTIONS  */
 .section {
     clear: both;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 /*  COLUMN SETUP  */
@@ -39,6 +39,6 @@
 
 /*  GO FULL WIDTH BELOW 480 PIXELS */
 @media only screen and (max-width: 768px) {
-    .col {  margin: 0 0 1% 0%; }
+    .col {  margin: 0 0 1% 0; }
     .span_1_of_5, .span_2_of_5, .span_3_of_5, .span_4_of_5, .span_5_of_5 { width: 100%; }
 }

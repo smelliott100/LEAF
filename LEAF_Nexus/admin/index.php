@@ -72,7 +72,10 @@ switch($action) {
 
         $memberships = $login->getMembership();
         if(isset($memberships['groupID'][1])) {
-            $main->assign('body', $t_form->fetch('admin_refresh_directory.tpl'));
+            try {
+                $main->assign('body', $t_form->fetch('admin_refresh_directory.tpl'));
+            } catch (SmartyException $e) {
+            }
         }
         else {
             $main->assign('body', 'You require System Administrator level access to view this section.');
@@ -87,7 +90,10 @@ switch($action) {
     
         $memberships = $login->getMembership();
         if(isset($memberships['groupID'][1])) {
-            $main->assign('body', $t_form->fetch('admin_update_database.tpl'));
+            try {
+                $main->assign('body', $t_form->fetch('admin_update_database.tpl'));
+            } catch (SmartyException $e) {
+            }
         }
         else {
             $main->assign('body', 'You require System Administrator level access to view this section.');
@@ -115,8 +121,11 @@ switch($action) {
 
        	$memberships = $login->getMembership();
        	if(isset($memberships['groupID'][1])) {
-       		$main->assign('body', $t_form->fetch('mod_system.tpl'));
-       	}
+            try {
+                $main->assign('body', $t_form->fetch('mod_system.tpl'));
+            } catch (SmartyException $e) {
+            }
+        }
        	else {
        		$main->assign('body', 'You require System Administrator level access to view this section.');
        	}
@@ -140,8 +149,11 @@ switch($action) {
 
        	$memberships = $login->getMembership();
        	if(isset($memberships['groupID'][1])) {
-       		$main->assign('body', $t_form->fetch('setup_medical_center.tpl'));
-       	}
+            try {
+                $main->assign('body', $t_form->fetch('setup_medical_center.tpl'));
+            } catch (SmartyException $e) {
+            }
+        }
        	else {
        		$main->assign('body', 'You require System Administrator level access to view this section.');
        	}
@@ -181,11 +193,17 @@ switch($action) {
        		 
        	switch($action) {
        		case 'mod_templates':
-       			$main->assign('body', $t_form->fetch('mod_templates.tpl'));
-       			break;
+                try {
+                    $main->assign('body', $t_form->fetch('mod_templates.tpl'));
+                } catch (SmartyException $e) {
+                }
+                break;
        		case 'mod_templates_reports':
-       			$main->assign('body', $t_form->fetch('mod_templates_reports.tpl'));
-       			break;
+                try {
+                    $main->assign('body', $t_form->fetch('mod_templates_reports.tpl'));
+                } catch (SmartyException $e) {
+                }
+                break;
        		default:
        			break;
        	}
@@ -214,7 +232,10 @@ switch($action) {
 
         $memberships = $login->getMembership();
         if(isset($memberships['groupID'][1])) {
-            $main->assign('body', $t_form->fetch('view_admin.tpl'));            
+            try {
+                $main->assign('body', $t_form->fetch('view_admin.tpl'));
+            } catch (SmartyException $e) {
+            }
         }
         else {
             $main->assign('body', 'You require System Administrator level access to view this section.');
@@ -226,8 +247,14 @@ switch($action) {
 
 $memberships = $login->getMembership();
 $t_menu->assign('isAdmin', $memberships['groupID'][1]);
-$main->assign('login', $t_login->fetch('login.tpl'));
-$o_menu = $t_menu->fetch('menu.tpl');
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
+try {
+    $o_menu = $t_menu->fetch('menu.tpl');
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $tabText = $tabText == '' ? '' : $tabText . '&nbsp;';
 $main->assign('tabText', $tabText);

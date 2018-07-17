@@ -116,7 +116,7 @@ var LeafFormQuery = function() {
      * @memberOf LeafFormQuery
      */
     function join(table) {
-    	if(query.joins.indexOf(table) == -1) {
+    	if(query.joins.indexOf(table) === -1) {
         	query.joins.push(table);
     	}
     }
@@ -127,7 +127,7 @@ var LeafFormQuery = function() {
      * @memberOf LeafFormQuery
      */
     function getData(indicatorID) {
-    	if(query.getData.indexOf(indicatorID) == -1) {
+    	if(query.getData.indexOf(indicatorID) === -1) {
         	query.getData.push(indicatorID);
     	}
     }
@@ -151,9 +151,9 @@ var LeafFormQuery = function() {
      */
     function updateTerm(id, operator, match) {
     	for(var i in query.terms) {
-    		if(query.terms[i].id == id
-    				&& query.terms[i].operator == operator) {
-    			query.terms[i].match = match
+    		if(query.terms[i].id === id
+    				&& query.terms[i].operator === operator) {
+    			query.terms[i].match = match;
     			return;
     		}
     	}
@@ -171,10 +171,10 @@ var LeafFormQuery = function() {
     function updateDataTerm(id, indicatorID, operator, match) {
     	var found = 0;
     	for(var i in query.terms) {
-    		if(query.terms[i].id == id
-    				&& query.terms[i].indicatorID == indicatorID
-    				&& query.terms[i].operator == operator) {
-    			query.terms[i].match = match
+    		if(query.terms[i].id === id
+    				&& query.terms[i].indicatorID === indicatorID
+    				&& query.terms[i].operator === operator) {
+    			query.terms[i].match = match;
     			return;
     		}
     	}
@@ -196,11 +196,11 @@ var LeafFormQuery = function() {
      * @memberOf LeafFormQuery
      */
     function execute() {
-    	if(query.getData != undefined && query.getData.length == 0) {
+    	if(query.getData !== undefined && query.getData.length === 0) {
     		delete query.getData;
     	}
     	
-    	if(useJSONP == false) {
+    	if(useJSONP === false) {
         	return $.ajax({
         		type: 'GET',
         		url: rootURL + 'api/?a=form/query&q=' + JSON.stringify(query),

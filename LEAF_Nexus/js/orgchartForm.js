@@ -40,7 +40,7 @@ orgchartForm.prototype.getForm = function(UID, categoryID, indicatorID) {
 	            	dialog.setContent(response);
 	            	$('input:visible:first, select:visible:first').focus();
 	                $('input:visible:first, select:visible:first').keypress(function(event) {
-	                    if(event.which == 13) {
+	                    if(event.which === 13) {
 	                        $('#' + dialog.btnSaveID).trigger('click');
 	                    }
 	                });
@@ -71,7 +71,7 @@ orgchartForm.prototype.getForm = function(UID, categoryID, indicatorID) {
 	            	dialog.setContent(response);
 	            	$('input:visible:first, select:visible:first').focus();
 	            	$('input:visible:first, select:visible:first').keypress(function(event) {
-	                    if(event.which == 13) {
+	                    if(event.which === 13) {
 	                        $('#' + dialog.btnSaveID).trigger('click');
 	                    }
 	                });
@@ -102,7 +102,7 @@ orgchartForm.prototype.getForm = function(UID, categoryID, indicatorID) {
 	            	dialog.setContent(response);
 	            	$('input:visible:first, select:visible:first').focus();
 	            	$('input:visible:first, select:visible:first').keypress(function(event) {
-	                    if(event.which == 13) {
+	                    if(event.which === 13) {
 	                        $('#' + dialog.btnSaveID).trigger('click');
 	                    }
 	                });

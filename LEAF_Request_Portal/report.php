@@ -73,7 +73,10 @@ switch($action) {
     	$main->assign('javascripts', array('js/form.js', 'js/workflow.js', 'js/formGrid.js', 'js/formQuery.js'));
 
         $form = new Form($db, $login);
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $currentEmployee = $form->employee->lookupLogin($login->getUserID());
         $employeePositions = $form->employee->getPositions($currentEmployee[0]['empUID']);
@@ -91,7 +94,10 @@ switch($action) {
         $qrcodeURL = "{$protocol}://{$_SERVER['HTTP_HOST']}" . $_SERVER['REQUEST_URI'];
         $main->assign('qrcodeURL', urlencode($qrcodeURL));
 
-        $main->assign('body', $t_form->fetch('reports/showServiceFTEstatus.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('reports/showServiceFTEstatus.tpl'));
+        } catch (SmartyException $e) {
+        }
         $tabText = 'Service FTE Status';
         break;
     default:
@@ -101,9 +107,12 @@ switch($action) {
     			$main->assign('javascripts', array('js/form.js', 'js/workflow.js', 'js/formGrid.js', 'js/formQuery.js', 'js/formSearch.js'));
 
 				$form = new Form($db, $login);
-				$o_login = $t_login->fetch('login.tpl');
+            try {
+                $o_login = $t_login->fetch('login.tpl');
+            } catch (SmartyException $e) {
+            }
 
-				$t_form = new Smarty;
+            $t_form = new Smarty;
 				$t_form->left_delimiter = '<!--{';
 				$t_form->right_delimiter= '}-->';
 				$t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
@@ -119,8 +128,11 @@ switch($action) {
 				$qrcodeURL = "{$protocol}://{$_SERVER['HTTP_HOST']}" . $_SERVER['REQUEST_URI'];
 				$main->assign('qrcodeURL', urlencode($qrcodeURL));
 
-				$main->assign('body', $t_form->fetch("reports/{$action}.tpl"));
-				$tabText = '';
+            try {
+                $main->assign('body', $t_form->fetch("reports/{$action}.tpl"));
+            } catch (SmartyException $e) {
+            }
+            $tabText = '';
     	}
     	else {
     		$main->assign('body', 'Report does not exist');
@@ -128,11 +140,17 @@ switch($action) {
         break;
 }
 
-$main->assign('login', $t_login->fetch('login.tpl'));
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
 $t_menu->assign('action', $action);
 $t_menu->assign('orgchartPath', Config::$orgchartPath);
 $t_menu->assign('empMembership', $login->getMembership());
-$o_menu = $t_menu->fetch(customTemplate('menu.tpl'));
+try {
+    $o_menu = $t_menu->fetch(customTemplate('menu.tpl'));
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $tabText = $tabText == '' ? '' : $tabText . '&nbsp;';
 $main->assign('tabText', $tabText);

@@ -11,16 +11,16 @@ function showPreview(recordID) {
 	var formData = grid.getDataByRecordID(recordID);
 	var title = formData.title;
     var authors = '';
-    if(formData.s1.id9 != undefined
-        && formData.s1.id9 != '') {
+    if(formData.s1.id9 !== undefined
+        && formData.s1.id9 !== '') {
         authors = 'By ' + formData.s1.id9;
     }
-    if(formData.s1.id10 != undefined
-        && formData.s1.id10 != '') {
+    if(formData.s1.id10 !== undefined
+        && formData.s1.id10 !== '') {
         authors += ', ' + formData.s1.id10;
     }
-    if(formData.s1.id11 != undefined
-        && formData.s1.id11 != '') {
+    if(formData.s1.id11 !== undefined
+        && formData.s1.id11 !== '') {
         authors += '<br />' + formData.s1.id11;
     }
 
@@ -68,19 +68,19 @@ $(function() {
         grid.setRootURL('../');
         grid.hideIndex();
         grid.importQueryResult(res);
-        grid.setHeaders([
+        grid.setHeaders([;
             {name: 'Form', indicatorID: 'form', editable: false, sortable: false, callback: function(data, blob) {
             	$('#'+data.cellContainerID).html('<span style="font-weight: bold; font-size: 120%">' + blob[data.index].title + '</span>');
             }},
-            {name: 'Description', indicatorID: 5, sortable: false, editable: false},
+            {name: 'Description', indicatorID: 5, sortable: false, editable: false},;
             {name: 'Author(s)', indicatorID: 'authors', editable: false, sortable: false, callback: function(data, blob) {
             	var authors = '';
             	if(blob[data.index].s1.id9 != undefined
             		&& blob[data.index].s1.id9 != '') {
             		authors = blob[data.index].s1.id9;
             	}
-                if(blob[data.index].s1.id10 != undefined
-                    && blob[data.index].s1.id10 != '') {
+                if(blob[data.index].s1.id10 !== undefined
+                    && blob[data.index].s1.id10 !== '') {
                     authors += ', ' + blob[data.index].s1.id10;
                 }
 

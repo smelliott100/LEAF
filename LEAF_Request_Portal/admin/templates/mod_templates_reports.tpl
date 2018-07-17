@@ -82,7 +82,7 @@ function newReport() {
             data: {CSRFToken: '<!--{$CSRFToken}-->',
             	filename: file},
             success: function(res) {
-            	if(res == 'CreateOK') {
+            	if(res === 'CreateOK') {
             		loadContent(file);
             	}
             	else {
@@ -132,7 +132,7 @@ function loadContent(file) {
 	
 	$('#reportURL').html('URL: <a href="'+ reportURL +'" target="_blank">'+ reportURL +'</a>');
 	$('#controls').css('visibility', 'visible');
-    if(file == 'example') {
+    if(file === 'example') {
     	$('#controls').css('visibility', 'hidden');
     }
 
@@ -191,7 +191,7 @@ $(function() {
 			var buffer = '<ul>';
 			for(var i in res) {
 				file = res[i].replace('.tpl', '');
-				if(file != 'example') {
+				if(file !== 'example') {
 					buffer += '<li onclick="loadContent(\''+ file +'\');"><a href="#">' + file + '</a></li>';
 				}
 			}

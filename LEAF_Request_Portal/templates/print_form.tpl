@@ -10,7 +10,7 @@
 <div id="workflow_body">
     <!--{if $submitted == 0}-->
     <div id="progressSidebar" style="border: 1px solid black">
-        <div style="background-color: #d76161; padding: 8px; margin: 0px; color: white; text-shadow: black 0.1em 0.1em 0.2em; font-weight: bold; text-align: center; font-size: 120%">Form completion progress</div>
+        <div style="background-color: #d76161; padding: 8px; margin: 0; color: white; text-shadow: black 0.1em 0.1em 0.2em; font-weight: bold; text-align: center; font-size: 120%">Form completion progress</div>
         <div id="progressControl" style="padding: 16px; text-align: center; background-color: #ffaeae; font-weight: bold; font-size: 120%"><div id="progressBar" style="height: 30px; border: 1px solid black; text-align: center; width: 80%; margin: auto"><div style="width: 100%; line-height: 200%; float: left; font-size: 14px" id="progressLabel"></div></div><div style="line-height: 30%"><!-- ie7 workaround --></div></div>
     </div>
     <!--{/if}-->
@@ -97,7 +97,7 @@ function doSubmit(recordID) {
 		url: "./api/form/" + recordID + "/submit",
 		data: {CSRFToken: '<!--{$CSRFToken}-->'},
 		success: function(response) {
-            if(response.errors.length == 0) {
+            if(response.errors.length === 0) {
                 $('#submitControl').empty().html('Submitted');
                 $('#submitContent').hide('blind', 500);
                 workflow.getWorkflow(recordID);
@@ -157,7 +157,7 @@ function getIndicatorLog(indicatorID, series) {
         		date = new Date(curr.timestamp * 1000);
         		data = curr.data;
 
-        		if(i != 0) {
+        		if(i !== 0) {
         			data = diffString(prev, data);
         		}
 
@@ -204,7 +204,7 @@ function updateProgress() {
                 $('#progressBar').progressbar('option', 'value', response);
                 $('#progressLabel').text(response + '%');
             }
-            else if('<!--{$submitted}-->' == '0') {
+            else if('<!--{$submitted}-->' === '0') {
                 $('#progressBar').progressbar('option', 'value', response);
                 $('#progressLabel').text(response + '%');
                 $('#progressSidebar').slideUp(500);
@@ -254,7 +254,7 @@ var bookmarkStatus = 0;
 var bookmarkStatus = 1;
 <!--{/if}-->
 function toggleBookmark() {
-    if(bookmarkStatus == 0) {
+    if(bookmarkStatus === 0) {
         addBookmark();
         bookmarkStatus = 1;
         $('#tool_bookmarkText').empty().html('<img src="../libs/dynicons/?img=bookmark-new.svg&amp;w=32" style="vertical-align: middle" alt="Delete Bookmark" title="Delete Bookmark" /> Delete Bookmark');
@@ -302,7 +302,7 @@ function openContent(url) {
                 var boxSizer = {};
     			$(this).find('.printsubheading').each(function() {
     				layer = $(this).position().top;
-    				if(boxSizer[layer] == undefined) {
+    				if(boxSizer[layer] === undefined) {
     					boxSizer[layer] = $(this).height();
     				}
     				if($(this).height() > boxSizer[layer]) {
@@ -311,7 +311,7 @@ function openContent(url) {
     			});
     			$(this).find('.printsubheading').each(function() {
     				layer = $(this).position().top;
-    				if(boxSizer[layer] != undefined) {
+    				if(boxSizer[layer] !== undefined) {
                         $(this).height(boxSizer[layer]);
     				}
                 });
@@ -350,7 +350,7 @@ function cancelRequest() {
 			data: {cancel: <!--{$recordID|strip_tags|escape}-->,
                 CSRFToken: '<!--{$CSRFToken}-->'},
             success: function(response) {
-            	if(response == 1) {
+            	if(response === 1) {
                     window.location.href="index.php?a=cancelled_request&cancelled=<!--{$recordID|strip_tags}-->";
                 }
             	else {
@@ -447,14 +447,14 @@ function admin_changeStep() {
                     var steps2 = '';
                     var stepCounter = 0;
                 	for(var i in res) {
-                		if(Object.keys(workflows).length == 0
-                			|| workflows[res[i].workflowID] != undefined) {
+                		if(Object.keys(workflows).length === 0
+                			|| workflows[res[i].workflowID] !== undefined) {
                             steps += '<option value="'+ res[i].stepID +'">' + res[i].description + ': ' + res[i].stepTitle +'</option>';
                             stepCounter++;
                             steps2 += '<option value="'+ res[i].stepID +'">' + res[i].description + ' - ' + res[i].stepTitle +'</option>';
                 		}
                 	}
-                	if(stepCounter == 0) {
+                	if(stepCounter === 0) {
                 		steps += steps2;
                 	}
                 	steps += '</select>';
@@ -530,7 +530,7 @@ function admin_changeForm() {
                 	var temp = res[<!--{$recordID|strip_tags|escape}-->].categoryNamesUnabridged;
                 	$('label.checkable').each(function() {
                 		for(var i in temp) {
-                            if($(this).html() == temp[i]) {
+                            if($(this).html() === temp[i]) {
                                 $('#' + $(this).attr('for')).prop('checked', true);
                             }
                 		}
@@ -549,7 +549,7 @@ function admin_changeInitiator() {
     dialog.indicateBusy();
 
     dialog.setSaveHandler(function() {
-    	if($('#changeInitiator').val() != '') {
+    	if($('#changeInitiator').val() !== '') {
             $.ajax({
                 type: 'POST',
                 url: './api/?a=form/<!--{$recordID|strip_tags}-->/initiator',
@@ -572,12 +572,12 @@ function admin_changeInitiator() {
         empSel.rootPath = '<!--{$orgchartPath}-->/';
 
         empSel.setSelectHandler(function() {
-        	if(empSel.selectionData[empSel.selection] != undefined) {
+        	if(empSel.selectionData[empSel.selection] !== undefined) {
         		$('#changeInitiator').val(empSel.selectionData[empSel.selection].userName);
         	}
         });
         empSel.setResultHandler(function() {
-        	if(empSel.selectionData[empSel.selection] != undefined) {
+        	if(empSel.selectionData[empSel.selection] !== undefined) {
                 $('#changeInitiator').val(empSel.selectionData[empSel.selection].userName);
             }
         });
@@ -585,7 +585,7 @@ function admin_changeInitiator() {
         dialog.indicateIdle();
     }
 
-    if(typeof employeeSelector == 'undefined') {
+    if(typeof employeeSelector === 'undefined') {
         $('head').append('<link type="text/css" rel="stylesheet" href="<!--{$orgchartPath}-->/css/employeeSelector.css" />');
         $.ajax({
             type: 'GET',
@@ -613,7 +613,7 @@ function scrollPage(id) {
 var lastScreenSize = null;
 function sideBar() {
 //    console.log(window.innerWidth);
-    if(lastScreenSize != window.innerWidth) {
+    if(lastScreenSize !== window.innerWidth) {
         lastScreenSize = window.innerWidth;
 
         if(lastScreenSize < 700) {

@@ -100,19 +100,19 @@ function getSubordinates(positionID, level) {
         positions[subordinate[key].positionID].onLoad = function() {
             var loadSubordinates = 1;
 
-            if(subordinate[key][15].data != '') {
+            if(subordinate[key][15].data !== '') {
                 var subData = $.parseJSON(subordinate[key][15].data);
-                if(subData[<!--{$rootID}-->] != undefined
-                    && subData[<!--{$rootID}-->].hideSubordinates != undefined
-                    && subData[<!--{$rootID}-->].hideSubordinates == 1) {
+                if(subData[<!--{$rootID}-->] !== undefined
+                    && subData[<!--{$rootID}-->].hideSubordinates !== undefined
+                    && subData[<!--{$rootID}-->].hideSubordinates === 1) {
 
                     //positionControls = '<div class="button" onclick="showSubordinates('+subordinate[key].positionID+');"><img src="../libs/dynicons/?img=system-users.svg&amp;w=32" alt="Show" title="Show" /> Show Subordinates</div>';
                     loadSubordinates = 0;
                 }
             }
 
-            if(subordinate[key].hasSubordinates == 1
-                && loadSubordinates == 1) {
+            if(subordinate[key].hasSubordinates === 1
+                && loadSubordinates === 1) {
 
                 $.ajax({
                     url: './api/?a=position/' + subordinate[key].positionID,
@@ -196,7 +196,7 @@ $(function() {
     positions[<!--{$rootID}-->] = new position(<!--{$rootID}-->);
     positions[<!--{$rootID}-->].initialize('bodyarea');
     positions[<!--{$rootID}-->].setRootID(<!--{$rootID}-->);
-    //jsPlumb.draggable(positions[<!--{$rootID}-->].getDomID(), draggableOptions);
+    //jsPlumb.draggable(positions[<!--{$rootID}-->].getDomID(), draggableOptions;);
     $('#' + positions[<!--{$rootID}-->].getDomID()).on('dragstop', null, function() {
         saveLayout(<!--{$rootID}-->);
     });
@@ -205,15 +205,15 @@ $(function() {
     	endPoints[<!--{$rootID}-->] = jsPlumb.addEndpoint(positions[<!--{$rootID}-->].getDomID(), {anchor: 'Center'}, endpointOptions);
     	getSubordinates(<!--{$rootID}-->, 0);
 
-        if(positions[<!--{$rootID}-->].data[15].data != '') {
+        if(positions[<!--{$rootID}-->].data[15].data !== '') {
             var positionData = $.parseJSON(positions[<!--{$rootID}-->].data[15].data);
-            if(positionData[<!--{$rootID}-->] != undefined
-                && positionData[<!--{$rootID}-->].zoom != undefined) {
+            if(positionData[<!--{$rootID}-->] !== undefined
+                && positionData[<!--{$rootID}-->].zoom !== undefined) {
                 currentZoomLevel = positionData[<!--{$rootID}-->].zoom;
                 applyZoomLevel();
             }
         }
-    }
+    };
 
     positions[<!--{$rootID}-->].onDrawComplete = function() {
         <!--{if $header == 'false'}-->

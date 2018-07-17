@@ -79,7 +79,10 @@ switch($action) {
         $t_iframe->assign('series', (int)$_GET['series']);
         $t_iframe->assign('max_filesize', ini_get('upload_max_filesize'));
         $t_iframe->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_iframe->fetch('file_form.tpl'));
+        try {
+            $main->assign('body', $t_iframe->fetch('file_form.tpl'));
+        } catch (SmartyException $e) {
+        }
         break;
     case 'getimageuploadprompt':
        	$t_iframe = new Smarty;
@@ -89,8 +92,11 @@ switch($action) {
        	$t_iframe->assign('series', (int)$_GET['series']);
        	$t_iframe->assign('max_filesize', ini_get('upload_max_filesize'));
        	$t_iframe->assign('CSRFToken', $_SESSION['CSRFToken']);
-       	$main->assign('body', $t_iframe->fetch('file_image_form.tpl'));
-       	break;
+        try {
+            $main->assign('body', $t_iframe->fetch('file_image_form.tpl'));
+        } catch (SmartyException $e) {
+        }
+        break;
     case 'printview':
         $main->assign('useUI', true);
         $main->assign('javascripts', array('js/form.js', 'js/workflow.js', 'js/formGrid.js', 'js/formQuery.js', 'js/jsdiff.js'));
@@ -98,8 +104,11 @@ switch($action) {
         $form = new Form($db, $login);
         $t_menu->assign('recordID', (int)$_GET['recordID']);
         $t_menu->assign('action', $action);
-        $o_login = $t_login->fetch('login.tpl');
-        
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
+
         $recordInfo = $form->getRecordInfo((int)$_GET['recordID']);
         $comments = $form->getActionComments((int)$_GET['recordID']);
         
@@ -149,8 +158,11 @@ switch($action) {
                         $t_form->assign('childCategoryID', $_GET['childCategoryID']);
                     }
                 }
-                
-                $main->assign('body', $t_form->fetch(customTemplate('print_form_iframe.tpl')));
+
+                try {
+                    $main->assign('body', $t_form->fetch(customTemplate('print_form_iframe.tpl')));
+                } catch (SmartyException $e) {
+                }
                 $t_menu->assign('hide_main_control', true);
                 break;
         }
@@ -161,7 +173,10 @@ switch($action) {
     case 'menu':
     default:
         if($login->isLogin()) {
-            $o_login = $t_login->fetch('login.tpl');
+            try {
+                $o_login = $t_login->fetch('login.tpl');
+            } catch (SmartyException $e) {
+            }
 
             if($action != 'menu' && $action != '' && $action != 'dosubmit') {
                 $main->assign('status', 'The page you are looking for does not exist or may have been moved. Please update your bookmarks.');
@@ -171,12 +186,21 @@ switch($action) {
             $t_login->assign('name', '');
             $main->assign('status', 'Your login session has expired, You must log in again.');
         }
+    try {
         $o_login = $t_login->fetch('login.tpl');
+    } catch (SmartyException $e) {
+    }
         break;
 }
 
-$main->assign('login', $t_login->fetch('login.tpl'));
-$o_menu = $t_menu->fetch('menu.tpl');
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
+try {
+    $o_menu = $t_menu->fetch('menu.tpl');
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $tabText = $tabText == '' ? '' : $tabText . '&nbsp;';
 $main->assign('tabText', $tabText);

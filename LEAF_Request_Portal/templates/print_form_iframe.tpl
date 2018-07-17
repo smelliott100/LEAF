@@ -52,7 +52,7 @@ function getIndicatorLog(indicatorID, series) {
         		date = new Date(curr.timestamp * 1000);
         		data = curr.data;
 
-        		if(i != 0) {
+        		if(i !== 0) {
         			data = diffString(prev, data);
         		}
 
@@ -121,7 +121,7 @@ function openContent(url) {
                 var boxSizer = {};
     			$(this).find('.printsubheading').each(function() {
     				layer = $(this).position().top;
-    				if(boxSizer[layer] == undefined) {
+    				if(boxSizer[layer] === undefined) {
     					boxSizer[layer] = $(this).height();
     				}
     				if($(this).height() > boxSizer[layer]) {
@@ -130,7 +130,7 @@ function openContent(url) {
     			});
     			$(this).find('.printsubheading').each(function() {
     				layer = $(this).position().top;
-    				if(boxSizer[layer] != undefined) {
+    				if(boxSizer[layer] !== undefined) {
                         $(this).height(boxSizer[layer]);
     				}
                 });

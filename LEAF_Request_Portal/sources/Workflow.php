@@ -549,7 +549,7 @@ class Workflow
     /**
      * Retrieve a high level map of the workflow (if valid) to show how steps are routed forwards
      * (a valid workflow is one that has an end)
-     * @return array In-order steps of a workflow
+     * @return array|int
      */
     public function getSummaryMap()
     {

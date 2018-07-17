@@ -72,7 +72,10 @@ switch($action) {
         $t_iframe->assign('indicatorID', (int)$_GET['indicatorID']);
         $t_iframe->assign('max_filesize', ini_get('upload_max_filesize'));
         $t_iframe->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_iframe->fetch('file_form.tpl'));
+        try {
+            $main->assign('body', $t_iframe->fetch('file_form.tpl'));
+        } catch (SmartyException $e) {
+        }
         break;
     case 'getdeleteprompt':
         $main->assign('useDojoUI', false);
@@ -85,7 +88,10 @@ switch($action) {
         $t_iframe->assign('indicatorID', (int)$_GET['indicatorID']);
         $t_iframe->assign('file', strip_tags($_GET['file']));
         $t_iframe->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_iframe->fetch('file_form_delete.tpl'));
+        try {
+            $main->assign('body', $t_iframe->fetch('file_form_delete.tpl'));
+        } catch (SmartyException $e) {
+        }
         break;
     case 'permission':
     	$main->assign('useDojo', false);
@@ -119,7 +125,10 @@ switch($action) {
         $t_iframe->assign('privileges', $login->getIndicatorPrivileges(array($_GET['indicatorID']), $type, $_GET['UID']));
         $t_iframe->assign('indicatorID', (int)$_GET['indicatorID']);
         $t_iframe->assign('UID', (int)$_GET['UID']);
-        $main->assign('body', $t_iframe->fetch('permission_iframe.tpl'));
+        try {
+            $main->assign('body', $t_iframe->fetch('permission_iframe.tpl'));
+        } catch (SmartyException $e) {
+        }
         break;
     case 'view_position_permissions':
         require 'sources/Position.php';
@@ -147,15 +156,21 @@ switch($action) {
         $t_iframe->assign('positionTitle', $position->getTitle($positionID));
         $t_iframe->assign('permissions', $position->getPrivileges($positionID));
         $t_iframe->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_iframe->fetch('view_position_permissions.tpl'));
-    
+        try {
+            $main->assign('body', $t_iframe->fetch('view_position_permissions.tpl'));
+        } catch (SmartyException $e) {
+        }
+
         $tabText = 'Permission Editor';
         break;
     default:
         //$main->assign('useDojo', false);
         $main->assign('useDojoUI', false);
         if($login->isLogin()) {
-            $o_login = $t_login->fetch('login.tpl');
+            try {
+                $o_login = $t_login->fetch('login.tpl');
+            } catch (SmartyException $e) {
+            }
 
             if($action != 'menu' && $action != '' && $action != 'dosubmit') {
                 $main->assign('status', 'The page you are looking for does not exist or may have been moved. Please update your bookmarks.');
@@ -165,12 +180,21 @@ switch($action) {
             $t_login->assign('name', '');
             $main->assign('status', 'Your login session has expired, You must log in again.');
         }
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
         break;
 }
 
-$main->assign('login', $t_login->fetch('login.tpl'));
-$o_menu = $t_menu->fetch('menu.tpl');
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
+try {
+    $o_menu = $t_menu->fetch('menu.tpl');
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $tabText = $tabText == '' ? '' : $tabText . '&nbsp;';
 $main->assign('tabText', $tabText);
@@ -183,4 +207,4 @@ $main->assign('revision', $rev[0]['data']);
 $main->display('main_iframe.tpl');
 
 
-?>
+

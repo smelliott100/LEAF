@@ -8,9 +8,9 @@
 
 .positionSelectorInput {
     position: relative;
-    border: 0px;
+    border: 0;
     font-size: 140%;
-    padding: 0px 0px 0px 4px;
+    padding: 0 0 0 4px;
     width: 90%;
 }
 

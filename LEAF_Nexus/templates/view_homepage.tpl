@@ -42,7 +42,7 @@
             <div id="searchBorder" style="white-space: nowrap; background-color: #5a79a5;">
                 <img id="searchIcon" src="../libs/dynicons/?img=search.svg&w=16" style="position: absolute; margin-left: 66px; padding: 10px" alt="search" />
                 <img id="searchIconBusy" src="images/indicator.gif" style="display: none; position: absolute; margin-left: 66px; padding: 10px" alt="search" />
-                Search <input id="search" name="search" aria-label="Search" style="font-size: 140%; width: 75%; padding: 2px 2px 2px 26px; border: 1px solid black; background-repeat: no-repeat; background-position: right center" type="text" />
+                Search <label for="search"></label><input id="search" name="search" aria-label="Search" style="font-size: 140%; width: 75%; padding: 2px 2px 2px 26px; border: 1px solid black; background: no-repeat right center;" type="text" />
             </div>
         </div>
         <br />
@@ -122,7 +122,7 @@
 
 function postProcess()
 {
-    if(empSel.numResults == 0) {
+    if(empSel.numResults === 0) {
         $('#employee').css('display', 'none');
     }
     else {
@@ -135,7 +135,7 @@ function postProcess()
         $('#employeeAllResults').css('display', 'none');
     }
 
-    if(posSel.numResults == 0) {
+    if(posSel.numResults === 0) {
         $('#position').css('display', 'none');
     }
     else {
@@ -148,13 +148,13 @@ function postProcess()
         $('#positionAllResults').css('display', 'none');
     }
 
-    if(grpSel.numResults == 0) {
+    if(grpSel.numResults === 0) {
         $('#group').css('display', 'none');
     }
     else {
         $('#group').css('display', 'inline');
     }
-    if(grp2Sel.numResults == 0) {
+    if(grp2Sel.numResults === 0) {
         $('#group2').css('display', 'none');
     }
     else {
@@ -234,7 +234,7 @@ $(function() {
         grp2Sel.forceSearch($('#search').val());
         sideOffset = 350;
         setSearchWidth();
-        if($('#search').val() != '') {
+        if($('#search').val() !== '') {
         	$('#searchTips').css('display', 'none');
         }
         else {
@@ -253,7 +253,7 @@ $(function() {
     $.ajax({
         url: "ajaxEmployee.php?a=getForm&empUID=<!--{$employee[0].empUID}-->",
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 $('#currentEmployeeBody').html(response);
                 $('#currentEmployeeBody img').css('max-width', '64px');
                 <!--{if $employeePositions[0].positionID > 0}-->
@@ -262,7 +262,7 @@ $(function() {
                     dataType: 'json',
                     success: function(positionData) {
                         title = '';
-                        if(positionData.title != '') {
+                        if(positionData.title !== '') {
                             title = '<br /><span>' + positionData.title + '</span>';
                         }
                         $('#currentEmployeeHeader').append(title);

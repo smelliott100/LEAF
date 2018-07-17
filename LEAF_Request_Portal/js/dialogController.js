@@ -54,7 +54,7 @@ dialogController.prototype.hide = function() {
 };
 
 dialogController.prototype.show = function() {
-	if($('#' + this.contentID).html() == '') {
+	if($('#' + this.contentID).html() === '') {
 		$('#' + this.indicatorID).css('visibility', 'visible');
 	}
 	$('#' + this.containerID).dialog('open');
@@ -87,7 +87,7 @@ dialogController.prototype.isValid = function() {
 	for(var item in this.validators) {
     	if(!this.validators[item]()) {
     		this.invalid = 1;
-    		if(this.validatorErrors[item] != undefined) {
+    		if(this.validatorErrors[item] !== undefined) {
     			this.validatorErrors[item]();
     		}
     		else {
@@ -95,12 +95,12 @@ dialogController.prototype.isValid = function() {
     		}
     	}
     	else {
-    		if(this.validatorOks[item] != undefined) {
+    		if(this.validatorOks[item] !== undefined) {
     			this.validatorOks[item]();
     		}
     	}
     }
-	if(this.invalid == 1) {
+	if(this.invalid === 1) {
 		return 0;
 	}
 	return 1;
@@ -111,7 +111,7 @@ dialogController.prototype.isComplete = function() {
 	for(var item in this.requirements) {
     	if(this.requirements[item]()) {
     		this.incomplete = 1;
-    		if(this.requirementErrors[item] != undefined) {
+    		if(this.requirementErrors[item] !== undefined) {
     			this.requirementErrors[item]();
     		}
     		else {
@@ -119,12 +119,12 @@ dialogController.prototype.isComplete = function() {
     		}
     	}
     	else {
-    		if(this.requirementOks[item] != undefined) {
+    		if(this.requirementOks[item] !== undefined) {
     			this.requirementOks[item]();
     		}
     	}
     }
-	if(this.incomplete == 1) {
+	if(this.incomplete === 1) {
 		return 0;
 	}
 	return 1;
@@ -134,7 +134,7 @@ dialogController.prototype.setSaveHandler = function(funct) {
 	$('#' + this.btnSaveID).off();
 	var t = this;
     this.dialogControllerXhrEvent = $('#' + this.btnSaveID).on('click', function() {
-        if(t.isValid() == 1 && t.isComplete() == 1) {        	
+        if(t.isValid() === 1 && t.isComplete() === 1) {
         	funct();
         	$('#' + t.btnSaveID).off();
         }
@@ -148,7 +148,7 @@ dialogController.prototype.setCancelHandler = function(funct) {
 	$('#' + this.containerID).off('dialogbeforeclose');
 	var t = this;
     $('#' + this.containerID).on('dialogbeforeclose', function() {
-        if(t.isValid() == 1 && t.isComplete() == 1) {        	
+        if(t.isValid() === 1 && t.isComplete() === 1) {
         	funct();
         	$('#' + this.containerID).off('dialogbeforeclose');
         }

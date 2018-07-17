@@ -4,7 +4,7 @@ body {
 }
 
 #body {
-    padding: 0px;
+    padding: 0;
     text-align: center;
     width: 100%;
 }
@@ -90,7 +90,7 @@ span#headerTab {
 
 #content {
     padding: 4px;
-    margin: 0px auto;
+    margin: 0 auto;
     text-align: left;
 }
 
@@ -242,7 +242,7 @@ span.printsubheading {
 
 div.printResponse {
     float: left;
-    padding: 0px 16px 8px 16px;
+    padding: 0 16px 8px 16px;
     page-break-before: avoid;
     page-break-after: auto;
 }
@@ -293,8 +293,7 @@ span.approval_disapproved {
     float: left;
     width: 96px;
     height: 96px;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background: no-repeat center center;
 }
 
 .menuText {

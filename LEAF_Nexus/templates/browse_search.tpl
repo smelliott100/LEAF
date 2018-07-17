@@ -9,7 +9,7 @@
 <div id="maincontent">
 <div id="searchContainer">
     <div style="padding: 8px; color: white; font-weight: bold; font-size: 140%; background-color: #5A79A5">
-        Search: <input id="search" style="width: 80%; font-size: 140%; padding: 2px; border: 1px solid black" type="text" />
+        Search: <label for="search"></label><input id="search" style="width: 80%; font-size: 140%; padding: 2px; border: 1px solid black" type="text" />
     </div>
     <br />
     <div style="margin-bottom: 8px" id="employee">
@@ -47,19 +47,19 @@
 
 function postProcess()
 {
-	if(empSel.numResults == 0) {
+	if(empSel.numResults === 0) {
 		$('#employee').css('display', 'none');
 	}
 	else {
 		$('#employee').css('display', 'inline');
 	}
-	if(posSel.numResults == 0) {
+	if(posSel.numResults === 0) {
         $('#position').css('display', 'none');
     }
     else {
         $('#position').css('display', 'inline');
     }
-	if(grpSel.numResults == 0) {
+	if(grpSel.numResults === 0) {
         $('#group').css('display', 'none');
     }
     else {
@@ -100,7 +100,7 @@ $(function() {
         grpSel.forceSearch($('#search').val());
     });
 
-    ppInterval = setInterval(function(){postProcess();}, 300);
+    ppInterval = setInterval(function(){postProcess()}, 300);
 
     orgchartForm = new orgchartForm('orgchartForm');
     orgchartForm.initialize();

@@ -66,14 +66,14 @@ position.prototype.prepContent = function(response) {
 	this.data = response;
     this.setNumFTE(response[11].data);
     this.setTitle(response.title);
-    var pd = response[9].data != '' ? 'PD#' + response[9].data : '';
+    var pd = response[9].data !== '' ? 'PD#' + response[9].data : '';
     this.setContent(response[2].data + ' ' + response[13].data + '-' + response[14].data + '<br />' + pd);
-    if(response[15].data != '') {
+    if(response[15].data !== '') {
     	var layout = $.parseJSON(response[15].data);
     	$('#' + this.prefixID + this.positionID).css('position', 'absolute');
     	var y = 120;
     	var x = 40;
-    	if(layout[this.rootID] != undefined) {
+    	if(layout[this.rootID] !== undefined) {
         	if((layout[this.rootID].y) > 0) {
         		y = layout[this.rootID].y;
         	}
@@ -81,7 +81,7 @@ position.prototype.prepContent = function(response) {
         		x = layout[this.rootID].x;
         	}
     	}
-    	else if(layout[this.parentID] != undefined) {
+    	else if(layout[this.parentID] !== undefined) {
         	if((layout[this.parentID].y) > 0) {
         		y = layout[this.parentID].y;
         	}
@@ -96,7 +96,7 @@ position.prototype.prepContent = function(response) {
 
 position.prototype.draw = function(data) {
 	var t = this;
-	if(data == undefined) {
+	if(data === undefined) {
 		$.ajax({
 			url: './api/?a=position/' + this.positionID,
 			data: {q: this.q},
@@ -139,7 +139,7 @@ position.prototype.setNumFTE = function (numFTE) {
 };
 
 position.prototype.setTitle = function (title) {
-	if(title == '') {
+	if(title === '') {
 		title = '';
 	} 
 	$('#' + this.prefixID + this.positionID + '_title').html(title);

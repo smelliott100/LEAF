@@ -169,7 +169,7 @@ abstract class RESTfulResponse
     /**
      * Parses url input into generic format
      * @param string api path
-     * @return string parsed path 
+     * @return array|string
      */
     public function parseAction($action)
     {

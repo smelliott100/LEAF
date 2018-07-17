@@ -128,7 +128,7 @@ function addEmployeePosition() {
 
     var isService = 0;
     // If this is a service, don't allow adding all subordinates
-    if(tags['service'] != undefined) {
+    if(tags['service'] !== undefined) {
     	isService = 1;
     	$('#container_ignorePositions').css('display', 'none');
         $('#container_includeSub').css('display', 'none');
@@ -145,7 +145,7 @@ function addEmployeePosition() {
 
     var ignorePositions = false;
     $('#ignorePositions').on('click', function() {
-    	if($('#ignorePositions:checked').val() != undefined) {
+    	if($('#ignorePositions:checked').val() !== undefined) {
     		ignorePositions = true;
     		empSel.showInput();
     		posSel.hideInput();
@@ -163,9 +163,9 @@ function addEmployeePosition() {
     });
 
     posSel.setResultHandler(function() {
-    	if(ignorePositions == false) {
-            if(posSel.numResults == 0
-            	&& isService == 0) {
+    	if(ignorePositions === false) {
+            if(posSel.numResults === 0
+            	&& isService === 0) {
                 posSel.hideResults();
                 empSel.showResults();
                 empSel.forceSearch(posSel.q);
@@ -178,8 +178,8 @@ function addEmployeePosition() {
     });
 
     dialog.setSaveHandler(function() {
-        if(posSel.selection != ''
-        	&& ignorePositions == false) {
+        if(posSel.selection !== ''
+        	&& ignorePositions === false) {
             dialog.indicateBusy();
             $.ajax({
                 type: 'POST',
@@ -192,7 +192,7 @@ function addEmployeePosition() {
                 cache: false
             });
         }
-        else if(empSel.selection != '') {
+        else if(empSel.selection !== '') {
             dialog.indicateBusy();
             var selectedUserName = empSel.selectionData[empSel.selection].userName;
             $.ajax({
@@ -236,7 +236,7 @@ function confirmRemove() {
             type: 'DELETE',
             url: './api/?a=group/<!--{$groupID}-->&' + $.param({CSRFToken: '<!--{$CSRFToken}-->'}),
             success: function(response) {
-            	if(response == 1) {
+            	if(response === 1) {
             		alert('Group has been deleted.');
                     history.back();
             	}
@@ -309,7 +309,7 @@ function writeTag(input) {
         data: {tag: input,
             CSRFToken: '<!--{$CSRFToken}-->'},
         success: function(response) {
-        	if(response == true) {
+        	if(response === true) {
         		window.location.reload();
         	}
         	else {
@@ -341,7 +341,7 @@ $(function() {
     $.ajax({
         url: "ajaxGroup.php?a=getForm&groupID=" + <!--{$groupID}-->,
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 $('#groupBody').html(response);
             }
             else {
@@ -354,7 +354,7 @@ $(function() {
         url: "./api/group/" + <!--{$groupID}--> + "/positions",
         dataType: 'json',
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
             	positions = '';
             	for(var id in response) {
             		positions += '<div style="background-color: #e6f5ff">&#10148; <a href="?a=view_position&positionID='+response[id].positionID+'" style="font-size: 120%; font-weight: bold">' + response[id].positionTitle + '</a> [ <a href="#" onclick="confirmUnlinkPosition('+ response[id].positionID +'); return false;">Remove</a> ]<ul id="pos_'+ response[id].positionID +'"></ul></div>';
@@ -363,7 +363,7 @@ $(function() {
 
                 // discourage users from adding more than one position for services
                 if(response.length >= 1
-                	&& tags['service'] != undefined) {
+                	&& tags['service'] !== undefined) {
                 	$('#button_addEmployeePosition').css('display', 'none');
                 }
 
@@ -372,7 +372,7 @@ $(function() {
                         url: "./api/position/" + response[id].positionID + "/employees",
                         dataType: 'json',
                         success: function(employees) {
-                            if(employees != '') {
+                            if(employees !== '') {
                             	for(var t in employees) {
                             		name = '<span style="color: red">VACANT</span>';
                             		if(employees[t].lastName) {
@@ -396,7 +396,7 @@ $(function() {
         url: "./api/group/" + <!--{$groupID}--> + "/employees",
         dataType: 'json',
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 employees = '';
                 for(var id in response) {
                 	employees += '<div><a class="buttonNorm" href="?a=view_employee&empUID='+response[id].empUID+'">' + response[id].lastName + ', ' + response[id].firstName +'</a> [ <a href="#" onclick="confirmUnlinkEmployee('+ response[id].empUID +'); return false;"> Remove</a> ]</div>';

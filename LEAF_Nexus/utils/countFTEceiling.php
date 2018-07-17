@@ -80,7 +80,7 @@ function countFTE(positionID) {
                     logError('Missing Current FTE - <a href="../?a=view_position&positionID=' + data.subordinates[i].positionID + '" target="_blank">'+ data.subordinates[i].title + '</a>');
                 }
 
-                if(data.subordinates[i].hasSubordinates == 1) {
+                if(data.subordinates[i].hasSubordinates === 1) {
                     if($.isNumeric(data.subordinates[i][11].data)) {
                         fteTotal = Math.round((fteTotal - parseFloat(data.subordinates[i][11].data)) * 100)/100;
                     }

@@ -159,6 +159,8 @@ class Group extends Data
      * Deletes a group, including all associated data
      * @param int $groupID
      * @return number
+     * @throws Exception
+     * @throws Exception
      */
     public function deleteGroup($groupID)
     {
@@ -230,6 +232,8 @@ class Group extends Data
      * @param int $groupID
      * @param string $newTitle
      * @param string $abbrTitle
+     * @throws Exception
+     * @throws Exception
      */
     public function editTitle($groupID, $newTitle, $abbrTitle = null)
     {

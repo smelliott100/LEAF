@@ -100,16 +100,16 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'text' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <span class="text">
-                <br /><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" style="width: 50%" <!--{$indicator.html}--> />
+                <br /><label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" style="width: 50%" <!--{$indicator.html}--> />
             </span>
         <!--{/if}-->
         <!--{if $indicator.format == 'number' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <span class="text">
-                <br /><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> />
+                <br /><label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> />
             </span>
             <script type="text/javascript">
             orgchartForm.dialog.setValidator(<!--{$indicator.indicatorID|strip_tags}-->, function() {
-                return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
             });
             orgchartForm.dialog.setValidatorError(<!--{$indicator.indicatorID|strip_tags}-->, function() {
                 alert('Data must be numeric.');
@@ -118,7 +118,7 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'numberspinner' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <span class="text">
-                <br /><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> />
+                <br /><label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> />
             </span>
             <script type="text/javascript">
             $('#<!--{$indicator.indicatorID|strip_tags}-->').spinner();
@@ -126,7 +126,7 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'date' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <span class="text">
-                <br /><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> />
+                <br /><label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> />
                 <script type="text/javascript">
                 $('#<!--{$indicator.indicatorID|strip_tags}-->').datepicker();
                 </script>
@@ -134,15 +134,17 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'time' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <span class="text">
-                <br /><input disabled="disabled" type="text" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> />
+                <br /><label>
+<input disabled="disabled" type="text" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->"
+</label> <!--{$indicator.html}--> />
             </span>
         <!--{/if}-->
         <!--{if $indicator.format == 'currency' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <span class="text">
-                <br /><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> /> (Amount in USD)
+                <br /><label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.data}-->" <!--{$indicator.html}--> /> (Amount in USD)
                 <script type="text/javascript">
                 orgchartForm.dialog.setValidator(<!--{$indicator.indicatorID|strip_tags}-->, function() {
-                    return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                    return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                 });
                 </script>
             </span>
@@ -152,10 +154,14 @@
                     <input type="hidden" name="<!--{$indicator.indicatorID|strip_tags}-->" value="no" /> <!-- dumb workaround -->
             <!--{foreach from=$indicator.options item=option}-->
                 <!--{if $option == $indicator.data}-->
-                    <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$option}-->" checked="checked" />
+                    <br /><label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$option}-->" checked="checked" />
+</label>
                     <!--{$option}-->
                 <!--{else}-->
-                    <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$option}-->" />
+                    <br /><label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$option}-->" />
+</label>
                     <!--{$option}-->
                 <!--{/if}-->
             <!--{/foreach}-->
@@ -167,11 +173,15 @@
             <!--{foreach from=$indicator.options item=option}-->
                     <input type="hidden" name="<!--{$indicator.indicatorID|strip_tags}-->[<!--{$idx}-->]" value="no" /> <!-- dumb workaround -->
                     <!--{if $option == $indicator.data[$idx]}-->
-                        <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[<!--{$idx}-->]" value="<!--{$option}-->" checked="checked" />
-                        <!--{$option}-->
+                        <br /><label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[<!--{$idx}-->]" value="<!--{$option}-->" checked="checked" />
+</label>
+                    <!--{$option}-->
                     <!--{else}-->
-                        <br /><input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[<!--{$idx}-->]" value="<!--{$option}-->" />
-                        <!--{$option}-->
+                        <br /><label>
+<input dojoType="dijit.form.CheckBox" type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[<!--{$idx}-->]" value="<!--{$option}-->" />
+</label>
+                    <!--{$option}-->
                     <!--{/if}-->
                     <!--{assign var='idx' value=$idx+1}-->
             <!--{/foreach}-->
@@ -221,15 +231,19 @@
             <!--{foreach from=$indicator.options item=option}-->
                 <!--{if is_array($option)}-->
                     <!--{assign var='option' value=$option[0]}-->
-                    <!--{$option}--> <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option}-->" checked="checked" /><br />
+                    <!--{$option}--> <label>
+                <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option}-->" checked="checked" />
+            </label><br />
                 <!--{else}-->
-                    <!--{$option}--> <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option}-->" /><br />
+                    <!--{$option}--> <label>
+                <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option}-->" />
+            </label><br />
                 <!--{/if}-->
             <!--{/foreach}-->
         <!--{/if}-->
         <!--{if $indicator.format == 'orgchart_position' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <!--{if $indicator.data != ''}-->
-            <div dojoType="dijit.layout.ContentPane" id="indata_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series}-->" style="padding: 0px">
+            <div dojoType="dijit.layout.ContentPane" id="indata_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series}-->" style="padding: 0">
             <script type="dojo/method">
                 dojo.xhrGet({
                     url: "<!--{$orgchartPath}-->/api/?a=position/<!--{$indicator.data}-->",

@@ -68,7 +68,7 @@
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() === '');
                 },
                 setRequiredError: function() {
                     $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -108,7 +108,7 @@
                 <!--{if $indicator.required == 1}-->
                 formRequired.id<!--{$indicator.indicatorID}--> = {
                     setRequired: function() {
-                        return ($('.icheck<!--{$indicator.indicatorID|strip_tags}-->').is(':checked') == false);
+                        return ($('.icheck<!--{$indicator.indicatorID|strip_tags}-->').is(':checked') === false);
                     },
                     setRequiredError: function() {
                         $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -143,7 +143,7 @@
                 <!--{if $indicator.required == 1}-->
                 formRequired.id<!--{$indicator.indicatorID}--> = {
                     setRequired: function() {
-                        return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                        return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                     },
                     setRequiredError: function() {
                         $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -155,13 +155,13 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'text' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
             <span class="text">
-                <input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" trim="true" style="width: 50%; font-size: 1.3em; font-family: monospace" />
+                <label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" trim="true" style="width: 50%; font-size: 1.3em; font-family: monospace" />
             </span>
             <script>
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                 },
                 setRequiredError: function() {
                 	$('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -173,17 +173,17 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'number' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
             <span class="text">
-                <input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|strip_tags}-->" style="font-size: 1.3em; font-family: monospace" />
+                <label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|strip_tags}-->" style="font-size: 1.3em; font-family: monospace" />
                 <span id="<!--{$indicator.indicatorID|strip_tags}-->_error" style="color: red; display: none">Data must be numeric</span>
             </span>
             <script type="text/javascript">
             formValidator.id<!--{$indicator.indicatorID}--> = {
             	setValidator: function() {
-                    return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                    return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
             	},
             	setValidatorError: function() {
                     $('#<!--{$indicator.indicatorID|strip_tags}-->').css('border', '2px solid red');
-                    if($('#<!--{$indicator.indicatorID|strip_tags}-->_error').css('display') != 'none') {
+                    if($('#<!--{$indicator.indicatorID|strip_tags}-->_error').css('display') !== 'none') {
                         $('#<!--{$indicator.indicatorID|strip_tags}-->_error').effect('pulsate');
                     }
                     else {
@@ -198,7 +198,7 @@
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                 },
                 setRequiredError: function() {
                 	$('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -210,13 +210,13 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'numberspinner' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
             <span class="text">
-                <br /><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" />
+                <br /><label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" />
             </span>
             <!--{$indicator.html}-->
         <!--{/if}-->
         <!--{if $indicator.format == 'date' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
             <span class="text">
-                <input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" style="background: url(../libs/dynicons/?img=office-calendar.svg&w=16); background-repeat: no-repeat; background-position: 4px center; padding-left: 24px; font-size: 1.3em; font-family: monospace" value="<!--{$indicator.value|sanitize}-->" />
+                <label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" style="background: url(../libs/dynicons/?img=office-calendar.svg&w=16) no-repeat 4px center;padding-left: 24px; font-size: 1.3em; font-family: monospace" value="<!--{$indicator.value|sanitize}-->" />
             </span>
             <script>
             $(function() {
@@ -226,7 +226,7 @@
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                 },
                 setRequiredError: function() {
                     $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -238,19 +238,21 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'time' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
             <span class="text">
-                <br /><input type="text" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" />
+                <br /><label>
+<input type="text" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" />
+</label>
             </span>
             <!--{$indicator.html}-->
         <!--{/if}-->
         <!--{if $indicator.format == 'currency' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
             <span class="text">
-                <br />$<input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" style="font-size: 1.3em; font-family: monospace" /> (Amount in USD)
+                <br />$<label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" style="font-size: 1.3em; font-family: monospace" /> (Amount in USD)
                 <span id="<!--{$indicator.indicatorID|strip_tags}-->_error" style="color: red; display: none">Data must be numeric</span>
             </span>
             <script type="text/javascript">
             formValidator.id<!--{$indicator.indicatorID}--> = {
                     setValidator: function() {
-                    	return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');                 
+                    	return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                     },
                     setValidatorError: function() {
                     	$('#<!--{$indicator.indicatorID|strip_tags}-->').css('border', '2px solid red');
@@ -260,7 +262,7 @@
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                 },
                 setRequiredError: function() {
                 	$('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -290,7 +292,7 @@
                 <!--{if $indicator.required == 1}-->
                 formRequired.id<!--{$indicator.indicatorID}--> = {
                     setRequired: function() {
-                        return ($('#<!--{$indicator.indicatorID|strip_tags}-->_<!--{$idx}-->').prop('checked') == false);
+                        return ($('#<!--{$indicator.indicatorID|strip_tags}-->_<!--{$idx}-->').prop('checked') === false);
                     },
                     setRequiredError: function() {
                         $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -331,11 +333,11 @@
                 <!--{foreach from=$indicator.value item=file}-->
                 <div id="file_<!--{$recordID|strip_tags}-->_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->" style="background-color: #b7c5ff; padding: 4px"><img src="../libs/dynicons/?img=mail-attachment.svg&amp;w=16" /> <a href="file.php?form=<!--{$recordID|strip_tags}-->&amp;id=<!--{$indicator.indicatorID|strip_tags}-->&amp;series=<!--{$indicator.series|strip_tags}-->&amp;file=<!--{$counter}-->" target="_blank"><!--{$file|sanitize}--></a>
                     <span style="float: right; padding: 4px">
-                    [ <span class="link" onclick="deleteFile_<!--{$recordID|strip_tags}-->_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->();">Delete</span> ]
+                    [ <span class="link" onclick="deleteFile_;<!--{$recordID|strip_tags}-->_;<!--{$indicator.indicatorID|strip_tags}-->_;<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->();">Delete</span> ]
                     </span>
                 </div>
                 <script>
-                    function deleteFile_<!--{$recordID|strip_tags}-->_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->() {
+                    function deleteFile_<!--{$recordID|strip_tags}-->_;<!--{$indicator.indicatorID|strip_tags}-->_;<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->(); {
                     	dialog_confirm.setTitle('Delete File?');
                     	dialog_confirm.setContent('Are you sure you want to delete:<br /><br /><b><!--{$file}--></b>');
                     	dialog_confirm.setSaveHandler(function() {
@@ -377,11 +379,11 @@
                 <!--{foreach from=$indicator.value item=file}-->
                 <div id="file_<!--{$recordID|strip_tags}-->_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->" style="background-color: #b7c5ff; padding: 4px"><img src="../libs/dynicons/?img=mail-attachment.svg&amp;w=16" /> <a href="file.php?form=<!--{$recordID|strip_tags}-->&amp;id=<!--{$indicator.indicatorID|strip_tags}-->&amp;series=<!--{$indicator.series|strip_tags}-->&amp;file=<!--{$counter}-->" target="_blank"><!--{$file|sanitize}--></a>
                     <span style="float: right; padding: 4px">
-                    [ <span class="link" onclick="deleteFile_<!--{$recordID|strip_tags}-->_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->();">Delete</span> ]
+                    [ <span class="link" onclick="deleteFile_;<!--{$recordID|strip_tags}-->_;<!--{$indicator.indicatorID|strip_tags}-->_;<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->();">Delete</span> ]
                     </span>
                 </div>
                 <script>
-                    function deleteFile_<!--{$recordID|strip_tags}-->_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->() {
+                    function deleteFile_<!--{$recordID|strip_tags}-->_;<!--{$indicator.indicatorID|strip_tags}-->_;<!--{$indicator.series|strip_tags}-->_<!--{$counter}-->(); {
                         dialog_confirm.setTitle('Delete File?');
                         dialog_confirm.setContent('Are you sure you want to delete:<br /><br /><b><!--{$file}--></b>');
                         dialog_confirm.setSaveHandler(function() {
@@ -418,24 +420,30 @@
             <!--{foreach from=$indicator.options item=option}-->
                 <!--{if is_array($option)}-->
                     <!--{assign var='option' value=$option[0]}-->
-                    <!--{$option}--> <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option|sanitize}-->" checked="checked" /><br />
+                    <!--{$option}--> <label>
+                <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option|sanitize}-->" checked="checked" />
+            </label><br />
                 <!--{else}-->
-                    <!--{$option}--> <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option|sanitize}-->" /><br />
+                    <!--{$option}--> <label>
+                <input type="checkbox" name="<!--{$indicator.indicatorID|strip_tags}-->[]" value="<!--{$option|sanitize}-->" />
+            </label><br />
                 <!--{/if}-->
             <!--{/foreach}-->
         <!--{/if}-->
         <!--{if $indicator.format == 'orgchart_group' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <div id="grpSel_<!--{$indicator.indicatorID|strip_tags}-->"></div>
-            <input id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|strip_tags}-->" style="display: none"></input>
+            <label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input
+                    id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->"
+                    value="<!--{$indicator.value|strip_tags}-->" style="display: none"/>
             <span id="<!--{$indicator.indicatorID|strip_tags}-->_error" style="color: red; display: none">Invalid Group</span>
             <script>
             formValidator.id<!--{$indicator.indicatorID}--> = {
                 setValidator: function() {
-                    return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() == '');
+                    return ($.isNumeric($('#<!--{$indicator.indicatorID|strip_tags}-->').val()) || $('#<!--{$indicator.indicatorID|strip_tags}-->').val() === '');
                 },
                 setValidatorError: function() {
                     $('#<!--{$indicator.indicatorID|strip_tags}-->').css('border', '2px solid red');
-                    if($('#<!--{$indicator.indicatorID|strip_tags}-->_error').css('display') != 'none') {
+                    if($('#<!--{$indicator.indicatorID|strip_tags}-->_error').css('display') !== 'none') {
                         $('#<!--{$indicator.indicatorID|strip_tags}-->_error').effect('pulsate');
                     }
                     else {
@@ -450,7 +458,7 @@
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() === '');
                 },
                 setRequiredError: function() {
                     $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -458,7 +466,7 @@
             };
             <!--{/if}-->
             $(function() {
-                if(typeof groupSelector == 'undefined') {
+                if(typeof groupSelector === 'undefined') {
                     $('head').append('<link type="text/css" rel="stylesheet" href="<!--{$orgchartPath}-->/css/groupSelector.css" />');
                     $.ajax({
                         type: 'GET',
@@ -506,7 +514,7 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'orgchart_position' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <!--{if $indicator.value != ''}-->
-            <div id="indata_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->" style="padding: 0px">
+            <div id="indata_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->" style="padding: 0">
             <script>
             $(function() {
                 $.ajax({
@@ -517,7 +525,7 @@
                         $('#indata_<!--{$indicator.indicatorID|strip_tags}-->_<!--{$indicator.series|strip_tags}-->').html('<b>' + data.title + '</b>'
                             /* Pay Plan, Series, Pay Grade */ + '<br />' + data[2].data + '-' + data[13].data + '-' + data[14].data);
 
-                        if(data[3].data != '') {
+                        if(data[3].data !== '') {
                             for(i in data[3].data) {
                                 var pdLink = document.createElement('a');
                                 pdLink.innerHTML = data[3].data[i];
@@ -550,11 +558,13 @@
             Search and select:
             <!--{/if}--><br />
             <div id="posSel_<!--{$indicator.indicatorID|strip_tags}-->"></div>
-            <input id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" style="visibility: hidden"></input>
+            <label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input
+                    id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->"
+                    style="visibility: hidden"/>
             <script>
             $(function() {
             	var posSel;
-                if(typeof positionSelector == 'undefined') {
+                if(typeof positionSelector === 'undefined') {
                     $('head').append('<link type="text/css" rel="stylesheet" href="<!--{$orgchartPath}-->/css/positionSelector.css" />');
                     $.ajax({
                         type: 'GET',
@@ -600,7 +610,7 @@
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() === '');
                 },
                 setRequiredError: function() {
                     $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -612,12 +622,14 @@
         <!--{/if}-->
         <!--{if $indicator.format == 'orgchart_employee' && ($indicator.isMasked == 0 || $indicator.data == '')}-->
             <div id="empSel_<!--{$indicator.indicatorID}-->"></div>
-            <input id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" style="display: none"></input>
+            <label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input
+                    id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->"
+                    value="<!--{$indicator.value|sanitize}-->" style="display: none"/>
             
             <script>
             $(function() {
                 function importFromNational(empSel) {
-                    if(empSel.selection != '') {
+                    if(empSel.selection !== '') {
                         var selectedUserName = empSel.selectionData[empSel.selection].userName;
                         $.ajax({
                             type: 'POST',
@@ -631,7 +643,7 @@
                 }
 
             	var empSel;
-                if(typeof nationalEmployeeSelector == 'undefined') {
+                if(typeof nationalEmployeeSelector === 'undefined') {
                     $('head').append('<link type="text/css" rel="stylesheet" href="<!--{$orgchartPath}-->/css/employeeSelector.css" />');
                     $.ajax({
                         type: 'GET',
@@ -676,7 +688,7 @@
             <!--{if $indicator.required == 1}-->
             formRequired.id<!--{$indicator.indicatorID}--> = {
                 setRequired: function() {
-                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() == '');
+                    return ($('#<!--{$indicator.indicatorID|strip_tags}-->').val().trim() === '');
                 },
                 setRequiredError: function() {
                     $('#<!--{$indicator.indicatorID|strip_tags}-->_required').css({"background-color": "red", "color": "white", "padding": "4px", "font-weight": "bold"});
@@ -687,7 +699,7 @@
             <!--{$indicator.html}-->
         <!--{/if}-->
         <!--{if $indicator.format == 'raw_data' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
-            <input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" style="display: none" />
+            <label for="<!--{$indicator.indicatorID|strip_tags}-->"></label><input type="text" id="<!--{$indicator.indicatorID|strip_tags}-->" name="<!--{$indicator.indicatorID|strip_tags}-->" value="<!--{$indicator.value|sanitize}-->" style="display: none" />
             <!--{$indicator.html}-->
         <!--{/if}-->
         <!--{include file=$subindicatorsTemplate form=$indicator.child depth=$depth+4 recordID=$recordID}-->

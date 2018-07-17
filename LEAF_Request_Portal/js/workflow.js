@@ -35,7 +35,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
      * @memberOf LeafWorkflow
      */
 	function applyAction(data) {
-	    if(antiDblClick == 1) {
+	    if(antiDblClick === 1) {
 	        return 1;
 	    }
 	    else {
@@ -48,12 +48,12 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 	        url: 'api/?a=formWorkflow/' + currRecordID + '/apply',
 	        data: data,
 	        success: function(response) {
-	            if(response.errors.length == 0) {
+	            if(response.errors.length === 0) {
 	                $("#workflowbox_dep" + data['dependencyID']).html('<div style="border: 2px solid black; text-align: center; font-size: 24px; font-weight: bold; background: white; padding: 16px; width: 95%">Action applied!</div>');
 	                $("#workflowbox_dep" + data['dependencyID']).hide('blind', 500);
 
 	                getWorkflow(currRecordID);
-	                if(actionSuccessCallback != undefined) {
+	                if(actionSuccessCallback !== undefined) {
 	                	actionSuccessCallback();
 	                }
 	            }
@@ -109,7 +109,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 		// draw buttons
 		for(var i in step.dependencyActions) {
 			var icon = '';
-			if(step.dependencyActions[i].actionIcon != '') {
+			if(step.dependencyActions[i].actionIcon !== '') {
 				icon = '<img src="../libs/dynicons/?img='+ step.dependencyActions[i].actionIcon +'&amp;w=22" alt="'+ step.dependencyActions[i].actionText +'" style="vertical-align: middle" />';
 			}
 
@@ -169,7 +169,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 	                                'text-align': 'center', 'padding': '8px'
 	                               });
 	    // dependencyID -1 : special case for person designated by the requestor
-	    if(step.dependencyID == -1) {
+	    if(step.dependencyID === -1) {
 	    	$.ajax({
 	    		type: 'GET',
 	    		url: 'api/?a=form/customData/_' + recordID + '/_' + step.indicatorID_for_assigned_empUID,
@@ -179,7 +179,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 	    		}
 	    	});
 	    }
-	    else if(step.dependencyID == -3) { // dependencyID -3 : special case for group designated by the requestor
+	    else if(step.dependencyID === -3) { // dependencyID -3 : special case for group designated by the requestor
 	    	$.ajax({
 	    		type: 'GET',
 	    		url: 'api/?a=form/customData/_' + recordID + '/_' + step.indicatorID_for_assigned_groupID,
@@ -213,9 +213,9 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 	            response.stepBgColor = response.stepBgColor == null ? '#e0e0e0' : response.stepBgColor;
 	            response.stepFontColor = response.stepFontColor == null ? '#000000' : response.stepFontColor;
 	            response.stepBorder = response.stepBorder == null ? '1px solid black' : response.stepBorder;
-	            var label = response.dependencyID == 5 ? response.categoryName: response.description;
+	            var label = response.dependencyID === 5 ? response.categoryName: response.description;
 	    		if(res != null) {
-	    			if(response.dependencyID != 5) {
+	    			if(response.dependencyID !== 5) {
 	    				$('#' + containerID).append('<div id="workflowbox_lastAction" class="workflowbox" style="padding: 0px; margin-top: 8px"></div>');
 	    				$('#workflowbox_lastAction').css({'background-color': response.stepBgColor, 'border': response.stepBorder});
 	    			}
@@ -226,7 +226,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 		            if(response.description != null && response.actionText != null) {
 		                text = '<div style="background-color: ' + darkenColor(response.stepBgColor) + '; padding: 4px"><span style="float: left; font-size: 90%">' + label + ': ' + response.actionTextPasttense + '</span>';
 		                text += '<span style="float: right; font-size: 90%">' + date.toLocaleString('en-US', {weekday: "long", year: "numeric", month: "long", day: "numeric"}) + '</span><br /></div>';
-		                if(response.comment != '' && response.comment != null) {
+		                if(response.comment !== '' && response.comment != null) {
 		                    text += '<div style="font-size: 80%; padding: 4px 8px 4px 8px">Comment:<br /><div style="font-weight: normal; padding-left: 16px; font-size: 12px">' + response.comment + '</div></div>';
 		                }
 		            }
@@ -234,7 +234,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 		                text = "[ Please refer to this request's history for current status ]";
 		            }
 
-		            if(response.dependencyID != 5) {
+		            if(response.dependencyID !== 5) {
 			            $('#workflowbox_lastAction').append('<span style="font-weight: bold; color: '+response.stepFontColor+'">'+text+'</span>');
 		            }
 	    		}
@@ -252,7 +252,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 	                if(response.description != null && response.actionText != null) {
 	                    text = '<div style="padding: 4px; background-color: ' + darkenColor(response.stepBgColor) + '">' + label + ': ' + response.actionTextPasttense;
 	                    text += '<br /><span style="font-size: 60%">' + date.toLocaleString('en-US', {weekday: "long", year: "numeric", month: "long", day: "numeric"}) + '</span></div>';
-	                    if(response.comment != '' && response.comment != null) {
+	                    if(response.comment !== '' && response.comment != null) {
 	                        text += '<div style="padding: 4px 16px"><fieldset style="border: 1px solid black"><legend class="noprint">Comment</legend><span style="font-size: 80%; font-weight: normal">' + response.comment + '</span></fieldset></div>';
 	                    }
 	                }
@@ -273,7 +273,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
 	function getWorkflow(recordID) {
 		$('#' + containerID).empty();
 		$('#' + containerID).css('display', 'none');
-		antiDblClick = 0
+		antiDblClick = 0;
 		currRecordID = recordID;
 
         $.ajax({
@@ -282,7 +282,7 @@ var LeafWorkflow = function(containerID, CSRFToken) {
         	dataType: 'json',
         	success: function(res) {
         		for(var i in res) {
-        			if(res[i].hasAccess == 1) {
+        			if(res[i].hasAccess === 1) {
         				drawWorkflow(res[i]);
         			}
         			else {

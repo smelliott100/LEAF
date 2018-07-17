@@ -49,16 +49,16 @@ function processData(queryResult, workflowData) {
         for(var j in request.action_history) {
             var isCounted = false;
             var idx = Number(j);
-            if(request.action_history[idx + 1] != undefined) {
+            if(request.action_history[idx + 1] !== undefined) {
                 var stepID = request.action_history[idx + 1].stepID;
                 var startTime = request.action_history[idx].time;
                 var endTime = request.action_history[idx + 1].time;
 
-                if(workflow[stepID] != undefined) {
+                if(workflow[stepID] !== undefined) {
                     timelines[stepID] = timelines[stepID] || {};
                     timelines[stepID].label = workflow[stepID];
                 }
-                else if (stepID == 0) {
+                else if (stepID === 0) {
                     // only track "Send Back" separately from "Other route" when checkbox is enabled
                     if ($('#showSendBackData').is(':checked')) {
                         timelines[stepID] = timelines[stepID] || {};
@@ -77,15 +77,15 @@ function processData(queryResult, workflowData) {
                 }
 
                 // only count the slowest approver in a multi-requirement step   
-                if(request.action_history[idx].stepID != request.action_history[idx + 1].stepID) {
-                    timelines[stepID].count = timelines[stepID].count == undefined ? 1 : timelines[stepID].count + 1;
+                if(request.action_history[idx].stepID !== request.action_history[idx + 1].stepID) {
+                    timelines[stepID].count = timelines[stepID].count === undefined ? 1 : timelines[stepID].count + 1;
                     isCounted = true;
                 }
-                timelines[stepID].time = timelines[stepID].time == undefined ? diffBusinessTime(startTime, endTime) : timelines[stepID].time + diffBusinessTime(startTime, endTime);
+                timelines[stepID].time = timelines[stepID].time === undefined ? diffBusinessTime(startTime, endTime) : timelines[stepID].time + diffBusinessTime(startTime, endTime);
 
                 // don't count time taken during sendbacks or other route overrides
                 if (!$('#showSendBackData').is(':checked')) {
-                    if(request.action_history[idx + 1].stepID == 0) {
+                    if(request.action_history[idx + 1].stepID === 0) {
                         if(isCounted) {
                             timelines[stepID].count--;
                         }
@@ -158,7 +158,7 @@ function renderCategory(categoryID) {
 
     var data = {};
     query.onSuccess(function(res) {
-        if(res.length == 0) {
+        if(res.length === 0) {
             return 0;
         }
         numCategories++;
@@ -268,7 +268,7 @@ $(function() {
     .then(function(categories) {
         for(var i in categories) {
             if(categories[i].workflowID > 0
-                && categories[i].parentID == '') {
+                && categories[i].parentID === '') {
                 renderCategory(categories[i].categoryID);
                 
                 $('#categories').append('<div style="float: left; padding: 8px; white-space: nowrap"><input type="checkbox" id="category_'+ categories[i].categoryID +'" name="categoryID" value="'+ categories[i].categoryID +'" checked="checked" /><label class="checkable" for="category_'+ categories[i].categoryID +'">' + categories[i].categoryName + '</label></div>');
@@ -297,7 +297,7 @@ $(function() {
     <div class="card" style="padding: 8px; text-align: center">
         <div id="sendBackOptions">
             <div style="float: left; padding: 8px; white-space: nowrap">
-                <input type="checkbox" id="showSendBackData" name="showSendBack" />
+                <label for="showSendBackData"></label><input type="checkbox" id="showSendBackData" name="showSendBack" />
                 <label class="checkable" for="showSendBack_1">Include Send Back times in averages</label>
             </div>
         </div>

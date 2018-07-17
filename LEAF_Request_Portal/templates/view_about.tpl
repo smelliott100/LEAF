@@ -26,7 +26,7 @@ This software was developed by VA employees in an effort to streamline daily pro
     </tr>
 </table>
 
-<img style="position: absolute; bottom: 0px; right: 0px; width: 57%; z-index: -999" src="images/aboutlogo.png" alt="logo" />
+<img style="position: absolute; bottom: 0; right: 0; width: 57%; z-index: -999" src="images/aboutlogo.png" alt="logo" />
 <script type="text/javascript">
 
 $(function() {

@@ -23,4 +23,3 @@ $emp = new OrgChart\Employee($db, $login);
 
 print_r($emp->search('gao'));
 
-?>

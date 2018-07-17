@@ -9,7 +9,7 @@
     border: 1px solid black;
     box-shadow: 0 2px 6px #8e8e8e;
     width: 390px;
-    margin: 7px 7px 0px 7px;
+    margin: 7px 7px 0 7px;
     padding: 13px;
 
     font-size: 13pt;
@@ -27,14 +27,10 @@ div.specialties {
 #coaches div.coach div.top div.info {
     margin: 5px 5px 5px 10px;
 }
-#coaches div.coach div.top div.info div.email {}
-#coaches div.coach div.top div.info div.geoLocation{}
-#coaches div.coach div.top div.info div.locationName{
+#coaches div.coach div.top div.info div.email, {
     margin-top: 7px;
 }
-#coaches div.coach div.top div.info div.name {}
-#coaches div.coach div.top div.info div.phone {}
-#coaches div.coach div.top div.info div.pulseBioLink{
+#coaches div.coach div.top div.info div.name, {
     margin-bottom: 10px;
 }
 
@@ -139,7 +135,7 @@ function CoachQuery(searchTerm) {
  */
 CoachQuery.prototype.buildQuery = function () {
     return this.formQuery.buildQuery();
-}
+};
 
 /**
  * Parse result object of a form query
@@ -188,7 +184,7 @@ CoachQuery.prototype.parseResults = function (results) {
     });
 
     return coaches;
-}
+};
 
 function buildCoachProfile(coach) {
     // slightly faster than $("<div>")...
@@ -229,7 +225,7 @@ function buildCoachProfile(coach) {
     var specialtiesText = "";
     var maxDisplaySpecialties = 3;
     for(var i =0; i < maxDisplaySpecialties; i++) {
-        if(specialtiesList[i] != undefined) {
+        if(specialtiesList[i] !== undefined) {
             specialtiesText += specialtiesList[i] + "<br />";
         }
     }

@@ -1,6 +1,6 @@
 <!-- form -->
 <br />
-<div class="printmainform" style="border-bottom: 0px; min-height: 64px">
+<div class="printmainform" style="border-bottom: 0; min-height: 64px">
     <div id="requestTitle"><!--{$title|sanitize}--> <!--{$subtype|sanitize}-->
     <!--{if $submitted == 0 || $is_admin}-->
         <img src="../libs/dynicons/?img=accessories-text-editor.svg&amp;w=16" style="cursor: pointer" alt="Edit Title" title="Edit Title" onclick="changeTitle()" />

@@ -21,7 +21,7 @@ function invertTable() {
 
 function getFTEs(serviceID) {
 	var query = new LeafFormQuery();
-	if(serviceID != 0) {
+	if(serviceID !== 0) {
     	query.addTerm('serviceID', '=', serviceID);
     }
 	query.addTerm('deleted', '=', 0);
@@ -38,12 +38,12 @@ function getFTEs(serviceID) {
         formGrid.enableToolbar();
         formGrid.hideIndex();
         formGrid.setDataBlob(res);
-        formGrid.setHeaders([
+        formGrid.setHeaders([;
                             {name: 'PMC', indicatorID: 'pmc', editable: false, callback: function(data, blob) {
                                 $('#'+data.cellContainerID).html('<a href="index.php?a=printview&recordID='+ data.recordID +'">' + data.recordID + '</a>');
                             }},
                                  {name: 'ARPA Number', indicatorID: 372},
-                                {name: 'WebHR ID', indicatorID: 423},
+                                {name: 'WebHR ID', indicatorID: 423},;
                             {name: 'Service', indicatorID: 'service', editable: false, callback: function(data, blob) {
                                 $('#'+data.cellContainerID).html(blob[data.recordID].service);
                             }},

@@ -40,7 +40,7 @@ employeeSelector.prototype.initialize = function() {
 	$('#' + this.prefixID+ 'input').on('keydown', function(e) {
 		t.showBusy();
 		t.timer = 0;
-		if(e.keyCode == 13) { // enter key
+		if(e.keyCode === 13) { // enter key
 			t.search();
 		}
 	});
@@ -50,7 +50,7 @@ employeeSelector.prototype.initialize = function() {
 };
 
 employeeSelector.prototype.showNotBusy = function() {
-	if(this.isBusy == 1) {
+	if(this.isBusy === 1) {
 		$('#' + this.prefixID + 'icon').css('display', 'inline');
 		$('#' + this.prefixID + 'iconBusy').css('display', 'none');
 		this.isBusy = 0;
@@ -127,7 +127,7 @@ employeeSelector.prototype.enableNoLimit = function() {
 };
 
 employeeSelector.prototype.search = function() {
-	if($('#' + this.prefixID + 'input').val() == undefined
+	if($('#' + this.prefixID + 'input').val() === undefined
 		|| $('#' + this.prefixID + 'input') == null) {
 		clearInterval(this.intervalID);
 		return false;
@@ -137,7 +137,7 @@ employeeSelector.prototype.search = function() {
 	if(this.timer > 300) {
 	    var txt = $('#' + this.prefixID + 'input').val().replace(/<[^>]*>/g, '');
 
-	    if(txt != "" && txt != this.q) {
+	    if(txt !== "" && txt !== this.q) {
 	    	this.q = txt;
 
 	    	if(this.currRequest != null) {
@@ -155,7 +155,7 @@ employeeSelector.prototype.search = function() {
 		            	t.selection = '';
 		            	$('#' + t.prefixID + 'result').html('');
 		            	var buffer = '';
-		            	if(t.outputStyle == 'micro') {
+		            	if(t.outputStyle === 'micro') {
 		            		buffer = '<table class="employeeSelectorTable"><tr><th>Name</th><th>Contact</th></tr><tbody id="' + t.prefixID + 'result_table"></tbody></table>';
 		            	}
 		            	else {
@@ -164,7 +164,7 @@ employeeSelector.prototype.search = function() {
 
 		            	$('#' + t.prefixID + 'result').html(buffer);
 
-		            	if(response.length == 0) {
+		            	if(response.length === 0) {
 		            		$('#' + t.prefixID + 'result_table').append('<tr id="' + t.prefixID + 'emp0"><td style="font-size: 120%; background-color: white; text-align: center" colspan=3>No results for &quot;<span style="color: red">'+ txt +'</span>&quot;</td></tr>');
 		            	}
 
@@ -172,12 +172,12 @@ employeeSelector.prototype.search = function() {
 		            	for(var i in response) {
 		                	t.selectionData[response[i].empUID] = response[i];
 
-		                	var photo = response[i].data[1] != undefined && response[i].data[1].data != '' ? '<img class="employeeSelectorPhoto" src="' + t.rootPath + 'image.php?categoryID=1&amp;UID='+response[i].empUID+'&amp;indicatorID=1" alt="photo" />' : '';
-		                	var positionTitle = response[i].positionData != undefined ? response[i].positionData.positionTitle : '';
+		                	var photo = response[i].data[1] !== undefined && response[i].data[1].data !== '' ? '<img class="employeeSelectorPhoto" src="' + t.rootPath + 'image.php?categoryID=1&amp;UID='+response[i].empUID+'&amp;indicatorID=1" alt="photo" />' : '';
+		                	var positionTitle = response[i].positionData !== undefined ? response[i].positionData.positionTitle : '';
 		                	var groupTitle = '';
 
-		                	if(response[i].serviceData != undefined
-		                	    && response[i].serviceData[0] != undefined
+		                	if(response[i].serviceData !== undefined
+		                	    && response[i].serviceData[0] !== undefined
 		                	    && response[i].serviceData[0].groupTitle != null) {
 		                		var counter = 0;
 		                		var divide = '';
@@ -191,28 +191,28 @@ employeeSelector.prototype.search = function() {
 		                	}
 
 		                	room = '';
-		                	if(response[i].data[8] != undefined) {
-		                		if(response[i].data[8].data != '') {
+		                	if(response[i].data[8] !== undefined) {
+		                		if(response[i].data[8].data !== '') {
 		                			room = response[i].data[8].data;
 		                		}
 		                	}
 		                	var email = '';
 		                	if(t.emailHref) {
-		                		email = response[i].data[6] != undefined ? '<b>Email:</b> <a href="mailto:' + response[i].data[6].data + '" onclick="event.stopPropagation();">' + response[i].data[6].data + '</a><br />' : '';
+		                		email = response[i].data[6] !== undefined ? '<b>Email:</b> <a href="mailto:' + response[i].data[6].data + '" onclick="event.stopPropagation();">' + response[i].data[6].data + '</a><br />' : '';
 		                	}
 		                	else {
-		                		email = response[i].data[6] != undefined ? '<b>Email:</b> ' + response[i].data[6].data + '<br />' : '';
+		                		email = response[i].data[6] !== undefined ? '<b>Email:</b> ' + response[i].data[6].data + '<br />' : '';
 		                	}
 
-		                	phone = response[i].data[5] != undefined ? '<b>Phone:</b> ' + response[i].data[5].data + '<br />' : '';
+		                	phone = response[i].data[5] !== undefined ? '<b>Phone:</b> ' + response[i].data[5].data + '<br />' : '';
 
-		                	midName = response[i].middleName == '' ? '' : '&nbsp;' + response[i].middleName + '.';
+		                	midName = response[i].middleName === '' ? '' : '&nbsp;' + response[i].middleName + '.';
 		                	linkText = response[i].lastName + ', ' + response[i].firstName + midName;
 		                	if(t.selectLink != null) {
 		                		linkText = '<a href="'+ t.selectLink +'&empUID='+ response[i].empUID +'">' + linkText + '</a>';
 		                	}
 
-		                	if(t.outputStyle == 'micro') {
+		                	if(t.outputStyle === 'micro') {
 			                	$('#' + t.prefixID + 'result_table').append('<tr id="'+ t.prefixID + 'emp' + response[i].empUID +'">\
 			                			<td class="employeeSelectorName" title="' + response[i].empUID + ' - ' + response[i].userName + '">' + photo + linkText + '<br /><span class="employeeSelectorTitle">'+ positionTitle +'</span></td>\
 			                			<td class="employeeSelectorContact">'+ email + phone +'</td>\
@@ -232,13 +232,13 @@ employeeSelector.prototype.search = function() {
 		                	t.numResults++;
 		            	}
 
-		            	if(t.numResults == 1) {
+		            	if(t.numResults === 1) {
 		            		t.selection = response[i].empUID;
 		            	}
 
 		            	if(t.numResults >= 5) {
 		            		var resultColSpan = 3;
-		                	if(t.outputStyle == 'micro') {
+		                	if(t.outputStyle === 'micro') {
 		                		resultColSpan = 2;
 		                	}
 
@@ -256,13 +256,13 @@ employeeSelector.prototype.search = function() {
 		            cache: false
 		        };
 	    	var t = this;
-	    	if(this.useJSONP == 1) {
+	    	if(this.useJSONP === 1) {
 	    		ajaxOptions.url += '&format=jsonp';
 	    		ajaxOptions.dataType = 'jsonp';
 	    	}
 	        this.currRequest = $.ajax(ajaxOptions);
 	    }
-	    else if(txt == "") {
+	    else if(txt === "") {
 	    	this.q = txt;
 	    	$('#' + this.prefixID + 'result').html('');
 	    	this.numResults = 0;

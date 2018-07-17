@@ -40,10 +40,10 @@ groupSelector.prototype.initialize = function() {
 	$(this.inputID).on('keydown', function(e) {
 		t.showBusy();
 		t.timer = 0;
-		if($(t.inputID).val() == '') {
+		if($(t.inputID).val() === '') {
 			t.q = '';
 		}
-		if(e.keyCode == 13) { // enter key
+		if(e.keyCode === 13) { // enter key
 			t.q = '';
 			t.search();
 		}
@@ -54,7 +54,7 @@ groupSelector.prototype.initialize = function() {
 };
 
 groupSelector.prototype.showNotBusy = function() {
-	if(this.isBusy == 1) {
+	if(this.isBusy === 1) {
 		$('#' + this.prefixID + 'icon').css('display', 'inline');
 		$('#' + this.prefixID + 'iconBusy').css('display', 'none');
 		this.isBusy = 0;
@@ -72,7 +72,7 @@ groupSelector.prototype.select = function(id) {
 
 	nodes = $('#'+ this.containerID +' .groupSelected');
 	for(var i in nodes) {
-		if(nodes[i].id != undefined) {
+		if(nodes[i].id !== undefined) {
 			$('#' + nodes[i].id).removeClass('groupSelected');
 			$('#' + nodes[i].id).addClass('groupSelector');
 		}
@@ -131,7 +131,7 @@ groupSelector.prototype.configInputID = function(inputID) {
 };
 
 groupSelector.prototype.search = function() {
-	if($('#' + this.prefixID + 'input').val() == undefined
+	if($('#' + this.prefixID + 'input').val() === undefined
 		|| $('#' + this.prefixID + 'input') == null) {
 		clearInterval(this.intervalID);
 		return false;
@@ -141,15 +141,15 @@ groupSelector.prototype.search = function() {
 	if(this.timer > 300) {
     	var skip = 0;
 	    var txt = $('#' + this.prefixID + 'input').val().replace(/<[^>]*>/g, '');
-	    if(txt == undefined) {
+	    if(txt === undefined) {
 	    	clearInterval(this.intervalID);
 	    	return false;
 	    }
-    	if(this.q.length != 0 && this.q.length < txt.length && this.numResults == 0) {
+    	if(this.q.length !== 0 && this.q.length < txt.length && this.numResults === 0) {
     		skip = 1;
     	}
 
-	    if(txt != "" && txt != this.q && skip == 0) {
+	    if(txt !== "" && txt !== this.q && skip === 0) {
 	    	this.q = txt;
 
 	    	if(this.currRequest != null) {
@@ -173,7 +173,7 @@ groupSelector.prototype.search = function() {
 	            	var buffer = '<table class="groupSelectorTable"><tr><th>Group Title</th></tr><tbody id="' + t.prefixID + 'result_table"></tbody></table>';
 	            	$('#' + t.prefixID + 'result').html(buffer + $('#' + t.prefixID + 'result').html());
 
-	            	if(response.length == 0) {
+	            	if(response.length === 0) {
 	            		$('#' + t.prefixID + 'result_table').append('<tr id="' + t.prefixID + 'emp0"><td style="font-size: 120%; background-color: white; text-align: center">No results for &quot;<span style="color: red">'+ txt +'</span>&quot;</td></tr>');
 	            	}
 
@@ -193,7 +193,7 @@ groupSelector.prototype.search = function() {
 	                	t.numResults++;
 	                });
 
-	            	if(t.numResults == 1) {
+	            	if(t.numResults === 1) {
 	            		t.selection = response[0].groupID;
 	            	}
 
@@ -206,7 +206,7 @@ groupSelector.prototype.search = function() {
 	            cache: false
 	        });
 	    }
-	    else if(txt == "") {
+	    else if(txt === "") {
 	    	this.q = txt;
 	    	$('#' + this.prefixID + 'result').html('');
 	    	this.numResults = 0;

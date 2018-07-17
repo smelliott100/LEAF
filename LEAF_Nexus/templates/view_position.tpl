@@ -171,7 +171,7 @@ function addEmployee() {
     empSel.clearSearch();
 
     dialog.setSaveHandler(function() {
-    	if(empSel.selection != '') {
+    	if(empSel.selection !== '') {
             dialog.indicateBusy();
             var selectedUserName = empSel.selectionData[empSel.selection].userName;
             $.ajax({
@@ -195,7 +195,7 @@ function addEmployee() {
 }
 
 function startFTE() {
-	if('<!--{$positionSummary.services[0].groupID}-->' == '') {
+	if('<!--{$positionSummary.services[0].groupID}-->' === '') {
 		alert('Error: <!--{$positionSummary.employeeList[0].positionTitle}--> has not been configured with a service. Please contact your system administrator.');
 		return false;
 	}
@@ -206,7 +206,7 @@ function startFTE() {
     start_request_dialog.setSaveHandler(function() {
     	start_request_dialog.indicateBusy();
     	description = '';
-    	if($('#description').val() != '') {
+    	if($('#description').val() !== '') {
     		description = ' - ' + $('#description').val();
     	}
         $.ajax({
@@ -221,7 +221,7 @@ function startFTE() {
                       CSRFToken: '<!--{$CSRFToken}-->'},
             success: function(response) {
             	var recordID = parseFloat(response);
-            	if(!isNaN(recordID) && isFinite(recordID) && recordID != 0) {
+            	if(!isNaN(recordID) && isFinite(recordID) && recordID !== 0) {
             		$.ajax({
             			type: 'POST',
             			url: '<!--{$ERM_site_resource_management}-->api/?a=form/' + recordID,
@@ -338,7 +338,7 @@ function confirmRemove() {
         	type: 'DELETE',
             url: './api/?a=position/<!--{$positionID}-->' + '&' + $.param({CSRFToken: '<!--{$CSRFToken}-->'}),
             success: function(response) {
-            	if(response == 1) {
+            	if(response === 1) {
                     alert('Position has been deleted.');
                     history.back();
             	}
@@ -372,7 +372,7 @@ $(function() {
     $.ajax({
         url: "ajaxPosition.php?a=getForm&pID=" + <!--{$positionID}-->,
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
                 $('#positionBody').html(response);
             }
             else {
@@ -390,10 +390,10 @@ $(function() {
         $.ajax({
             url: "ajaxEmployee.php?a=getForm&empUID=<!--{$employee.empUID}-->",
             success: function(response) {
-                if(response != '') {
+                if(response !== '') {
                     $('#employeeBody_<!--{$counter}-->').html(response);
                     // if it's a long list, use an abridged format
-                    if(<!--{$numEmployees}--> > 2) {
+                    if(<!--{$numEmployees}--> > 2;) {
                     	$('.employee .printformblock').css({'display': 'none'});
                     	$('#employeeHeader_<!--{$counter}-->').append('<div class="tempText" style="float: right; border: 1px solid black; background-color: #FFE3E3; padding: 2px; margin: 4px">'+ $('span[id^="data_5_1_<!--{$employee.empUID}-->"]').html() +'<br />'+ $('span[id^="data_6_1_<!--{$employee.empUID}-->"]').html() +'</div><br /><br />');
                     }

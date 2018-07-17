@@ -193,7 +193,10 @@ class Email
         $email['headers'] = $this->getHeaders();
 
         $emailCache = serialize($email);
-        $emailQueueName = sha1($emailCache . random_int(0, 99999999));
+        try {
+            $emailQueueName = sha1($emailCache . random_int(0, 99999999));
+        } catch (Exception $e) {
+        }
         if(strlen(trim($emailCache)) == 0) {
             trigger_error('Mail error: ' . $this->emailSubject);
             return false;

@@ -2,8 +2,8 @@
     border: 1px solid black;
     background-color: #caecff;
     width: 200px;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     position: relative;
     z-index: 20;
 }
@@ -16,14 +16,14 @@
 .positionSmall_title {
     background-color: #a8dfff;
     padding: 4px;
-    margin: 0px;
+    margin: 0;
     font-weight: bold;
     cursor: move;
 }
 
 .positionSmall_data {
     padding: 4px;
-    margin: 0px;
+    margin: 0;
 }
 
 .positionPhoto {
@@ -38,7 +38,7 @@
     background-color: #f6cafd;
     width: 200px;
     min-height: 72px;
-    padding: 0px;
+    padding: 0;
     margin: 8px;
     cursor: pointer;
     position: relative;
@@ -49,7 +49,7 @@
 .groupSmall_title {
     background-color: #cb9ed7;
     padding: 4px;
-    margin: 0px;
+    margin: 0;
     font-weight: bold;
 }
 
@@ -68,7 +68,7 @@
     position: absolute;
     background-color: lime;
     width: 250px;
-    left: 0px;
+    left: 0;
     padding: 4px;
 }
 

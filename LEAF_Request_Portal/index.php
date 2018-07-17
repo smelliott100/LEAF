@@ -76,7 +76,10 @@ switch ($action) {
         $stack = new FormStack($db, $login);
 
         $t_menu->assign('action', XSSHelpers::xscrub($action));
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $currEmployee = $form->employee->lookupLogin($_SESSION['userID']);
         $currEmployeeData = $form->employee->getAllData($currEmployee[0]['empUID'], 5);
@@ -92,9 +95,15 @@ switch ($action) {
         $t_form->assign('empMembership', $login->getMembership());
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
 
-        $main->assign('body', $t_form->fetch(customTemplate('initial_form.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('initial_form.tpl')));
+        } catch (SmartyException $e) {
+        }
 
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
         $tabText = 'Resource Request';
 
         break;
@@ -111,7 +120,10 @@ switch ($action) {
         {
             $t_menu->assign('recordID', $recordIDToView);
             $t_menu->assign('action', XSSHelpers::xscrub($action));
-            $o_login = $t_login->fetch('login.tpl');
+            try {
+                $o_login = $t_login->fetch('login.tpl');
+            } catch (SmartyException $e) {
+            }
 
             // $thisRecord = $form->getRecord($_GET['recordID']);
 
@@ -132,7 +144,10 @@ switch ($action) {
                 case 'review':
                     break;
                 default:
-                    $main->assign('body', $t_form->fetch(customTemplate('form.tpl')));
+                    try {
+                        $main->assign('body', $t_form->fetch(customTemplate('form.tpl')));
+                    } catch (SmartyException $e) {
+                    }
 
                     break;
             }
@@ -141,7 +156,10 @@ switch ($action) {
         {
             $main->assign('status', 'This form is locked from editing.');
         }
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $requestLabel = $settings['requestLabel'] == '' ? 'Request' : XSSHelpers::sanitizeHTML($settings['requestLabel']);
         $tabText = $requestLabel . ' #' . $recordIDToView;
@@ -164,7 +182,10 @@ switch ($action) {
         $form = new Form($db, $login);
         $t_menu->assign('recordID', $recordIDToPrint);
         $t_menu->assign('action', XSSHelpers::xscrub($action));
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $recordInfo = $form->getRecordInfo($recordIDToPrint);
         $comments = $form->getActionComments($recordIDToPrint);
@@ -227,7 +248,10 @@ switch ($action) {
                     }
                 }
 
-                $main->assign('body', $t_form->fetch(customTemplate('print_form.tpl')));
+                try {
+                    $main->assign('body', $t_form->fetch(customTemplate('print_form.tpl')));
+                } catch (SmartyException $e) {
+                }
                 $t_menu->assign('hide_main_control', true);
 
                 break;
@@ -269,7 +293,10 @@ switch ($action) {
         $t_form->assign('descriptionID', $config->descriptionID);
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
 
-        $main->assign('body', $t_form->fetch(customTemplate('view_inbox.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('view_inbox.tpl')));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = 'Inbox';
 
@@ -282,7 +309,10 @@ switch ($action) {
 
         $t_menu->assign('recordID', $recordIDForStatus);
         $t_menu->assign('action', XSSHelpers::xscrub($action));
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $t_form = new Smarty;
         $t_form->left_delimiter = '<!--{';
@@ -298,7 +328,10 @@ switch ($action) {
         $t_form->assign('agenda', $view->buildViewStatus($recordIDForStatus));
         $t_form->assign('dependencies', $form->getDependencyStatus($recordIDForStatus));
 
-        $main->assign('body', $t_form->fetch('view_status.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('view_status.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         break;
     case 'cancelled_request':
@@ -310,7 +343,10 @@ switch ($action) {
         break;
     case 'import_from_webHR':
         $t_menu->assign('action', $action);
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $t_form = new Smarty;
         $t_form->left_delimiter = '<!--{';
@@ -318,9 +354,12 @@ switch ($action) {
 
         $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 
-        $main->assign('body', $t_form->fetch('import_from_webHR.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('import_from_webHR.tpl'));
+        } catch (SmartyException $e) {
+        }
 
-           $tabText = 'WebHR Importer';
+        $tabText = 'WebHR Importer';
 
            break;
     case 'bookmarks':
@@ -336,7 +375,10 @@ switch ($action) {
 
         $t_form->assign('bookmarks', $view->buildViewBookmarks($login->getUserID()));
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
-        $main->assign('body', $t_form->fetch('view_bookmarks.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('view_bookmarks.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = 'Bookmarks';
 
@@ -358,7 +400,10 @@ switch ($action) {
         $t_form->right_delimiter = '}-->';
         $t_form->assign('total', $count);
         $t_form->assign('tags', $tempTags);
-        $main->assign('body', $t_form->fetch('tag_cloud.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('tag_cloud.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = 'Tag Cloud';
 
@@ -374,7 +419,10 @@ switch ($action) {
         $t_form->assign('tag', strip_tags($_GET['tag']));
         $t_form->assign('totalNum', count($tagMembers));
         $t_form->assign('requests', $tagMembers);
-        $main->assign('body', $t_form->fetch('tag_show_members.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('tag_show_members.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         $tabText = 'Tagged Requests';
 
@@ -388,14 +436,20 @@ switch ($action) {
         $t_form->assign('dbversion', $rev[0]['data']);
 
         $main->assign('hideFooter', true);
-        $main->assign('body', $t_form->fetch('view_about.tpl'));
+        try {
+            $main->assign('body', $t_form->fetch('view_about.tpl'));
+        } catch (SmartyException $e) {
+        }
 
         break;
     case 'search':
         $main->assign('javascripts', array('js/form.js', 'js/formGrid.js', 'js/formQuery.js', 'js/formSearch.js'));
         $main->assign('useUI', true);
 
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $t_form = new Smarty;
         $t_form->left_delimiter = '<!--{';
@@ -404,9 +458,15 @@ switch ($action) {
         $t_form->assign('orgchartPath', Config::$orgchartPath);
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
 
-        $main->assign('body', $t_form->fetch(customTemplate('view_search.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('view_search.tpl')));
+        } catch (SmartyException $e) {
+        }
 
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         break;
     case 'reports':
@@ -421,7 +481,10 @@ switch ($action) {
            ));
            $main->assign('useUI', true);
 
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $t_form = new Smarty;
         $t_form->left_delimiter = '<!--{';
@@ -435,10 +498,16 @@ switch ($action) {
         $t_form->assign('version', (int)$_GET['v']);
         $t_form->assign('empMembership', $login->getMembership());
 
-        $main->assign('body', $t_form->fetch(customTemplate('view_reports.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('view_reports.tpl')));
+        } catch (SmartyException $e) {
+        }
 
-           $o_login = $t_login->fetch('login.tpl');
-           $tabText = 'Report Builder';
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
+        $tabText = 'Report Builder';
 
            break;
     case 'logout':
@@ -452,7 +521,10 @@ switch ($action) {
         $main->assign('city', $settings['subheading'] == '' ? $config->city : XSSHelpers::sanitizeHTML($settings['subheading']));
         $main->assign('revision', XSSHelpers::sanitizeHTML($settings['version']));
 
-        $main->assign('body', $t_form->fetch(customTemplate('view_logout.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('view_logout.tpl')));
+        } catch (SmartyException $e) {
+        }
         $main->display(customTemplate('main.tpl'));
         exit();
 
@@ -461,7 +533,10 @@ switch ($action) {
         $main->assign('javascripts', array('js/form.js', 'js/formGrid.js', 'js/formQuery.js', 'js/formSearch.js'));
         $main->assign('useLiteUI', true);
 
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         $t_form = new Smarty;
         $t_form->left_delimiter = '<!--{';
@@ -483,23 +558,35 @@ switch ($action) {
         //$t_form->assign('inbox_status', $inbox->getInboxStatus()); // see Inbox.php -> getInboxStatus()
         $t_form->assign('inbox_status', 1);
 
-        $main->assign('body', $t_form->fetch(customTemplate('view_homepage.tpl')));
+        try {
+            $main->assign('body', $t_form->fetch(customTemplate('view_homepage.tpl')));
+        } catch (SmartyException $e) {
+        }
 
         if ($action != 'menu' && $action != '' && $action != 'dosubmit')
         {
             $main->assign('status', 'The page you are looking for does not exist or may have been moved. Please update your bookmarks.');
         }
 
-        $o_login = $t_login->fetch('login.tpl');
+        try {
+            $o_login = $t_login->fetch('login.tpl');
+        } catch (SmartyException $e) {
+        }
 
         break;
 }
 
-$main->assign('login', $t_login->fetch('login.tpl'));
+try {
+    $main->assign('login', $t_login->fetch('login.tpl'));
+} catch (SmartyException $e) {
+}
 $t_menu->assign('action', XSSHelpers::xscrub($action));
 $t_menu->assign('orgchartPath', Config::$orgchartPath);
 $t_menu->assign('empMembership', $login->getMembership());
-$o_menu = $t_menu->fetch(customTemplate('menu.tpl'));
+try {
+    $o_menu = $t_menu->fetch(customTemplate('menu.tpl'));
+} catch (SmartyException $e) {
+}
 $main->assign('menu', $o_menu);
 $main->assign('tabText', XSSHelpers::sanitizeHTML($tabText));
 

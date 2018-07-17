@@ -123,7 +123,7 @@
         <!--{if $indicator.format == 'orgchart_position'}-->
             <span class="printResponse" id="data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->">
             <!--{if trim($indicator.value) != ''}-->
-            <div style="padding: 0px">
+            <div style="padding: 0">
             <script>
             $(function() {
                 $.ajax({
@@ -131,7 +131,7 @@
                     url: '<!--{$orgchartPath}-->/api/?a=position/<!--{$indicator.value|escape}-->',
                     dataType: 'json',
                     success: function(data) {
-                        if(data.title != false) {
+                        if(data.title !== false) {
                             $('#data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->').append('<div style="border: 1px solid black" id="data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->_pos">\
                                     <img src="../libs/dynicons/?img=preferences-system-windows.svg&w=32" alt="View Position Details" style="float: left; padding: 4px" /><b>' + data.title + '</b><br />' + data[2].data + '-' + data[13].data + '-' + data[14].data + '</div>');
                             $('#data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->_pos').on('click', function() {
@@ -140,7 +140,7 @@
                             $('#data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->_pos').addClass('buttonNorm noprint');
                             $('#data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->_pos').css('margin-top', '8px');
     
-                            if(data[3].data != '') {
+                            if(data[3].data !== '') {
                                 for(i in data[3].data) {
                                     $('#data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->').append('<br />Position Description: <a class="printResponse" target="_blank" href="<!--{$orgchartPath}-->/file.php?categoryID=2&UID=<!--{$indicator.value}-->&indicatorID=3&file=' + encodeURIComponent(data[3].data[i]) +'">'+ data[3].data[i] +'</a>');
                                 }
@@ -167,7 +167,7 @@
         <!--{if $indicator.format == 'orgchart_employee'}-->
             <span class="printResponse" id="data_<!--{$indicator.indicatorID}-->_<!--{$indicator.series}-->">
             <!--{if trim($indicator.value) != ''}-->
-            <div style="padding: 0px">
+            <div style="padding: 0">
                 <!--{if $indicator.displayedValue != ''}-->
                     <a href="<!--{$orgchartPath}-->/?a=view_employee&empUID=<!--{$indicator.value|escape}-->"><!--{$indicator.displayedValue|sanitize}--></a>
                 <!--{else}-->

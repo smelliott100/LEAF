@@ -92,9 +92,9 @@ $(function() {
     $('#run').on('click', function() {
         var oldAccount = empSel.selectionData[empSel.selection].userName;
         var newAccount = empSelNew.selectionData[empSelNew.selection].userName;
-		if(oldAccount != ''
-          	&& newAccount != ''
-          	&& oldAccount != newAccount) {
+		if(oldAccount !== ''
+          	&& newAccount !== ''
+          	&& oldAccount !== newAccount) {
             findAssociatedRequests(oldAccount, newAccount);
         }
         else {

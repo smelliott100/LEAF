@@ -12,12 +12,10 @@
 
 .formPreviewTitle {
     font-weight: bold;
-    padding-bottom: 1em;
     padding: 8px;
 }
 
 .formPreviewDescription {
-    padding-bottom: 1em;
     padding: 8px;
     text-overflow: ellipsis;
     overflow: hidden;

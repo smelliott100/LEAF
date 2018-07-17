@@ -8,10 +8,10 @@
 
 var currCategoryID = '';
 function openContent(url) {
-	var isSubForm = categories[currCategoryID].parentID == '' ? false : true;
-	var formTitle = categories[currCategoryID].categoryName == '' ? 'Untitled' : categories[currCategoryID].categoryName;
+	var isSubForm = categories[currCategoryID].parentID != '';
+	var formTitle = categories[currCategoryID].categoryName === '' ? 'Untitled' : categories[currCategoryID].categoryName;
 	var workflow = '';
-	if(categories[currCategoryID].workflowID != 0) {
+	if(categories[currCategoryID].workflowID !== 0) {
 		workflow = categories[currCategoryID].description + ' (ID #' + categories[currCategoryID].workflowID + ')';
 	}
 	else {
@@ -23,7 +23,7 @@ function openContent(url) {
     		                          '<b title="categoryID: '+ currCategoryID +'">' + formTitle + '</b><br />' +
     		                          categories[currCategoryID].categoryDescription +
     		                          '<br /><span class="isSubForm">Workflow: ' + workflow + '</span>' +
-    		                          '<br /><span class="isSubForm">Need to Know mode: ' + (categories[currCategoryID].needToKnow == 1 ? 'On' : 'Off') + '</span>' +
+    		                          '<br /><span class="isSubForm">Need to Know mode: ' + (categories[currCategoryID].needToKnow === 1 ? 'On' : 'Off') + '</span>' +
     		                      '</div>' +
                                   '</div><br /><div id="formEditor_form" style="background-color: white"><div style="border: 2px solid black; text-align: center; font-size: 24px; font-weight: bold; background: white; padding: 16px; width: 95%">Loading... <img src="../images/largespinner.gif" alt="loading..." /></div></div>');
     if(isSubForm) {
@@ -124,7 +124,7 @@ function openContent(url) {
                     	categoryID: currCategoryID,
                         CSRFToken: '<!--{$CSRFToken}-->'},
                     success: function(res) {
-                        if(res == false) {
+                        if(res === false) {
                         	alert('Workflow cannot be set because this form has been merged into another form');
                         }
                     }
@@ -244,7 +244,7 @@ function removePermission(groupID) {
 }
 
 function editPermissions() {
-	formTitle = categories[currCategoryID].categoryName == '' ? 'Untitled' : categories[currCategoryID].categoryName;
+	formTitle = categories[currCategoryID].categoryName === '' ? 'Untitled' : categories[currCategoryID].categoryName;
 
 	dialog_simple.setTitle('Edit Collaborators - ' + formTitle);
 	dialog_simple.setContent('<h2>Collaborators have access to fill out data fields at any time in the workflow.</h2><br />'
@@ -313,7 +313,7 @@ function addIndicatorPrivilege(indicatorID) {
             [$('#groupID').val()],
             function(results) {
                 console.log(results);
-                if (results == true) {
+                if (results === true) {
 
                     console.log('it worked!');
                 } else {
@@ -454,7 +454,7 @@ function newQuestion(parentIndicatorID) {
         });
     });
     $('#required').on('click', function() {
-    	if($('#indicatorType').val() == '') {
+    	if($('#indicatorType').val() === '') {
     		$('#required').prop('checked', false);
     		alert('You can\'t mark a field as required if the Input Format is "None".');
     	}
@@ -582,7 +582,7 @@ function getForm(indicatorID, series) {
     	}
     });
     $('#required').on('click', function() {
-        if($('#indicatorType').val() == '') {
+        if($('#indicatorType').val() === '') {
             $('#required').prop('checked', false);
             alert('You can\'t mark a field as required if the Input Format is "None".');
         }
@@ -696,7 +696,7 @@ function getForm(indicatorID, series) {
     	            var buffer = '<select id="parentID" style="width: 300px">';
     	            buffer += '<option value="">None</option>';
     	            for(var i in res) {
-    	                if(indicatorID != i) {
+    	                if(indicatorID !== i) {
     	                    buffer += '<option value="'+ i +'">' + i + ': ' + res[i][1].name +'</option>';
     	                }
     	            }
@@ -711,7 +711,7 @@ function getForm(indicatorID, series) {
             url: '../api/formEditor/indicator/' + indicatorID,
             success: function(res) {
                 var format = res[indicatorID].format;
-                if(res[indicatorID].options != undefined
+                if(res[indicatorID].options !== undefined
                     && res[indicatorID].options.length > 0) {
                     for(var i in res[indicatorID].options) {
                         format += "\n" + res[indicatorID].options[i];
@@ -727,7 +727,7 @@ function getForm(indicatorID, series) {
                 $('#indicatorType').val(format);
                 $('#description').val(res[indicatorID].description);
                 $('#default').val(res[indicatorID].default);
-                if(res[indicatorID].required == 1) {
+                if(res[indicatorID].required === 1) {
                     $('#required').prop('checked', true);
                 }
                 $('#parentID').val(res[indicatorID].parentID);
@@ -737,7 +737,7 @@ function getForm(indicatorID, series) {
 
                 // render input format UI
                 var formatIdx = format.indexOf('\n');
-                if(formatIdx != -1 && format.substr(0, formatIdx) != '') {
+                if(formatIdx !== -1 && format.substr(0, formatIdx) !== '') {
                     switch(format.substr(0, formatIdx)) {
                         case 'checkbox':
                             $('#indicatorType').val(format.substr(0, formatIdx));
@@ -786,7 +786,7 @@ function getForm(indicatorID, series) {
     	dialog.indicateBusy();
 
         // check if the user is trying to set an invalid parent ID
-        if(indicatorID == $('#parentID').val()) {
+        if(indicatorID === $('#parentID').val()) {
         	alert('Invalid parentID.');
         	$('#parentID').val('');
         	dialog.indicateIdle();
@@ -909,7 +909,7 @@ function formatIndicatorMultiAnswer(multiAnswerValue){
     }
     var uniqueNames = multiAnswerValue.split("\n");
     uniqueNames = uniqueNames.filter(function(elem, index, self) {
-       return index == self.indexOf(elem);
+       return index === self.indexOf(elem);
     });
 
     $.each(uniqueNames, function(i, el){
@@ -933,9 +933,9 @@ function mergeForm(categoryID) {
         success: function(res) {
             var buffer = '<select id="stapledCategoryID">';
             for(var i in res) {
-            	if(res[i].workflowID == 0
-            		&& res[i].categoryID != categoryID
-            		&& res[i].parentID == '') {
+            	if(res[i].workflowID === 0
+            		&& res[i].categoryID !== categoryID
+            		&& res[i].parentID === '') {
             		buffer += '<option value="'+ res[i].categoryID +'">'+ res[i].categoryName +'</option>';
             	}
             }
@@ -953,7 +953,7 @@ function mergeForm(categoryID) {
             data: {CSRFToken: '<!--{$CSRFToken}-->',
                    stapledCategoryID: $('#stapledCategoryID').val()},
             success: function(res) {
-            	if(res == 1) {
+            	if(res === 1) {
                     dialog.hide();
                     mergeFormDialog(categoryID);
             	}
@@ -1030,7 +1030,7 @@ function exportForm(categoryID) {
     });
 
 	for(var i in categories) {
-        if(categories[i].parentID == categoryID) {
+        if(categories[i].parentID === categoryID) {
         	promise = promise.then(
             	function(subCategoryID) {
                     return $.ajax({
@@ -1062,7 +1062,7 @@ function exportForm(categoryID) {
 }
 
 function deleteForm() {
-	var formTitle = categories[currCategoryID].categoryName == '' ? 'Untitled' : categories[currCategoryID].categoryName;
+	var formTitle = categories[currCategoryID].categoryName === '' ? 'Untitled' : categories[currCategoryID].categoryName;
 	dialog_confirm.setTitle('Delete Form?');
 	dialog_confirm.setContent('Are you sure you want to delete the <b>'+ formTitle +'</b> form?');
 	
@@ -1071,7 +1071,7 @@ function deleteForm() {
 			type: 'DELETE',
 			url: '../api/?a=formStack/_' + currCategoryID + '&CSRFToken=<!--{$CSRFToken}-->',
 			success: function(res) {
-			    if(res != true) {
+			    if(res !== true) {
 			        alert(res);
 			    }
 		        window.location.reload();
@@ -1093,7 +1093,7 @@ function buildMenu(categoryID) {
         };
     }(categoryID));
 	for(var i in categories) {
-		if(categories[i].parentID == categoryID) {
+		if(categories[i].parentID === categoryID) {
 			$('#menu').append('<div id="'+ categories[i].categoryID +'" class="buttonNorm" style="font-size: 120%"><img src="../../libs/dynicons/?img=text-x-generic.svg&w=32" alt="Open Form" /> '+ categories[i].categoryName +'</div>');
             $('#' + categories[i].categoryID).on('click', function(categoryID) {
                 return function() {
@@ -1158,11 +1158,11 @@ function showFormBrowser() {
             $('#formEditor_content').html(buffer);
             for(var i in res) {
             	categories[res[i].categoryID] = res[i];
-            	if(res[i].parentID == '') {
-            		formTitle = res[i].categoryName == '' ? 'Untitled' : res[i].categoryName;
-            		availability = res[i].visible == 1 ? '' : 'Hidden. Users cannot submit new requests.';
+            	if(res[i].parentID === '') {
+            		formTitle = res[i].categoryName === '' ? 'Untitled' : res[i].categoryName;
+            		availability = res[i].visible === 1 ? '' : 'Hidden. Users cannot submit new requests.';
             		var needToKnow = '';
-            		if(res[i].needToKnow == 1) {
+            		if(res[i].needToKnow === 1) {
             			needToKnow = ' <img src="../../libs/dynicons/?img=emblem-readonly.svg&w=16" alt="Need to know mode enabled" title="Need to know mode enabled" />';
             		}
             		var formActiveID = '';
@@ -1189,7 +1189,7 @@ function showFormBrowser() {
                     }(res[i].categoryID));
             	}
             }
-            if(postRenderFormBrowser != undefined) {
+            if(postRenderFormBrowser !== undefined) {
             	postRenderFormBrowser();
             }
         },
@@ -1198,7 +1198,7 @@ function showFormBrowser() {
 }
 
 function createForm(parentID) {
-	if(parentID == undefined) {
+	if(parentID === undefined) {
 		parentID = '';
 		dialog.setTitle('New Form');
 	}
@@ -1236,7 +1236,7 @@ function createForm(parentID) {
                 categories[res].categoryDescription = categoryDescription;
                 categories[res].workflowID = 0;
                 categories[res].parentID = '';
-    			if(parentID != '') {
+    			if(parentID !== '') {
     			    categories[res].parentID = parentID;
     				buildMenu(parentID);
     				// hightlight the newly created form in the menu

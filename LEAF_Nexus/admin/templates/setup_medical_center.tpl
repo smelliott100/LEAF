@@ -123,7 +123,7 @@ function createDirectorGroup() {
     }
 
     dialog.setSaveHandler(function() {
-        if($('#serviceName').val() == '') {
+        if($('#serviceName').val() === '') {
             alert('All fields must be filled out.');
         }
         else {
@@ -201,9 +201,9 @@ function createGroup() {
 	}
 
 	dialog.setSaveHandler(function() {
-		if($('#serviceName').val() == ''
-			|| $('#positionTitle').val() == ''
-			|| empSel.selection == '') {
+		if($('#serviceName').val() === ''
+			|| $('#positionTitle').val() === ''
+			|| empSel.selection === '') {
 			alert('All fields must be filled out.');
 		}
 		else {
@@ -390,9 +390,9 @@ function createService(parentGroupID) {
     }
 
     dialog.setSaveHandler(function() {
-        if($('#serviceName').val() == ''
-            || $('#positionTitle').val() == ''
-            || empSel.selection == '') {
+        if($('#serviceName').val() === ''
+            || $('#positionTitle').val() === ''
+            || empSel.selection === '') {
             alert('All fields must be filled out.');
         }
         else {

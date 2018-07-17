@@ -36,7 +36,7 @@ function newWorkflow() {
 }
 
 function deleteWorkflow() {
-    if(currentWorkflow == 0) {
+    if(currentWorkflow === 0) {
         return;
     }
 
@@ -47,7 +47,7 @@ function deleteWorkflow() {
             type: 'DELETE',
             url: '../api/?a=workflow/'+ currentWorkflow + '&CSRFToken=' + CSRFToken,
             success: function(res) {
-            	if(res != true) {
+            	if(res !== true) {
             		alert("Prerequisite action needed:\n\n" + res);
             		dialog_confirm.hide();
             	}
@@ -127,7 +127,7 @@ function removeStep(stepID) {
             type: 'DELETE',
             url: '../api/?a=workflow/step/' + stepID + '&CSRFToken=' + CSRFToken,
             success: function(res) {
-            	if(res == 1) {
+            	if(res === 1) {
             		loadWorkflow(currentWorkflow);
             		dialog_confirm.hide();
             	}
@@ -151,7 +151,7 @@ function editStep(stepID) {
             	   title: $('#title').val()},
             url: '../api/?a=workflow/step/' + stepID,
             success: function(res) {
-                if(res == 1) {
+                if(res === 1) {
                     loadWorkflow(currentWorkflow);
                     dialog.hide();
                 }
@@ -271,7 +271,7 @@ function dependencyGrantAccess(dependencyID, stepID) {
             success: function(res) {
                 dialog.hide();
                 loadWorkflow(currentWorkflow);
-                if(stepID != undefined) {
+                if(stepID !== undefined) {
                 	linkDependency(stepID, dependencyID);
                 }
             }
@@ -318,8 +318,8 @@ function linkDependencyDialog(stepID) {
             
             buffer += '<optgroup label="Custom Requirements">';
             for(var i in res) {
-            	if(reservedDependencies.indexOf(res[i].dependencyID) == -1
-            		&& maskedDependencies.indexOf(res[i].dependencyID) == -1) {
+            	if(reservedDependencies.indexOf(res[i].dependencyID) === -1
+            		&& maskedDependencies.indexOf(res[i].dependencyID) === -1) {
             		buffer += '<option value="'+ res[i].dependencyID +'">'+ res[i].description +'</option>';
             	}
             }
@@ -327,7 +327,7 @@ function linkDependencyDialog(stepID) {
 
             buffer += '<optgroup label="&quot;Smart&quot; Requirements">';
             for(var i in res) {
-                if(reservedDependencies.indexOf(res[i].dependencyID) != -1) {
+                if(reservedDependencies.indexOf(res[i].dependencyID) !== -1) {
                     buffer += '<option value="'+ res[i].dependencyID +'">'+ res[i].description +'</option>';
                 }
             }
@@ -348,7 +348,7 @@ function linkDependencyDialog(stepID) {
 
 function createStep() {
 	$('.workflowStepInfo').css('display', 'none');
-	if(currentWorkflow == 0) {
+	if(currentWorkflow === 0) {
 		return;
 	}
 	
@@ -377,7 +377,7 @@ function setInitialStep(stepID) {
                CSRFToken: CSRFToken},
         success: function() {
         	// ending step
-        	if(stepID == 0) {
+        	if(stepID === 0) {
                 $.ajax({
                     type: 'POST',
                     url: '../api/?a=workflow/' + currentWorkflow + '/action',
@@ -432,8 +432,8 @@ function newAction() {
 		          <br /><br />Does this action represent moving forwards or backwards in the process? <select id="fillDependency"><option value="1">Forwards</option><option value="-1">Backwards</option></select><br />';
 
     dialog.setSaveHandler(function() {
-    	if($('#actionText').val() == ''
-    		|| $('#actionTextPasttense').val() == '') {
+    	if($('#actionText').val() === ''
+    		|| $('#actionTextPasttense').val() === '') {
     		alert('Please fill out required fields.');
     	}
     	else {
@@ -464,23 +464,23 @@ function createAction(params) {
 	sourceTitle = '';
 	target = parseFloat(params.targetId.substr(5));
 	targetTitle = '';
-	if(source == 0) {
+	if(source === 0) {
 		sourceTitle = 'End';
 		alert('Ending step cannot be set as a triggering step.');
 		loadWorkflow(currentWorkflow);
 		return;
 	}
-	if(target == 0) {
+	if(target === 0) {
 		targetTitle = 'End';
 	}
-	if(source == -1) {
+	if(source === -1) {
 		source = 0;
 		sourceTitle = 'Requestor';
 		// handle intial step separately
 		setInitialStep(target);
 		return;
 	}
-	if(target == -1) {
+	if(target === -1) {
 		target = 0;
 		targetTitle = 'Requestor';
 
@@ -577,11 +577,11 @@ function showActionInfo(params, evt) {
         url: '../api/?a=workflow/'+ currentWorkflow +'/step/' + stepID + '/_' + params.action + '/events',
         success: function(res) {
             var output = '';
-            stepTitle = steps[stepID] != undefined ? steps[stepID].stepTitle : 'Requestor';
+            stepTitle = steps[stepID] !== undefined ? steps[stepID].stepTitle : 'Requestor';
             output = '<h2>'+ stepTitle +' -> '+ params.action +'</h2>';
             output += '<br /><div>Events:<ul>';
             // the sendback action always notifies the requestor
-            if(params.action == 'sendback') {
+            if(params.action === 'sendback') {
             	output += '<li><b>Notify the requestor via email</b></li>';
             }
             for(var i in res) {
@@ -616,8 +616,8 @@ function setDynamicApprover(stepID) {
     	success: function(res) {
     		var indicatorList = '';
     		for(var i in res) {
-    			if(res[i]['format'] == 'orgchart_employee'
-    				|| res[i]['format'] == 'raw_data') {
+    			if(res[i]['format'] === 'orgchart_employee'
+    				|| res[i]['format'] === 'raw_data') {
     				indicatorList += '<option value="'+ res[i].indicatorID +'">'+ res[i].categoryName +': '+ res[i].name +' (id: '+ res[i].indicatorID +')</option>';
     			}
     		}
@@ -654,8 +654,8 @@ function setDynamicGroupApprover(stepID) {
         success: function(res) {
             var indicatorList = '';
             for(var i in res) {
-                if(res[i]['format'] == 'orgchart_group'
-                	|| res[i]['format'] == 'raw_data') {
+                if(res[i]['format'] === 'orgchart_group'
+                	|| res[i]['format'] === 'raw_data') {
                     indicatorList += '<option value="'+ res[i].indicatorID +'">'+ res[i].categoryName +': '+ res[i].name +' (id: '+ res[i].indicatorID +')</option>';
                 }
             }
@@ -682,7 +682,7 @@ function setDynamicGroupApprover(stepID) {
 }
 
 function showStepInfo(stepID) {
-	if($('#stepInfo_' + stepID).css('display') != 'none') { // hide info window on second click
+	if($('#stepInfo_' + stepID).css('display') !== 'none') { // hide info window on second click
 		$('.workflowStepInfo').css('display', 'none');
 		return;
 	}
@@ -709,31 +709,31 @@ function showStepInfo(stepID) {
                     for(var i in res) {
                     	control_editDependency = '<img style="cursor: pointer" src="../../libs/dynicons/?img=accessories-text-editor.svg&w=16" onclick="editRequirement('+ res[i].dependencyID +')" alt="Edit Requirement" />';
                     	control_unlinkDependency = '<img style="cursor: pointer" src="../../libs/dynicons/?img=dialog-error.svg&w=16" onclick="unlinkDependency('+ stepID +', '+ res[i].dependencyID +')" alt="Remove" />';
-                        if(res[i].dependencyID == 1) { // special case for service chief and quadrad
+                        if(res[i].dependencyID === 1) { // special case for service chief and quadrad
                             output += '<li><b style="color: green">'+ res[i].description +'</b> '+ control_editDependency + ' ' + control_unlinkDependency + ' (depID: '+ res[i].dependencyID +')</li>';
                         }
-                        else if(res[i].dependencyID == 8) { // special case for service chief and quadrad
+                        else if(res[i].dependencyID === 8) { // special case for service chief and quadrad
                             output += '<li><b style="color: green">'+ res[i].description +'</b> '+ control_editDependency + ' ' + control_unlinkDependency +' (depID: '+ res[i].dependencyID +')</li>';
                         }
-                        else if(res[i].dependencyID == -1) { // dependencyID -1 : special case for person designated by the requestor
+                        else if(res[i].dependencyID === -1) { // dependencyID -1 : special case for person designated by the requestor
                         	var indicatorWarning = '';
-                        	if(res[i].indicatorID_for_assigned_empUID == null || res[i].indicatorID_for_assigned_empUID == 0) {
+                        	if(res[i].indicatorID_for_assigned_empUID == null || res[i].indicatorID_for_assigned_empUID === 0) {
                         		indicatorWarning = '<li><span style="color: red; font-weight: bold">A data field (indicatorID) must be set.</span></li>';
                         	}
                             output += '<li><b style="color: green">'+ res[i].description +'</b> '+ control_unlinkDependency +' (depID: '+ res[i].dependencyID +')<ul>'+ indicatorWarning +'<li>indicatorID: '+ res[i].indicatorID_for_assigned_empUID +'<br /><div class="buttonNorm" onclick="setDynamicApprover('+ res[i].stepID +')">Set Data Field</div></li></ul></li>';
                         }
-                        else if(res[i].dependencyID == -2) { // dependencyID -2 : requestor followup
+                        else if(res[i].dependencyID === -2) { // dependencyID -2 : requestor followup
                         	output += '<li><b style="color: green">'+ res[i].description +'</b> '+ control_unlinkDependency +' (depID: '+ res[i].dependencyID +')</li>';
                         }
-                        else if(res[i].dependencyID == -3) { // dependencyID -3 : special case for group designated by the requestor
+                        else if(res[i].dependencyID === -3) { // dependencyID -3 : special case for group designated by the requestor
                             var indicatorWarning = '';
-                            if(res[i].indicatorID_for_assigned_groupID == null || res[i].indicatorID_for_assigned_groupID == 0) {
+                            if(res[i].indicatorID_for_assigned_groupID == null || res[i].indicatorID_for_assigned_groupID === 0) {
                                 indicatorWarning = '<li><span style="color: red; font-weight: bold">A data field (indicatorID) must be set.</span></li>';
                             }
                             output += '<li><b style="color: green">'+ res[i].description +'</b> '+ control_unlinkDependency +' (depID: '+ res[i].dependencyID +')<ul>'+ indicatorWarning +'<li>indicatorID: '+ res[i].indicatorID_for_assigned_groupID +'<br /><div class="buttonNorm" onclick="setDynamicGroupApprover('+ res[i].stepID +')">Set Data Field</div></li></ul></li>';
                         }
                         else {
-                        	if(tDeps[res[i].dependencyID] == undefined) { // 
+                        	if(tDeps[res[i].dependencyID] === undefined) { //
                         		tDeps[res[i].dependencyID] = 1;
                                 output += '<li style="padding-bottom: 8px"><b title="depID: '+ res[i].dependencyID +'" onclick="dependencyGrantAccess('+ res[i].dependencyID +')">'+ res[i].description +'</b> ' + control_editDependency + ' ' + control_unlinkDependency
                                 + '<ul id="step_'+ stepID +'_dep'+ res[i].dependencyID +'"><li style="padding-top: 8px"><span class="buttonNorm" onclick="dependencyGrantAccess('+ res[i].dependencyID +')"><img src="../../libs/dynicons/?img=list-add.svg&w=16" alt="Add" /> Add Group</span></li>\
@@ -741,7 +741,7 @@ function showStepInfo(stepID) {
                         	}
                         }
                     }
-                    if(res.length == 0) {
+                    if(res.length === 0) {
                     	output += '<li><span style="color: red; font-weight: bold">A requirement must be added.</span></li>';
                     }
                     output += '</ul><div>';
@@ -757,8 +757,8 @@ function showStepInfo(stepID) {
                             counter++;
                         }
                     }
-                    if(counter == 0
-                        && res[i] != undefined) {
+                    if(counter === 0
+                        && res[i] !== undefined) {
                     	$('#step_'+ stepID +'_dep' + res[i].dependencyID).prepend('<li><span style="color: red; font-weight: bold">A group must be added.</span></li>');
                     }
                 },
@@ -783,11 +783,11 @@ function drawRoutes(workflowID) {
         type: 'GET',
         url: '../api/?a=workflow/' + workflowID + '/route',
         success: function(res) {
-            if(endPoints[-1] == undefined) {
+            if(endPoints[-1] === undefined) {
                 endPoints[-1] = jsPlumb.addEndpoint('step_-1', {anchor: 'Continuous'}, endpointOptions);
                 jsPlumb.draggable('step_-1');
             }
-            if(endPoints[0] == undefined) {
+            if(endPoints[0] === undefined) {
                 endPoints[0] = jsPlumb.addEndpoint('step_0', {anchor: 'Continuous'}, endpointOptions);
                 jsPlumb.draggable('step_0');
             }
@@ -812,8 +812,8 @@ function drawRoutes(workflowID) {
                         loc = 0.75;
                         break;
                 }
-            	if(res[i].nextStepID == 0
-            		&& res[i].actionType == 'sendback') {
+            	if(res[i].nextStepID === 0
+            		&& res[i].actionType === 'sendback') {
             		jsPlumb.connect({
                         source: 'step_' + res[i].stepID,
                         target: 'step_-1',
@@ -857,7 +857,7 @@ function drawRoutes(workflowID) {
                                     }
                                 }]]
                     };
-            		if(res[i].actionType == 'sendback') {
+            		if(res[i].actionType === 'sendback') {
             			lineOptions.paintStyle = {stroke: 'red'};
             		}
             		jsPlumb.connect(lineOptions);
@@ -865,7 +865,7 @@ function drawRoutes(workflowID) {
             }
 
             // connect the initial step if it exists
-            if(workflows[workflowID].initialStepID != 0) {
+            if(workflows[workflowID].initialStepID !== 0) {
                 jsPlumb.connect({
                     source: endPoints[-1],
                     target: endPoints[workflows[workflowID].initialStepID],
@@ -935,7 +935,7 @@ function loadWorkflow(workflowID) {
         	var maxY = 80;
             for(var i in res) {
             	steps[res[i].stepID] = res[i];
-            	posY = parseFloat(res[i].posY)
+            	posY = parseFloat(res[i].posY);
             	if(posY < minY) {
             		posY = minY;
             	}
@@ -946,7 +946,7 @@ function loadWorkflow(workflowID) {
             		'background-color': res[i].stepBgColor
             	});
 
-                if(endPoints[res[i].stepID] == undefined) {
+                if(endPoints[res[i].stepID] === undefined) {
                     endPoints[res[i].stepID] = jsPlumb.addEndpoint('step_' + res[i].stepID, {anchor: 'Continuous'}, endpointOptions);
                     jsPlumb.draggable('step_' + res[i].stepID, {
                         // save position of the box when moved
@@ -1010,14 +1010,14 @@ function loadWorkflowList(workflowID)
             var count = 0;
             var firstWorkflowID = 0;
             for(var i in res) {
-                if(count == 0) {
+                if(count === 0) {
                     firstWorkflowID = res[i].workflowID;
                 }
                 workflows[res[i].workflowID] = res[i];
                 output += '<option value="'+ res[i].workflowID +'"><b>' + res[i].description + '</b> (ID: #'+ res[i].workflowID +')</option>';
                 count++;
             }
-            if(count == 0) {
+            if(count === 0) {
                 return;
             }
             
@@ -1028,7 +1028,7 @@ function loadWorkflowList(workflowID)
             	loadWorkflow($('#workflows').val());
             });
             $('#workflows').chosen({disable_search_threshold: 5, allow_single_deselect: true, width: '100%'});
-            if(workflowID == undefined) {
+            if(workflowID === undefined) {
             	workflowID = firstWorkflowID;
             }
             loadWorkflow(workflowID);

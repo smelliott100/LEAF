@@ -127,7 +127,7 @@ function addEmployeePosition() {
     posSel.enableEmployeeSearch();
 
     posSel.setResultHandler(function() {
-        if(posSel.numResults == 0) {
+        if(posSel.numResults === 0) {
             posSel.hideResults();
             empSel.showResults();
             empSel.forceSearch(posSel.q);
@@ -139,7 +139,7 @@ function addEmployeePosition() {
     });
 
     dialog.setSaveHandler(function() {
-        if(posSel.selection != '') {
+        if(posSel.selection !== '') {
             dialog.indicateBusy();
             $.ajax({
                 type: 'POST',
@@ -152,7 +152,7 @@ function addEmployeePosition() {
                 cache: false
             });
         }
-        else if(empSel.selection != '') {
+        else if(empSel.selection !== '') {
             dialog.indicateBusy();
             $.ajax({
                 type: 'POST',
@@ -237,10 +237,10 @@ function togglePermission(categoryID, UID, type)
         dataType: 'json',
         success: function(response) {
             if(response != null) {
-                if(response == '1') {
+                if(response === '1') {
                 	$('#'+categoryID+'_'+UID+'_'+type).html('<div class="buttonNorm"><img src="../libs/dynicons/?img=gnome-emblem-default.svg&amp;w=32" alt="Yes" /> Yes</div>');
                 }
-                else if(response == '0') {
+                else if(response === '0') {
                 	$('#'+categoryID+'_'+UID+'_'+type).html('<div class="buttonNorm"><img src="../libs/dynicons/?img=process-stop.svg&amp;w=32" alt="No" /> No</div>');
                 }
             }
@@ -258,7 +258,7 @@ $(function() {
         url: "./api/<!--{$permission.categoryID}-->/<!--{$permission.UID}-->",
         dataType: 'json',
         success: function(response) {
-            if(response != '') {
+            if(response !== '') {
             	switch("<!--{$permission.categoryID}-->") {
             	   case "employee":
                        $("#<!--{$permission.categoryID}-->_<!--{$permission.UID}-->").html('<img src="../libs/dynicons/?img=gnome-stock-person.svg&w=32" alt="employee" style="vertical-align: middle" /> <a href="?a=view_employee&empUID=<!--{$permission.UID}-->">'

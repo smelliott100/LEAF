@@ -140,10 +140,11 @@ class Position extends Data
     }
 
     /**
-    * Edit an existing position's title
-    * @param int $positionID
-    * @param string $newTitle
-    */
+     * Edit an existing position's title
+     * @param int $positionID
+     * @param string $newTitle
+     * @throws Exception
+     */
     public function editTitle($positionID, $newTitle)
     {
         $privs = $this->getUserPrivileges($positionID);
@@ -438,7 +439,9 @@ class Position extends Data
     /**
      * Set position supervisor
      * @param int $positionID
-     * @return array
+     * @return array|int
+     * @throws Exception
+     * @throws Exception
      */
     public function setSupervisor($positionID, $parentID)
     {

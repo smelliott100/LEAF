@@ -2,7 +2,7 @@ body {
     background-color: #f3f3f3;
     font-family: verdana;
     font-size: 12px;
-    margin: 0px;
+    margin: 0;
 }
 
 
@@ -41,11 +41,11 @@ select {
 }
 
 img {
-    border: 0px;
+    border: 0;
 }
 
 #body {
-    padding: 0px;
+    padding: 0;
     text-align: center;
     width: 100%;
 }
@@ -151,7 +151,7 @@ span#headerMenu {
     box-shadow: 0 2px 60px #8e8e8e;
     padding: 16px;
     border: 1px solid black;
-    right: 0px;
+    right: 0;
     z-index: 100;
 }
 
@@ -200,7 +200,7 @@ span#headerTab {
 
 #content {
     padding: 4px;
-    margin: 0px auto;
+    margin: 0 auto;
     text-align: left;
 }
 
@@ -346,7 +346,7 @@ span.printsubheading {
 
 div.printResponse {
     float: left;
-    padding: 0px 16px 8px 16px;
+    padding: 0 16px 8px 16px;
 }
 
 span.printResponse {
@@ -518,8 +518,7 @@ span.approval_disapproved {
     width: 96px;
     height: 96px;
     padding-right: 4px;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background: no-repeat center center;
 }
 
 .menuText {
@@ -554,8 +553,7 @@ span.approval_disapproved {
     width: 76px;
     height: 76px;
     padding-right: 4px;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background: no-repeat center center;
 }
 
 .menuTextSmall {
@@ -760,7 +758,7 @@ div#maincontent {
 .toolbar h1 {
     text-align: center;
     font-size: 12px;
-    margin: 0px;
+    margin: 0;
     padding: 2px;
 }
 
@@ -822,7 +820,7 @@ div#search > div {
 
 div.workflowbox {
     padding: 2px;
-    margin: 0px;
+    margin: 0;
 }
 
 .openlate {

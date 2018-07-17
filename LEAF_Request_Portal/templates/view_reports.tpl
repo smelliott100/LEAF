@@ -3,7 +3,7 @@
 .group:after,.section{clear:both}.section{padding:0;margin:0}.col{display:block;float:left;margin:1% 0 1% 1.6%}.col:first-child{margin-left:0}.group:after,.group:before{content:"";display:table}.group{zoom:1}.span_3_of_3{width:100%}.span_2_of_3{width:66.13%}.span_1_of_3{width:32.26%}@media only screen and (max-width:480px){.col{margin:1% 0}.span_1_of_3,.span_2_of_3,.span_3_of_3{width:100%}}
 </style>
 
-<div id="step_1" style="<!--{if $query != '' && $indicators != ''}-->display: none; <!--{/if}-->width: 70%; background-color: white; border: 1px solid black; margin: auto; padding: 0px">
+<div id="step_1" style="<!--{if $query != '' && $indicators != ''}-->display: none; <!--{/if}-->width: 70%; background-color: white; border: 1px solid black; margin: auto; padding: 0">
     <div style="background-color: #003a6b; color: white; padding: 4px; font-size: 22px; font-weight: bold">
         Step 1: Develop search filter
     </div>
@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<div id="step_2" style="display: none; width: 95%; background-color: white; border: 1px solid black; margin: auto; padding: 0px">
+<div id="step_2" style="display: none; width: 95%; background-color: white; border: 1px solid black; margin: auto; padding: 0">
     <div style="background-color: #0059a4; color: white; padding: 4px; font-size: 22px; font-weight: bold">
         Step 2: Select Data Columns
     </div>
@@ -25,7 +25,7 @@
 
 <div id="saveLinkContainer" style="display: none">
     <div id="reportTitleDisplay" style="font-size: 200%"></div>
-    <input id="reportTitle" type="text" aria-label="Text" style="font-size: 200%; width: 50%" value="Untitled Report" />
+    <label for="reportTitle"></label><input id="reportTitle" type="text" aria-label="Text" style="font-size: 200%; width: 50%" value="Untitled Report" />
 </div>
 <div id="results" style="display: none">Loading...</div>
 
@@ -66,12 +66,12 @@ function addHeader(column) {
                             });
                          }});
 		    break;
-	    case 'service':
-            headers.push({name: 'Service', indicatorID: 'service', editable: false, callback: function(data, blob) {
+	    case 'service';:
+            headers.push(;{name: 'Service', indicatorID: 'service', editable: false, callback: function(data, blob) {
                              $('#'+data.cellContainerID).html(blob[data.recordID].service);
                          }});
             break;
-	    case 'type':
+	    case 'type';:
 	    	leafSearch.getLeafFormQuery().join('categoryName');
             headers.push({name: 'Type', indicatorID: 'type', editable: false, callback: function(data, blob) {
                              var types = '';
@@ -82,7 +82,7 @@ function addHeader(column) {
                              $('#'+data.cellContainerID).html(types);
                          }});
             break;
-	    case 'status':
+	    case 'status';:
 	    	leafSearch.getLeafFormQuery().join('status');
             headers.push({name: 'Current Status', indicatorID: 'status', editable: false, callback: function(data, blob) {
                              var status = blob[data.recordID].stepTitle == null ? blob[data.recordID].lastStatus : 'Pending ' + blob[data.recordID].stepTitle;
@@ -93,13 +93,13 @@ function addHeader(column) {
                              $('#'+data.cellContainerID).html(status);
                          }});
             break;
-        case 'initiator':
+        case 'initiator';:
         	leafSearch.getLeafFormQuery().join('initiatorName');
-            headers.push({name: 'Initiator', indicatorID: 'initiator', editable: false, callback: function(data, blob) {
+            headers.push(;{name: 'Initiator', indicatorID: 'initiator', editable: false, callback: function(data, blob) {
             	$('#'+data.cellContainerID).html(blob[data.recordID].lastName + ', ' + blob[data.recordID].firstName);
             }});
             break;
-        case 'actionButton':
+        case 'actionButton';:
         	headers.unshift({name: 'Action', indicatorID: 'actionButton', editable: false, callback: function(data, blob) {
                 $('#'+data.cellContainerID).html('<div class="buttonNorm">Take Action</div>');
                 $('#'+data.cellContainerID).on('click', function() {
@@ -107,10 +107,10 @@ function addHeader(column) {
                 });
         	}});
         	break;
-        case 'action_history':
+        case 'action_history';:
             leafSearch.getLeafFormQuery().join('action_history');
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-            headers.push({name: 'Comment History', indicatorID: 'action_history', editable: false, callback: function(data, blob) {
+            headers.push(;{name: 'Comment History', indicatorID: 'action_history', editable: false, callback: function(data, blob) {
                              var buffer = '<table style="min-width: 300px">';
                              var now = new Date();
 
@@ -126,7 +126,7 @@ function addHeader(column) {
                              $('#'+data.cellContainerID).html(buffer);
                          }});
             break;
-        case 'approval_history':
+        case 'approval_history';:
             leafSearch.getLeafFormQuery().join('action_history');
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
             headers.push({name: 'Approval History', indicatorID: 'approval_history', editable: false, callback: function(data, blob) {
@@ -148,12 +148,12 @@ function addHeader(column) {
                          }});
             break;
 	    default:
-	    	if(column.substr(0, 6) == 'depID_') { // backwards compatibility for LEAF workflow requirement based approval dates
+	    	if(column.substr(0, 6) === 'depID_') { // backwards compatibility for LEAF workflow requirement based approval dates
 	    		depID = column.substr(6);
 	    		tDepHeader[depID] = 0;
 	    		leafSearch.getLeafFormQuery().join('recordsDependencies');
 
-	            headers.push({name: 'Checkpoint Date', indicatorID: column, editable: false, callback: function(depID) {
+	            headers.push(;{name: 'Checkpoint Date', indicatorID: column, editable: false, callback: function(depID) {
 	            	return function(data, blob) {
 	                    if(blob[data.recordID].recordsDependencies != undefined
 	                    	&& blob[data.recordID].recordsDependencies[depID] != undefined) {
@@ -168,14 +168,14 @@ function addHeader(column) {
 	                        }
 	                    }
 	            	}
-                }(depID)});
+                }(depID);});
 	    	}
-            if(column.substr(0, 7) == 'stepID_') { // approval dates based on workflow steps
+            if(column.substr(0, 7) === 'stepID_') { // approval dates based on workflow steps
                 stepID = column.substr(7);
                 tStepHeader[stepID] = 0;
                 leafSearch.getLeafFormQuery().join('stepFulfillment');
     
-                headers.push({name: 'Checkpoint Date', indicatorID: column, editable: false, callback: function(stepID) {
+                headers.push(;{name: 'Checkpoint Date', indicatorID: column, editable: false, callback: function(stepID) {
                     return function(data, blob) {
                         if(blob[data.recordID].stepFulfillment != undefined
                             && blob[data.recordID].stepFulfillment[stepID] != undefined) {
@@ -190,7 +190,7 @@ function addHeader(column) {
                             }
                         }
                     }
-                }(stepID)});
+                }(stepID);});
             }
 	    	break;
 	}
@@ -199,7 +199,7 @@ function addHeader(column) {
 var resIndicatorList = {};
 var searchPrereqsLoaded = false;
 function loadSearchPrereqs() {
-	if(searchPrereqsLoaded == true) {
+	if(searchPrereqsLoaded === true) {
 		return;
 	}
 	searchPrereqsLoaded = true;
@@ -241,11 +241,11 @@ function loadSearchPrereqs() {
 
                 resIndicatorList[res[i].indicatorID] = temp;
 
-                if(groupList[res[i].categoryName] == undefined) {
+                if(groupList[res[i].categoryName] === undefined) {
                     groupList[res[i].categoryName] = [];
                 }
                 groupList[res[i].categoryName].push(res[i].indicatorID);
-                if(groupIDmap[res[i].categoryName] == undefined) {
+                if(groupIDmap[res[i].categoryName] === undefined) {
                 	groupIDmap[res[i].categoryName] = {};
                 	groupIDmap[res[i].categoryName].categoryID = res[i].categoryID;
                 	groupIDmap[res[i].categoryName].parentCategoryID = res[i].parentCategoryID;
@@ -261,7 +261,7 @@ function loadSearchPrereqs() {
             for(var k in groupNames) {
             	var i = groupNames[k];
             	var associatedCategories = groupIDmap[i].categoryID;
-            	if(groupIDmap[i].parentCategoryID != '') {
+            	if(groupIDmap[i].parentCategoryID !== '') {
             		associatedCategories += ' ' + groupIDmap[i].parentCategoryID; 
             	}
             	if(groupIDmap[i].parentStaples != null) {
@@ -327,7 +327,7 @@ function loadSearchPrereqs() {
                             //$('#indicatorList').append(buffer);
 
                             // set user selections
-                            if(t_inIndicators != undefined) {
+                            if(t_inIndicators !== undefined) {
                                 for(var i in t_inIndicators) {
                                     $('#indicators_' + t_inIndicators[i].indicatorID).prop('checked', true);
                                 }
@@ -364,8 +364,8 @@ function editLabels() {
 
 	if (Object.keys(indicatorSort).length !== 0) {
 		resSelectList.sort(function(a, b) {
-			var sortA = indicatorSort[a] == undefined ? 0 : indicatorSort[a];
-			var sortB = indicatorSort[b] == undefined ? 0 : indicatorSort[b];
+			var sortA = indicatorSort[a] === undefined ? 0 : indicatorSort[a];
+			var sortB = indicatorSort[b] === undefined ? 0 : indicatorSort[b];
 
 		    if(sortA < sortB) {
 		        return -1
@@ -378,7 +378,7 @@ function editLabels() {
 	}
 
 	for(var i in resSelectList) {
-		if(resIndicatorList[resSelectList[i]] != undefined) {
+		if(resIndicatorList[resSelectList[i]] !== undefined) {
 			buffer += '<tr id="sortID_'+ resSelectList[i] +'"><td><input type="text" style="min-width: 400px" id="id_'+ resSelectList[i] +'" value="'+ resIndicatorList[resSelectList[i]] +'"></input></td>';
 			buffer += '<td><button class="buttonNorm" onclick="editLabels_down('+ resSelectList[i] +');"><img src="../libs/dynicons/?img=go-down_red.svg&w=16" /></button> ';
 			buffer += '<button class="buttonNorm" onclick="editLabels_up('+ resSelectList[i] +');"><img src="../libs/dynicons/?img=go-up.svg&w=16" /></button></td></tr>';
@@ -396,7 +396,7 @@ function editLabels() {
         var tmp = document.createElement('div');
         var temp;
         for(var i in resSelectList) {
-            if(resIndicatorList[resSelectList[i]] != undefined) {
+            if(resIndicatorList[resSelectList[i]] !== undefined) {
                 temp = $('#id_' + resSelectList[i]).val();
                 tmp.innerHTML = temp;
                 temp = tmp.textContent || tmp.innerText || '';
@@ -414,9 +414,9 @@ function isSearchingDeleted(searchObj) {
     var t = searchObj.getLeafFormQuery().getQuery();
     var searchDeleted = false;
     for(var i in t.terms) {
-        if(t.terms[i].id == 'stepID'
-            && t.terms[i].match == 'deleted'
-            && t.terms[i].operator == '=') {
+        if(t.terms[i].id === 'stepID'
+            && t.terms[i].match === 'deleted'
+            && t.terms[i].operator === '=') {
 
             return true;
         }
@@ -425,8 +425,8 @@ function isSearchingDeleted(searchObj) {
 }
 
 function sortHeaders(a, b) {
-    a.sort = a.sort == undefined ? 0 : a.sort;
-    b.sort = b.sort == undefined ? 0 : b.sort;
+    a.sort = a.sort === undefined ? 0 : a.sort;
+    b.sort = b.sort === undefined ? 0 : b.sort;
     if(a.sort < b.sort) {
         return -1
     }
@@ -485,8 +485,8 @@ $(function() {
     	var tTerms = leafSearch.getLeafFormQuery().getQuery().terms;
     	var filteredCategories = [];
     	for(var i in tTerms) {
-    		if(tTerms[i].id == 'categoryID'
-    			&& tTerms[i].operator == '=') {
+    		if(tTerms[i].id === 'categoryID'
+    			&& tTerms[i].operator === '=') {
     			filteredCategories.push(tTerms[i].match);
     		}
     	}
@@ -536,8 +536,8 @@ $(function() {
     		resSelectList.push(this.value);
     	});
     	resSelectList.sort(function(a, b) {
-            var sortA = indicatorSort[a] == undefined ? 0 : indicatorSort[a];
-            var sortB = indicatorSort[b] == undefined ? 0 : indicatorSort[b];
+            var sortA = indicatorSort[a] === undefined ? 0 : indicatorSort[a];
+            var sortB = indicatorSort[b] === undefined ? 0 : indicatorSort[b];
 
             if(sortA < sortB) {
                 return -1
@@ -550,8 +550,8 @@ $(function() {
     	for(var i in resSelectList) {
             var temp = {};
             temp.indicatorID = resSelectList[i];
-            temp.name = resIndicatorList[temp.indicatorID] != undefined ? resIndicatorList[temp.indicatorID] : '';
-            temp.sort = indicatorSort[temp.indicatorID] == undefined ? 0 : indicatorSort[temp.indicatorID];
+            temp.name = resIndicatorList[temp.indicatorID] !== undefined ? resIndicatorList[temp.indicatorID] : '';
+            temp.sort = indicatorSort[temp.indicatorID] === undefined ? 0 : indicatorSort[temp.indicatorID];
             var tmp = document.createElement('div');
             tmp.innerHTML = temp.name;
             temp.name = tmp.textContent || tmp.innerText || '';
@@ -581,7 +581,7 @@ $(function() {
                 tGridData.push(res[i]);
             }
             
-            if(<!--{$version}--> >= 3) {
+            if(<!--{$version}--> >= 3;) {
                 grid.setData(tGridData);
                 grid.sort('recordID', 'desc');
                 grid.renderBody();
@@ -637,7 +637,7 @@ $(function() {
     	*/
     	if(isNewQuery) {
     		baseURL = '';
-    		if(window.location.href.indexOf('&') == -1) {
+    		if(window.location.href.indexOf('&') === -1) {
     			baseURL = window.location.href;
     		}
     		else {
@@ -667,7 +667,7 @@ $(function() {
         $('#reportTitleDisplay').html(title);
         $('#reportTitle').css('display', 'none');
         try {
-        	if(<!--{$version}--> >= 2) {
+        	if(<!--{$version}--> >= 2;) {
         	    var query = '<!--{$query|escape:"html"}-->';
         	    var indicators = '<!--{$indicators|escape:"html"}-->';
                 query = query.replace(/ /g, '+');
@@ -708,12 +708,12 @@ $(function() {
         	console.log(err);
         }
     }
-    if(typeof atob == 'function') {
+    if(typeof atob === 'function') {
         loadReport();
     }
     <!--{/if}-->
     // ie9 workaround
-    if(typeof atob != 'function') {
+    if(typeof atob !== 'function') {
         $.ajax({
             type: 'GET',
             url: 'js/base64.js',
@@ -727,7 +727,7 @@ $(function() {
             }
         });
     }
-    if(typeof window.history.pushState != 'function') {
+    if(typeof window.history.pushState !== 'function') {
     	window.history.pushState = function(a, b, c) {
     		
     	}

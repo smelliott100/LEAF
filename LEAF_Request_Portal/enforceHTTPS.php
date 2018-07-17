@@ -6,4 +6,4 @@ if(isset($config->enforceHTTPS) && $config->enforceHTTPS == true) {
 		exit();
 	}
 }
-?>
+

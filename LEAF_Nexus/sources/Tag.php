@@ -40,6 +40,7 @@ class Tag
     /**
      * Set a tag's parent tag
      * @param string $tag
+     * @throws Exception
      */
     function setParent($tag, $parentTag)
     {
