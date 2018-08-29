@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jnlp spec="1.0+" codebase="https://localhost/LEAF_Nexus/" href="sign.jnlp">
+<jnlp spec="1.5.0+" codebase="http://localhost/libs/sign" href="sign.jnlp">
 
     <information>
         <title>Websocket Digital Signature</title>
@@ -7,7 +7,8 @@
     <security>
         <all-permissions/>
     </security>
-    <resources>
+    <resources arch="amd64">
+        <j2se version="1.7+" java-vm-args="-d64 -noverify"/>
         <jar href="Sign.jar" />
     </resources>
 
