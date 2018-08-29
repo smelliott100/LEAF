@@ -10,19 +10,11 @@ public class SignController {
     private String content;
 
     @MessageMapping("/sign")
-    @SendTo("/topic/greetings")
-    public Sign sign(Sign sign) throws Exception {
-        SignUI.showErrorMessage(sign.getContent());
-        String signature = SignEngine.getInstance().getSignature(sign.getContent());
+    @SendTo("/wsbroker/controller")
+    public Sign sign(Sign sign) {
+        String signature = SignEngine.getSignature(sign.getContent());
+        SignUI.showSuccess();
         return new Sign(signature);
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     @MessageMapping("/close")
