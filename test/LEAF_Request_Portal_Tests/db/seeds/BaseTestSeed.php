@@ -20,7 +20,7 @@ class BaseTestSeed extends AbstractSeed
             INSERT INTO `action_history` 
             (`actionID`, `recordID`, `userID`, `stepID`, `dependencyID`, `actionType`, `actionTypeID`, `time`, `comment`, `signature_id`) VALUES
 	        (1, 1, 'tester', 0, 5, 'submit', 6, 1520268930, '', NULL),
-	        (2, 1, 'tester', 0, 5, 'signed', 6, 1520268931, NULL, 1);
+	        (2, 1, 'tester', 0, 5, 'signed', 9, 1520268931, NULL, 1);
 
 
             INSERT INTO `categories`
