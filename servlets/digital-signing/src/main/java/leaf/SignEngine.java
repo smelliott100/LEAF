@@ -3,50 +3,43 @@ package leaf;
 import sun.security.pkcs11.SunPKCS11;
 
 import java.io.ByteArrayInputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.Provider;
 import java.security.ProviderException;
 import java.security.Security;
 import java.security.Signature;
+import java.util.Enumeration;
 import java.util.Formatter;
 
 public class SignEngine {
 
-    private static SignEngine signEngine;
-
     private static SunPKCS11 provider;
 
-    public static SignEngine getInstance() {
-        if (signEngine == null) {
-            signEngine = new SignEngine();
+    public static void getInstance() {
+        if (provider == null) {
             try {
-
-                // Jar
-//                String pkcs11Config = "name=OpenSC\nlibrary=" + ResourceManager.extract("opensc-pkcs11.so");
-
-                // Mac
-//                String pkcs11Config = "name=OpenSC\nlibrary=/usr/local/lib/opensc-pkcs11.so";
-
-                // Windows
-                String pkcs11Config = "name=OpenSC\nlibrary=" + ResourceManager.extract("opensc-pkcs11.dll");
-
-                // Linux
-//                String pkcs11Config = "name=OpenSC\nlibrary=/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so";
-
+                long begin = System.currentTimeMillis();
+                String extractedPath = ResourceManager.extract("opensc-pkcs11.so");
+                String pkcs11Config = "name=OpenSC\nlibrary=" + extractedPath;
                 byte[] providerConfig = pkcs11Config.getBytes("UTF-8");
                 ByteArrayInputStream config = new ByteArrayInputStream(providerConfig);
                 provider = new SunPKCS11(config);
                 Security.addProvider(provider);
+                System.out.println("Provider created in " + (System.currentTimeMillis() - begin) + "ms");
             } catch (Exception e) {
-                SignUI.showErrorMessage(e.getMessage());
+                StringWriter errors = new StringWriter();
+                e.printStackTrace(new PrintWriter(errors));
+                SignUI.showErrorMessage(errors.toString());
                 e.printStackTrace();
             }
         }
-        return signEngine;
     }
 
-    public String getSignature(String data) {
+    public static String getSignature(String data) {
         try {
             KeyStore.CallbackHandlerProtection callbackHandlerProtection = new KeyStore.CallbackHandlerProtection(new PinInputHandler());
             KeyStore.Builder builder = KeyStore.Builder.newInstance("PKCS11", provider, callbackHandlerProtection);
@@ -73,8 +66,21 @@ public class SignEngine {
         }
     }
 
-    public static boolean hasInstance() {
-        return signEngine == null;
+    public static boolean hasProvider() {
+        return provider == null;
+    }
+
+    public static void printProviders() throws Exception {
+        try {
+            Provider p[] = Security.getProviders();
+            for (Provider aP : p) {
+                System.out.println(aP);
+                for (Enumeration e = aP.keys(); e.hasMoreElements(); )
+                    System.out.println("\t" + e.nextElement());
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 }

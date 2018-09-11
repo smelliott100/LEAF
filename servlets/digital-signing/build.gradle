@@ -19,10 +19,13 @@ sourceCompatibility = 1.7
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-websocket'
+    compile group: 'org.springframework.boot', name: 'spring-boot-actuator'
     compile group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '2.0.4'
     compile 'org.bouncycastle:bcprov-jdk15on:1.59'
     testCompile 'junit:junit:4.12'
 }
+
+shadowJar.archiveName = 'Sign.jar'
 
 jar {
     manifest {

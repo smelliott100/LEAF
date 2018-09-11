@@ -14,8 +14,15 @@ public class Application {
     }
 
     public static void main(String[] args) {
+        providerThread.start();
         SpringApplication.run(Application.class, args);
-        SignEngine.getInstance();
-        SignUI.showErrorMessage("Begin");
     }
+
+    private static Thread providerThread = new Thread() {
+        public void run() {
+            SignEngine.getInstance();
+        }
+    };
+
 }
+

@@ -10,10 +10,106 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
+import java.util.Objects;
 
 public class SignUI {
 
     protected SignUI() {}
+
+    static char[] askForPin() {
+        final JOptionPane optionPane = new JOptionPane();
+        optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
+        final JPasswordField passwordField = new JPasswordField(8);
+        passwordField.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                event.getComponent().requestFocusInWindow();
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) { }
+
+            @Override
+            public void ancestorMoved(AncestorEvent event) { }
+        });
+        JLabel leafLabel = formatIconLabel("pinlogo.png");
+        JLabel label = new JLabel("Insert PIN");
+        JPanel panel = new JPanel();
+        panel.add(leafLabel);
+        panel.add(passwordField);
+        panel.add(label);
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                optionPane.setValue(JOptionPane.OK_OPTION);
+            }
+        });
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                optionPane.setValue(JOptionPane.CLOSED_OPTION);
+            }
+        });
+        optionPane.setMessage(panel);
+        optionPane.setOptions(new Object[] { okButton, cancelButton });
+        JDialog dialog = optionPane.createDialog(null, "PIN");
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+        int retVal = (optionPane.getValue() instanceof Integer) ? (Integer) optionPane.getValue() : -1;
+        dialog.dispose();
+        return retVal == JOptionPane.OK_OPTION ? (new String(passwordField.getPassword())).toCharArray() : null;
+    }
+
+    public static void showSuccess() {
+        JPanel panel = new JPanel();
+        JLabel leafLabel = formatIconLabel("leaf.png");
+        panel.add(leafLabel);
+        panel.add(new JLabel("Signed Successfully"));
+        JOptionPane.showMessageDialog(null, panel, "LEAF", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private static JLabel formatIconLabel(String resource) {
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(SignUI.class.getClassLoader().getResource(resource)));
+        JLabel label = new JLabel(imageIcon);
+        label.setPreferredSize(new Dimension(50, 50));
+        return label;
+    }
+
+    public static void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void showLoader() {
+        JFrame frame = new JFrame();
+        frame.add(formatIconLabel("loading.gif"));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(250, 250);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static String askForData() {
         final JOptionPane optionPane = new JOptionPane();
@@ -112,50 +208,6 @@ public class SignUI {
         return null;
     }
 
-    static char[] askForPin() {
-        final JOptionPane optionPane = new JOptionPane();
-        optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
-        final JPasswordField passwordField = new JPasswordField(8);
-        passwordField.addAncestorListener(new AncestorListener() {
-            @Override
-            public void ancestorAdded(AncestorEvent event) {
-                event.getComponent().requestFocusInWindow();
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) { }
-
-            @Override
-            public void ancestorMoved(AncestorEvent event) { }
-        });
-        JLabel label = new JLabel("Insert PIN for token");
-        JPanel panel = new JPanel();
-        panel.add(passwordField);
-        panel.add(label);
-        JButton okButton = new JButton("OK");
-        okButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                optionPane.setValue(JOptionPane.OK_OPTION);
-            }
-        });
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                optionPane.setValue(JOptionPane.CLOSED_OPTION);
-            }
-        });
-        optionPane.setMessage(panel);
-        optionPane.setOptions(new Object[] { okButton, cancelButton });
-        JDialog dialog = optionPane.createDialog(null, "PIN");
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);
-        int retVal = (optionPane.getValue() instanceof Integer) ? (Integer) optionPane.getValue() : -1;
-        dialog.dispose();
-        return retVal == JOptionPane.OK_OPTION ? (new String(passwordField.getPassword())).toCharArray() : null;
-    }
-
     private static void updateComboBox(Choice certificateComboBox, KeyStore keyStore) {
         certificateComboBox.removeAll();
         certificateComboBox.addItem("--Select Certificate--");
@@ -181,10 +233,6 @@ public class SignUI {
 
     private boolean isValidCertificate(Choice certificateComboBox) {
         return true;
-    }
-
-    public static void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
 }
