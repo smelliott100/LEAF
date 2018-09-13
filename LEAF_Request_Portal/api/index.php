@@ -141,9 +141,9 @@ $controllerMap->register('telemetry', function () use ($db, $login, $action) {
 });
 
 $controllerMap->register('signature', function() use ($db, $login, $action) {
-	require 'controllers/SignaturesController.php';
-	$SignaturesController = new SignaturesController($db, $login);
-	$SignaturesController->handler($action);
+	require 'controllers/SignatureController.php';
+	$SignatureController = new SignatureController($db, $login);
+	$SignatureController->handler($action);
 });
 
 $controllerMap->runControl($key);

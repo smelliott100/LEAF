@@ -4,12 +4,15 @@
  */
 
 require '../sources/Signature.php';
-require '../../libs/php-commons/XSSHelpers.php';
+if (!class_exists('XSSHelpers'))
+{
+    include_once dirname(__FILE__) . '/../../../libs/php-commons/XSSHelpers.php';
+}
 
 /**
  * Handles API methods related to signatures.
  */
-class SignaturesController extends RESTfulResponse
+class SignatureController extends RESTfulResponse
 {
     public $index = array();
 

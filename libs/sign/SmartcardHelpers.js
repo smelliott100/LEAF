@@ -35,13 +35,12 @@ var Signer = function() {
         alert(message);
     }
 
-    var sign = function (dataToSign) {
-        // if (!isConnected) {
-        //     window.open("sign.jnlp");
-        // }
+    var sign = function (dataToSign, onSuccess) {
+        // add logic to check if a connection can be made, if not show user an error
         connect(function() {
             sendData(dataToSign);
-            return dataToSign;
+            // add logic to check if sendData() worked correctly
+            onSuccess('signature hash needs to go here');
         });
     };
 

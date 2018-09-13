@@ -13,7 +13,7 @@ include '../../LEAF_Request_Portal/db_mysql.php';
 /**
  * Tests LEAF_Request_Portal/api/?a=signature API
  */
-final class SignaturesControllerTest extends DatabaseTest
+final class SignatureControllerTest extends DatabaseTest
 {
     private static $client = null;
 
