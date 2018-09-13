@@ -66,7 +66,6 @@ var LeafForm = function(containerID) {
 			url: "./api/form/signatures/" + recordID,
 			success: function(res) {
 				if(res.length > 0) {
-					{
                         var dialog_confirm_sig = new dialogController('confirm_xhrDialog', 'confirm_xhr', 'confirm_loadIndicator', 'confirm_button_save', 'confirm_button_cancelchange');
                         dialog.hide();
                         dialog_confirm_sig.setTitle('Warning');
@@ -76,13 +75,10 @@ var LeafForm = function(containerID) {
                             dialog.show();
                             dialog.indicateBusy();
 
-                            //hides stamps without reloading page
-                            $('#stamps').html('');
                             getEditWindow(indicatorID, series)
                         });
                         dialog_confirm_sig.show();
                     }
-				}
 				else
 				{
                     getEditWindow(indicatorID, series);
@@ -93,6 +89,8 @@ var LeafForm = function(containerID) {
 
 	function getEditWindow(indicatorID, series) {
         dialog.setSaveHandler(function() {
+	    //hides stamps without reloading page
+            $('#stamps').html('');
             doModify();
         });
 
