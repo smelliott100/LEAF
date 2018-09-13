@@ -4,7 +4,7 @@ var Signer = function() {
     var isConnected = false;
 
     function connect(_callback) {
-        var url = "https://localhost:8080/websocket";
+        var url = "https://localhost:8443/websocket";
         var socket = new SockJS(url);
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
@@ -37,11 +37,12 @@ var Signer = function() {
 
     var sign = function (dataToSign, onSuccess) {
         // add logic to check if a connection can be made, if not show user an error
-        connect(function() {
+        /*connect(function() {
             sendData(dataToSign);
             // add logic to check if sendData() worked correctly
             onSuccess('signature hash needs to go here');
-        });
+        });*/
+        onSuccess('signature hash needs to go here');
     };
 
     var connection = function () {
