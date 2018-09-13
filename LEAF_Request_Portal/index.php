@@ -18,7 +18,10 @@ include 'form.php';
 include_once './enforceHTTPS.php';
 
 // Include XSSHelpers
-include_once dirname(__FILE__) . '/../libs/php-commons/XSSHelpers.php';
+if (!class_exists('XSSHelpers'))
+{
+    include_once dirname(__FILE__) . '/../libs/php-commons/XSSHelpers.php';
+}
 
 $db_config = new DB_Config();
 $config = new Config();
@@ -81,16 +84,28 @@ switch ($action) {
         $currEmployee = $form->employee->lookupLogin($_SESSION['userID']);
         $currEmployeeData = $form->employee->getAllData($currEmployee[0]['empUID'], 5);
 
+        $categoryArray = $stack->getCategories();
+        foreach($categoryArray as $key => $cat)
+        {
+            $categoryArray[$key] = array_map('XSSHelpers::xscrub', $cat );
+        }
+
+        $servicesArray = $form->getServices2();
+        foreach($servicesArray as $key => $service)
+        {
+            $servicesArray[$key]['service'] = XSSHelpers::xscrub($servicesArray[$key]['service']);
+        }
+
         $t_form = new Smarty;
         $t_form->left_delimiter = '<!--{';
         $t_form->right_delimiter = '}-->';
         $t_form->assign('categories', $stack->getCategories());
         $t_form->assign('recorder', XSSHelpers::sanitizeHTML($login->getName()));
-        $t_form->assign('services', $form->getServices2());
+        $t_form->assign('services', $servicesArray);
         $t_form->assign('city', XSSHelpers::sanitizeHTML($config->city));
         $t_form->assign('phone', XSSHelpers::sanitizeHTML($currEmployeeData[5]['data']));
         $t_form->assign('empMembership', $login->getMembership());
-        $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
+        $t_form->assign('CSRFToken', XSSHelpers::xscrub($_SESSION['CSRFToken']));
 
         $main->assign('body', $t_form->fetch(customTemplate('initial_form.tpl')));
 
@@ -150,11 +165,11 @@ switch ($action) {
     case 'printview':
         $main->assign('useUI', true);
         $main->assign('javascripts', array(
-            'js/form.js', 
-            'js/workflow.js', 
-            'js/formGrid.js', 
-            'js/formQuery.js', 
-            'js/jsdiff.js', 
+            'js/form.js',
+            'js/workflow.js',
+            'js/formGrid.js',
+            'js/formQuery.js',
+            'js/jsdiff.js',
             '../libs/js/LEAF/XSSHelpers.js',
             '../libs/jsapi/portal/LEAFPortalAPI.js',
             '../libs/sign/Stomp.js',

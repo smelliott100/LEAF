@@ -2,6 +2,11 @@
 
 require '../sources/Workflow.php';
 
+if (!class_exists('XSSHelpers'))
+{
+    include_once dirname(__FILE__) . '/../../../libs/php-commons/XSSHelpers.php';
+}
+
 class WorkflowController extends RESTfulResponse
 {
     private $API_VERSION = 1;    // Integer
@@ -28,7 +33,7 @@ class WorkflowController extends RESTfulResponse
             $workflow->setWorkflowID($args[0]);
             return $workflow->getAllUniqueWorkflows();
         });
-        
+
         $this->index['GET']->register('workflow/[digit]', function($args) use ($workflow) {
             $workflow->setWorkflowID($args[0]);
             return $workflow->getSteps();
@@ -52,7 +57,7 @@ class WorkflowController extends RESTfulResponse
         $this->index['GET']->register('workflow/categories', function($args) use ($workflow) {
             return $workflow->getCategories();
         });
-        
+
        	$this->index['GET']->register('workflow/categoriesUnabridged', function($args) use ($workflow) {
        		return $workflow->getCategoriesUnabridged();
        	});
@@ -89,7 +94,7 @@ class WorkflowController extends RESTfulResponse
         $this->index['POST'] = new ControllerMap();
         $this->index['POST']->register('workflow', function($args) {
         });
-        
+
         $this->index['POST']->register('workflow/[digit]', function($args) use ($workflow) {
             try {
                 $workflow->modify($args[0]);
@@ -163,7 +168,7 @@ class WorkflowController extends RESTfulResponse
 
         return $this->index['POST']->runControl($act['key'], $act['args']);
     }
-    
+
     public function delete($act)
     {
     	$workflow = $this->workflow;
@@ -195,7 +200,7 @@ class WorkflowController extends RESTfulResponse
 			$workflow->setWorkflowID($args[0]);
 			return $workflow->unlinkEvent($args[1], $args[2], $_GET['eventID']);
 		});
-		
+
 		$this->index['DELETE']->register('workflow/step/[digit]', function($args) use ($workflow) {
 			return $workflow->deleteStep($args[0]);
 		});

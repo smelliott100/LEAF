@@ -2,7 +2,11 @@
 
 require '../form.php';
 require '../sources/signature.php';
-include_once dirname(__FILE__) . '/../../../libs/php-commons/XSSHelpers.php';
+
+if (!class_exists('XSSHelpers'))
+{
+    include_once dirname(__FILE__) . '/../../../libs/php-commons/XSSHelpers.php';
+}
 
 class FormController extends RESTfulResponse
 {
@@ -35,6 +39,23 @@ class FormController extends RESTfulResponse
         });
 
         $this->index['GET']->register('form', function ($args) use ($form) {
+        });
+
+        $this->index['GET']->register('form/categories', function ($args) use ($form) {
+            $result = $form->getAllCategories();
+
+            for ($i = 0; $i < count($result); $i++)
+            {
+                $result[$i]['categoryID'] = XSSHelpers::xscrub($result[$i]['categoryID']);
+                $result[$i]['categoryName'] = XSSHelpers::xscrub($result[$i]['categoryName']);
+                $result[$i]['categoryDescription'] = XSSHelpers::xscrub($result[$i]['categoryDescription']);
+            }
+
+            return $result;
+        });
+
+        $this->index['GET']->register('form/category', function ($args) use ($form) {
+            return $form->getFormByCategory(XSSHelpers::xscrub($_GET['id']));
         });
 
         // form/customData/ recordID list (csv) / indicatorID list (csv)

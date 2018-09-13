@@ -2,6 +2,11 @@
 
 require '../FormWorkflow.php';
 
+if (!class_exists('XSSHelpers'))
+{
+    require_once dirname(__FILE__) . '/../../../libs/php-commons/XSSHelpers.php';
+}
+
 class FormWorkflowController extends RESTfulResponse
 {
     private $API_VERSION = 1;    // Integer
@@ -56,8 +61,8 @@ class FormWorkflowController extends RESTfulResponse
         	$formWorkflow->initRecordID($args[0]);
 
         	return $formWorkflow->handleAction(
-                $_POST['dependencyID'], 
-                $_POST['actionType'], 
+                $_POST['dependencyID'],
+                $_POST['actionType'],
                 $_POST['comment'],
                 (int) $_POST['signature']
             );

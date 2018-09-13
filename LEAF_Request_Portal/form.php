@@ -10,8 +10,12 @@
 */
 
 define('UPLOAD_DIR', './UPLOADS/'); // with trailing slash
-require_once dirname(__FILE__) . '/../libs/php-commons/XSSHelpers.php';
 include_once dirname(__FILE__) . '/FormWorkflow.php';
+
+if (!class_exists('XSSHelpers'))
+{
+    require_once dirname(__FILE__) . '/../libs/php-commons/XSSHelpers.php';
+}
 
 class Form
 {
@@ -69,6 +73,21 @@ class Form
     }
 
     /**
+     * Get all category (Form) IDs, names, and descriptions.
+     *
+     * @return an array of all category IDs, names and descriptions
+     */
+    public function getAllCategories()
+    {
+        $res = $this->db->prepared_query(
+            'SELECT categoryID, categoryName, categoryDescription FROM categories WHERE disabled = 0',
+            array()
+        );
+
+        return $res;
+    }
+
+    /**
      * New version of getServices
      * @return array
      */
@@ -79,7 +98,7 @@ class Form
 
         foreach ($res as $field)
         {
-            $temp['serviceID'] = $field['serviceID'];
+            $temp['serviceID'] = (int)$field['serviceID'];
             $temp['service'] = $field['service'];
             $services[] = $temp;
         }
@@ -535,7 +554,7 @@ class Form
 
         $vars = array(':recordID' => (int)$recordID,
                       ':indicatorID' => (int)$indicatorID,
-                      ':series' => (int)$series);
+                      ':series' => (int)$series, );
 
         $res = $this->db->prepared_query(
             'SELECT * FROM data_history
@@ -942,7 +961,7 @@ class Form
                         }
 
                         $sanitizedFileName = $this->getFileHash($recordID, $indicator, $series, $this->sanitizeInput($_FILES[$indicator]['name']));
-                        $sanitizedFileName = stripslashes($sanitizedFileName);
+                        // $sanitizedFileName = XSSHelpers::scrubFilename($sanitizedFileName);
                         move_uploaded_file($_FILES[$indicator]['tmp_name'], $uploadDir . $sanitizedFileName);
                     }
                     else
@@ -1952,7 +1971,7 @@ class Form
             }
         }
 
-        $vars2 = array("recordIDs" => $recordIDs);
+        $vars2 = array('recordIDs' => $recordIDs);
         $res = $this->db->prepared_query("SELECT * FROM data
                                     WHERE indicatorID IN ({$indicatorID_list})
                                         AND recordID IN ({$recordIDs})", $vars2);
