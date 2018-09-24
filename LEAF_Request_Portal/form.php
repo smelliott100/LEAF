@@ -16,6 +16,10 @@ if (!class_exists('XSSHelpers'))
     require_once dirname(__FILE__) . '/../libs/php-commons/XSSHelpers.php';
 }
 
+/*
+ * As a work of the United States government, this project is in the public domain within the United States.
+ */
+
 class Form
 {
     public $employee;    // Org Chart
@@ -1093,11 +1097,14 @@ class Form
      */
     public function doSubmit($recordID)
     {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
         $recordID = (int)$recordID;
-        if ($_POST['CSRFToken'] != $_SESSION['CSRFToken'])
-        {
-            return 0;
-        }
+        // if ($_POST['CSRFToken'] != $_SESSION['CSRFToken'])
+        // {
+        //     return 0;
+        // }
+
         if (!is_numeric($recordID))
         {
             return 0;
@@ -1117,81 +1124,130 @@ class Form
             return $recordID;
         }
 
-        $this->db->beginTransaction();
+        //see if there is any parallelProcessingData.
+        //if there is, scrub it all
+        $isParallelProcessing = false;
+        $ppType = null;
+        $ppIndicatorID = null;
+        $ppIdsToProcess = null;
+        $newPPRecordIDs = [];
+        if (array_key_exists('parallelProcessingData', $_POST))
+        {
+            $ppData = $_POST['parallelProcessingData'];
+            $ppType = array_key_exists('type', $ppData) ? XSSHelpers::xscrub($ppData['type']) : null;
+            $ppIndicatorID = array_key_exists('indicatorID', $ppData) ? (int)$ppData['indicatorID'] : null;
+            $ppIdsToProcess = array_key_exists('idsToProcess', $ppData) && is_array($ppData['idsToProcess']) && (sizeof($ppData['idsToProcess']) > 0) ? $ppData['idsToProcess'] : null;
+            
+            if ($ppType !== null && $ppIndicatorID !== null && $ppIdsToProcess !== null)
+            {
+                $isParallelProcessing = true;
 
-        // write new workflow states
-        $vars = array(':recordID' => $recordID);
-        $res = $this->db->prepared_query('SELECT * FROM category_count
+                //scrub all of $ppIdsToProcess
+                foreach ($ppIdsToProcess as $key => $value)
+                {
+                    $ppIdsToProcess[$key] = (int)$ppIdsToProcess[$key];
+                }
+
+                $this->db->beginTransaction();
+
+                //duplicate the records and get the ids
+                $newPPRecordIDs = $this->duplicateRecordForParallelProcessing($recordID, sizeof($ppIdsToProcess) - 1);
+
+                //duplicate the category_count rows for each new record
+                $this->duplicateCategoryCountForParallelProcessing($recordID, $newPPRecordIDs);
+
+                //duplicate the data rows for each new record
+                $this->duplicateAndUpdateDataForParallelProcessing($recordID, $newPPRecordIDs, $ppIndicatorID, $ppIdsToProcess);
+
+                //duplicate the data_history rows for each new record
+                $this->duplicateAndUpdateDataHistoryForParallelProcessing($recordID, $newPPRecordIDs, $ppIndicatorID, $ppIdsToProcess);
+
+                $this->db->commitTransaction();
+            }
+        }
+        //prepend the new recordID to any recordIDs created through parallel processing
+        $allNewRecordIDs = [$recordID] + $newPPRecordIDs; 
+
+        $errors = array();
+        //loop through all new recordID
+        foreach ($allNewRecordIDs as $recordID)
+        {
+
+            $this->db->beginTransaction();
+
+            // write new workflow states
+            $vars = array(':recordID' => $recordID);
+            $res = $this->db->prepared_query('SELECT * FROM category_count
                                              LEFT JOIN categories USING (categoryID)
                                              LEFT JOIN workflows USING (workflowID)
                                              WHERE recordID=:recordID
                                                AND count > 0', $vars);
-        $workflowIDs = array();
-        $hasInitialStep = false;
-        foreach ($res as $workflow)
-        {
-            if ($workflow['initialStepID'] > 0)
+            $workflowIDs = array();
+            $hasInitialStep = false;
+            foreach ($res as $workflow)
             {
-                // make sure the initial step is valid
-                $vars = array(':stepID' => $workflow['initialStepID']);
-                $res = $this->db->prepared_query('SELECT * FROM workflow_steps
-                                                     WHERE stepID=:stepID', $vars);
-                if ($res[0]['workflowID'] == $workflow['workflowID'])
+                if ($workflow['initialStepID'] > 0)
                 {
-                    $vars = array(':recordID' => $recordID,
+                    // make sure the initial step is valid
+                    $vars = array(':stepID' => $workflow['initialStepID']);
+                    $res = $this->db->prepared_query('SELECT * FROM workflow_steps
+                                                     WHERE stepID=:stepID', $vars);
+                    if ($res[0]['workflowID'] == $workflow['workflowID'])
+                    {
+                        $vars = array(':recordID' => $recordID,
                                   ':stepID' => $workflow['initialStepID'], );
-                    $this->db->prepared_query('INSERT INTO records_workflow_state (recordID, stepID)
+                        $this->db->prepared_query('INSERT INTO records_workflow_state (recordID, stepID)
                                              VALUES (:recordID, :stepID)', $vars);
-                    $hasInitialStep = true;
+                        $hasInitialStep = true;
+                    }
                 }
-            }
-            // check if the request only needs to be marked as submitted (e.g.:for surveys)
-            if ($workflow['initialStepID'] == 0)
-            {
-                $vars = array(':workflowID' => $workflow['workflowID']);
-                $res = $this->db->prepared_query('SELECT * FROM workflow_routes
+                // check if the request only needs to be marked as submitted (e.g.:for surveys)
+                if ($workflow['initialStepID'] == 0)
+                {
+                    $vars = array(':workflowID' => $workflow['workflowID']);
+                    $res = $this->db->prepared_query('SELECT * FROM workflow_routes
             										WHERE workflowID=:workflowID
             											AND stepID=-1
             											AND actionType="submit"', $vars);
-                if (count($res) > 0)
+                    if (count($res) > 0)
+                    {
+                        $hasInitialStep = true;
+                    }
+                }
+
+                if ($workflow['workflowID'] > 0)
                 {
-                    $hasInitialStep = true;
+                    $workflowIDs[] = $workflow['workflowID'];
                 }
             }
 
-            if ($workflow['workflowID'] > 0)
+            if (!$hasInitialStep)
             {
-                $workflowIDs[] = $workflow['workflowID'];
+                return array('status' => 1, 'errors' => array('Workflow is configured incorrectly'));
             }
-        }
 
-        if (!$hasInitialStep)
-        {
-            return array('status' => 1, 'errors' => array('Workflow is configured incorrectly'));
-        }
-
-        $vars = array(':recordID' => $recordID,
+            $vars = array(':recordID' => $recordID,
                       ':time' => time(), );
-        $res = $this->db->prepared_query('UPDATE records SET
+            $res = $this->db->prepared_query('UPDATE records SET
                                             submitted=:time,
                                             isWritableUser=0,
                                             lastStatus = "Submitted"
                                             WHERE recordID=:recordID', $vars);
 
-        // write history data, actionID 6 = filled dependency
-        $vars = array(':recordID' => $recordID,
+            // write history data, actionID 6 = filled dependency
+            $vars = array(':recordID' => $recordID,
                       ':userID' => $this->login->getUserID(),
                       ':dependencyID' => 5,
                       ':actionType' => 'submit',
                       ':actionTypeID' => 6,
                       ':time' => time(),
                       ':comment' => '', );
-        $res = $this->db->prepared_query('INSERT INTO action_history (recordID, userID, dependencyID, actionType, actionTypeID, time, comment)
+            $res = $this->db->prepared_query('INSERT INTO action_history (recordID, userID, dependencyID, actionType, actionTypeID, time, comment)
                                             VALUES (:recordID, :userID, :dependencyID, :actionType, :actionTypeID, :time, :comment)', $vars);
 
-        // populate dependency data using new workflow system
-        $vars = array(':recordID' => $recordID);
-        $res = $this->db->prepared_query('SELECT * FROM category_count
+            // populate dependency data using new workflow system
+            $vars = array(':recordID' => $recordID);
+            $res = $this->db->prepared_query('SELECT * FROM category_count
                                              LEFT JOIN categories USING (categoryID)
                                              LEFT JOIN workflows USING (workflowID)
                                              LEFT JOIN workflow_steps USING (workflowID)
@@ -1199,42 +1255,42 @@ class Form
                                              WHERE recordID=:recordID
                                                AND count > 0
                                                AND workflowID > 0', $vars);
-        foreach ($res as $dep)
-        {
-            $vars = array(':recordID' => $recordID,
+            foreach ($res as $dep)
+            {
+                $vars = array(':recordID' => $recordID,
                           ':dependencyID' => $dep['dependencyID'],
                           ':filled' => 0,
                           ':time' => time(), );
-            $res = $this->db->prepared_query('INSERT INTO records_dependencies (recordID, dependencyID, filled, time)
+                $res = $this->db->prepared_query('INSERT INTO records_dependencies (recordID, dependencyID, filled, time)
                                                 VALUES (:recordID, :dependencyID, :filled, :time)
                                                 ON DUPLICATE KEY UPDATE filled=:filled, time=:time', $vars);
-        }
+            }
 
-        // mark form as submitted, dependencyID 5 = submitted form
-        $vars = array(':recordID' => $recordID,
+            // mark form as submitted, dependencyID 5 = submitted form
+            $vars = array(':recordID' => $recordID,
                       ':dependencyID' => 5,
                       ':filled' => 1,
                       ':time' => time(), );
-        $res = $this->db->prepared_query('INSERT INTO records_dependencies (recordID, dependencyID, filled, time)
+            $res = $this->db->prepared_query('INSERT INTO records_dependencies (recordID, dependencyID, filled, time)
                                             VALUES (:recordID, :dependencyID, :filled, :time)
                                             ON DUPLICATE KEY UPDATE filled=:filled, time=:time', $vars);
 
-        $this->db->commitTransaction();
+            $this->db->commitTransaction();
 
-        $errors = array();
-        // trigger initial submit event
-        include_once 'FormWorkflow.php';
-        $FormWorkflow = new FormWorkflow($this->db, $this->login, $recordID);
-        $FormWorkflow->setEventFolder('../scripts/events/');
-        foreach ($workflowIDs as $id)
-        {
-            // The initial step for Requestor is special step id -1
-            $status = $FormWorkflow->handleEvents($id, -1, 'submit', '');
-            if (count($status['errors']) > 0)
+            // trigger initial submit event
+            include_once 'FormWorkflow.php';
+            $FormWorkflow = new FormWorkflow($this->db, $this->login, $recordID);
+            $FormWorkflow->setEventFolder('../scripts/events/');
+            foreach ($workflowIDs as $id)
             {
-                $errors = array_merge($errors, $status['errors']);
+                // The initial step for Requestor is special step id -1
+                $status = $FormWorkflow->handleEvents($id, -1, 'submit', '');
+                if (count($status['errors']) > 0)
+                {
+                    $errors = array_merge($errors, $status['errors']);
+                }
             }
-        }
+        }   
 
         return array('status' => 1, 'errors' => $errors);
     }
@@ -3043,6 +3099,245 @@ class Form
     public function sanitizeInput($in)
     {
         return XSSHelpers::sanitizeHTML($in);
+    }
+
+    /**
+     * Duplicate records table entry for Parallel Processing
+     * @param int   $recordID      The base URI of the API
+     * @param int   $numberOfTimes The base URI of the API
+     * 
+     * @return array   array of all new recordID created
+     */
+    public function duplicateRecordForParallelProcessing($recordID, $numberOfTimes)
+    {
+        //get the record to duplicate
+        $vars = array(':recordID' => $recordID);
+        $res = $this->db->prepared_query('SELECT * FROM records
+                                          WHERE recordID=:recordID', $vars);
+
+        //set up and sanatize the parent record to copy
+        $parentRecord = count($res) > 0 ? $res[0] : array();
+        unset($parentRecord['recordID']);
+        $parentRecord['title'] = $parentRecord['title'] . '-' . substr(md5(microtime()), 0, 6);
+
+        //$parentRecord = array_map('XSSHelpers::xscrub', $parentRecord);
+        foreach($parentRecord as $k => $v)
+        {
+            if($v !== null)
+            {
+                $parentRecord[$k] = XSSHelpers::xscrub($v);
+            }
+        }
+
+        //update the parent record with the new title
+        $vars = array(':title' => $parentRecord['title'],
+                        ':recordID' => $recordID, );
+        $res = $this->db->prepared_query('UPDATE records
+                                            SET title = :title
+                                            WHERE recordID=:recordID', $vars);
+
+        $valuesArray = array();
+        $prepVarArray = array();
+        for ($i = 0; $i < $numberOfTimes; $i++)
+        {
+            $params = array();
+            foreach ($parentRecord as $column => $value)
+            {
+                $param = ':' . $column . $i;
+                $prepVarArray[$param] = $value;
+                $params[] = $param;
+            }
+
+            $valuesArray[] = '(' . implode(',', $params) . ')';
+        }
+
+        $columnNames = array_keys($parentRecord);
+
+        $sql = 'INSERT INTO records ';
+        $sql .= '(' . implode(',', $columnNames) . ') ';
+        $sql .= 'VALUES ';
+        $sql .= implode(',', $valuesArray) . ';';
+
+        $res = $this->db->prepared_query($sql, $prepVarArray);
+
+        $vars = array(':title' => $parentRecord['title'],
+                        ':parentID' => $recordID, );
+        $res = $this->db->query_kv('SELECT recordID FROM records
+                                          WHERE title=:title
+                                          AND recordID != :parentID', 'recordID', 'recordID', $vars);
+
+        return $res;
+    }
+
+    public function duplicateCategoryCountForParallelProcessing($recordID, $newRecordIDs)
+    {
+        //get the category_count to duplicate
+        $vars = array(':recordID' => $recordID);
+        $res = $this->db->prepared_query('SELECT * FROM category_count
+                                          WHERE recordID=:recordID', $vars);
+
+        //set up and sanatize the parent category_count to copy
+        $parentCatCount = count($res) > 0 ? $res[0] : array();
+        $parentCatCount = array_map('XSSHelpers::xscrub', $parentCatCount);
+
+        $valuesArray = array();
+        $prepVarArray = array();
+        $i = 0;
+        foreach ($newRecordIDs as $newRecordID)
+        {
+            $params = array();
+            foreach ($parentCatCount as $column => $value)
+            {
+                $param = ':' . $column . $i;
+                $prepVarArray[$param] = ($column === 'recordID') ? $newRecordID : $value;
+                $params[] = $param;
+            }
+
+            $valuesArray[] = '(' . implode(',', $params) . ')';
+            $i++;
+        }
+
+        $columnNames = array_keys($parentCatCount);
+
+        $sql = 'INSERT INTO category_count ';
+        $sql .= '(' . implode(',', $columnNames) . ') ';
+        $sql .= 'VALUES ';
+        $sql .= implode(',', $valuesArray) . ';';
+
+        $res = $this->db->prepared_query($sql, $prepVarArray);
+    }
+
+    //duplicate the data rows for each new record
+    public function duplicateAndUpdateDataForParallelProcessing($recordID, $newRecordIDs, $ppIndicatorID, $ppIdsToProcess)
+    {
+        //get the data to duplicate
+        $vars = array(':recordID' => $recordID);
+        $res = $this->db->prepared_query('SELECT * FROM data
+                                          WHERE recordID=:recordID', $vars);
+
+        //set up and sanatize the parent data to copy
+        $parentData = count($res) > 0 ? $res : array();
+        foreach ($parentData as $key => $value)
+        {
+            $parentData[$key] = array_map('XSSHelpers::sanitizeHTML', $parentData[$key]);
+        }
+
+        //update the original row with the first $ppIdsToProcess
+        $vars = array(':recordID' => $recordID,
+                        ':indicatorID' => $ppIndicatorID,
+                        ':data' => $ppIdsToProcess[0]);
+        $res = $this->db->prepared_query('UPDATE data
+                                        SET data=:data
+                                        WHERE recordID=:recordID
+                                        AND indicatorID=:indicatorID', $vars);
+
+        $valuesArray = array();
+        $prepVarArray = array();
+        $i = 0;
+        foreach ($newRecordIDs as $newRecordID)
+        {
+            foreach ($parentData as $key => $dataRow)
+            {
+                $rowNumber = $i . $key;
+                $params = array();
+                foreach ($dataRow as $column => $value)
+                {
+                    $param = ':' . $column . $rowNumber;
+                    $prepVarArray[$param] = ($column === 'recordID') ? $newRecordID : $value;
+                    $params[] = $param;
+                }
+
+                if($prepVarArray[':indicatorID'.$rowNumber] == $ppIndicatorID)
+                {
+                    $prepVarArray[':data'.$rowNumber] = $ppIdsToProcess[$i+1];
+                }
+
+                $valuesArray[] = '(' . implode(',', $params) . ')';
+            }
+            $i++;
+        }
+
+        //get column names array
+        $columnNames = [];
+        if (count($parentData) > 0)
+        {
+            $columnNames = array_keys($parentData[0]);
+        }
+
+        //build sql
+        $sql = 'INSERT INTO data ';
+        $sql .= '(' . implode(',', $columnNames) . ') ';
+        $sql .= 'VALUES ';
+        $sql .= implode(',', $valuesArray) . ';';
+
+        $res = $this->db->prepared_query($sql, $prepVarArray);
+    }
+
+    //duplicate the data_history rows for each new record
+    public function duplicateAndUpdateDataHistoryForParallelProcessing($recordID, $newRecordIDs, $ppIndicatorID, $ppIdsToProcess)
+    {
+        //get the data_history to duplicate
+        $vars = array(':recordID' => $recordID);
+        $res = $this->db->prepared_query('SELECT * FROM data_history
+                                          WHERE recordID=:recordID', $vars);
+
+        //set up and sanatize the parent data_history to copy
+        $parentDataHistory = count($res) > 0 ? $res : array();
+        foreach ($parentDataHistory as $key => $value)
+        {
+            $parentDataHistory[$key] = array_map('XSSHelpers::sanitizeHTML', $parentDataHistory[$key]);
+        }
+
+        //update the original row with the first $ppIdsToProcess
+        $vars = array(':recordID' => $recordID,
+                        ':indicatorID' => $ppIndicatorID,
+                        ':data' => $ppIdsToProcess[0]);
+        $res = $this->db->prepared_query('UPDATE data_history
+                                        SET data=:data
+                                        WHERE recordID=:recordID
+                                        AND indicatorID=:indicatorID', $vars);
+
+        $valuesArray = array();
+        $prepVarArray = array();
+        $i = 0;
+        foreach ($newRecordIDs as $newRecordID)
+        {
+            foreach ($parentDataHistory as $key => $dataHistoryRow)
+            {
+                $rowNumber = $i . $key;
+                $params = array();
+                foreach ($dataHistoryRow as $column => $value)
+                {
+                    $param = ':' . $column . $rowNumber;
+                    $prepVarArray[$param] = ($column === 'recordID') ? $newRecordID : $value;
+                    $params[] = $param;
+                }
+
+                if($prepVarArray[':indicatorID'.$rowNumber] == $ppIndicatorID)
+                {
+                    //update the data column (+1, since we already use the first one above)
+                    $prepVarArray[':data'.$rowNumber] = $ppIdsToProcess[$i+1];
+                }
+
+                $valuesArray[] = '(' . implode(',', $params) . ')';
+            }
+            $i++;
+        }
+
+        //get column names array
+        $columnNames = [];
+        if (count($parentDataHistory) > 0)
+        {
+            $columnNames = array_keys($parentDataHistory[0]);
+        }
+
+        //build sql
+        $sql = 'INSERT INTO data_history ';
+        $sql .= '(' . implode(',', $columnNames) . ') ';
+        $sql .= 'VALUES ';
+        $sql .= implode(',', $valuesArray) . ';';
+
+        $res = $this->db->prepared_query($sql, $prepVarArray);
     }
 
     /**
