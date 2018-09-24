@@ -1097,13 +1097,11 @@ class Form
      */
     public function doSubmit($recordID)
     {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         $recordID = (int)$recordID;
-        // if ($_POST['CSRFToken'] != $_SESSION['CSRFToken'])
-        // {
-        //     return 0;
-        // }
+        if ($_POST['CSRFToken'] != $_SESSION['CSRFToken'])
+        {
+            return 0;
+        }
 
         if (!is_numeric($recordID))
         {
@@ -1133,7 +1131,7 @@ class Form
         $newPPRecordIDs = [];
         if (array_key_exists('parallelProcessingData', $_POST))
         {
-            $ppData = $_POST['parallelProcessingData'];
+            $ppData = json_decode($_POST['parallelProcessingData'], true);
             $ppType = array_key_exists('type', $ppData) ? XSSHelpers::xscrub($ppData['type']) : null;
             $ppIndicatorID = array_key_exists('indicatorID', $ppData) ? (int)$ppData['indicatorID'] : null;
             $ppIdsToProcess = array_key_exists('idsToProcess', $ppData) && is_array($ppData['idsToProcess']) && (sizeof($ppData['idsToProcess']) > 0) ? $ppData['idsToProcess'] : null;
