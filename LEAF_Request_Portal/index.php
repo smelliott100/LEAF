@@ -150,7 +150,7 @@ switch ($action) {
     case 'printview':
         $main->assign('useUI', true);
         $main->assign('javascripts', array('js/form.js', 'js/workflow.js', 'js/formGrid.js', 
-            'js/formQuery.js', 'js/jsdiff.js', '../libs/js/LEAF/XSSHelpers.js'));
+            'js/formQuery.js', 'js/jsdiff.js', '../libs/js/LEAF/XSSHelpersd.js'));
 
         $recordIDToPrint = (int)$_GET['recordID'];
 
