@@ -41,7 +41,7 @@ else
 }
 
 // exclude some controllers from login requirement
-if ($key != 'classicphonebook'
+if ($key != 'classicPhonebook'
     && $key != 'telemetry')
 {
     $login->loginUser();
@@ -49,7 +49,7 @@ if ($key != 'classicphonebook'
 
 $controllerMap = new ControllerMap();
 
-$controllerMap->register('classicphonebook', function () use ($db, $login, $action) {
+$controllerMap->register('classicPhonebook', function () use ($db, $login, $action) {
     require 'controllers/ClassicPhonebookController.php';
     $controller = new ClassicPhonebookController($db, $login);
     $controller->handler($action);
@@ -58,7 +58,7 @@ $controllerMap->register('classicphonebook', function () use ($db, $login, $acti
 // admin only
 if ($login->checkGroup(1))
 {
-    $controllerMap->register('simpledata', function () use ($db, $login, $action) {
+    $controllerMap->register('simpleData', function () use ($db, $login, $action) {
         require 'controllers/SimpleDataController.php';
         $controller = new SimpleDataController($db, $login);
         $controller->handler($action);

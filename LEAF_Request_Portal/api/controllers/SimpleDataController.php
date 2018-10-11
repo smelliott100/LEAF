@@ -27,17 +27,17 @@ class SimpleDataController extends RESTfulResponse
 
         $this->index['GET'] = new ControllerMap();
         $cm = $this->index['GET'];
-        $this->index['GET']->register('simpledata/version', function () {
+        $this->index['GET']->register('simpleData/version', function () {
             return $this->API_VERSION;
         });
 
-        $this->index['GET']->register('simpledata/[digit]/[digit]/[digit]', function ($args) use ($form) {
+        $this->index['GET']->register('simpleData/[digit]/[digit]/[digit]', function ($args) use ($form) {
             $data = $form->getIndicator($args[1], $args[2], $args[0]);
 
             return $data;
         });
 
-        $this->index['GET']->register('simpledata/equiptest', function ($args) {
+        $this->index['GET']->register('simpleData/equipTest', function ($args) {
             $res = $this->db->prepared_query('SELECT SUM(data) as total FROM records_workflow_state
             					LEFT JOIN (SELECT * FROM data WHERE indicatorID=76) lj1 USING (recordID)
             					WHERE indicatorID IS NOT NULL', array());

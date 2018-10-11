@@ -631,7 +631,7 @@ function setDynamicApprover(stepID) {
     dialog.setSaveHandler(function() {
         $.ajax({
             type: 'POST',
-            url: '../api/?a=workflow/step/' + stepID + '/indicatorID_for_assigned_empUID',
+            url: '../api/?a=workflow/step/' + stepID + '/indicatorIDForAssignedEmpUID',
             data: {indicatorID: $('#indicatorID').val(),
                    CSRFToken: CSRFToken},
             success: function(res) {
@@ -669,7 +669,7 @@ function setDynamicGroupApprover(stepID) {
     dialog.setSaveHandler(function() {
         $.ajax({
             type: 'POST',
-            url: '../api/?a=workflow/step/' + stepID + '/indicatorID_for_assigned_groupID',
+            url: '../api/?a=workflow/step/' + stepID + '/indicatorIDForAssignedGroupID',
             data: {indicatorID: $('#indicatorID').val(),
                    CSRFToken: CSRFToken},
             success: function(res) {

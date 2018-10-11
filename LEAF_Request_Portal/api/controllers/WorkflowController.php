@@ -153,11 +153,11 @@ class WorkflowController extends RESTfulResponse
             return $workflow->linkDependency((int)$args[0], (int)$_POST['dependencyID']);
         });
 
-        $this->index['POST']->register('workflow/step/[digit]/indicatorID_for_assigned_empUID', function ($args) use ($workflow) {
+        $this->index['POST']->register('workflow/step/[digit]/indicatorIDForAssignedEmpUID', function ($args) use ($workflow) {
             return $workflow->setDynamicApprover($args[0], $_POST['indicatorID']);
         });
 
-        $this->index['POST']->register('workflow/step/[digit]/indicatorID_for_assigned_groupID', function ($args) use ($workflow) {
+        $this->index['POST']->register('workflow/step/[digit]/indicatorIDForAssignedGroupID', function ($args) use ($workflow) {
             return $workflow->setDynamicGroupApprover((int)$args[0], (int)$_POST['indicatorID']);
         });
 

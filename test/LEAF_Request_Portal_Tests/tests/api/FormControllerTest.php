@@ -25,11 +25,11 @@ final class FormControllerTest extends DatabaseTest
     }
 
     /**
-     * Tests the `form/<recordID>/dataforsigning` endpoint.
+     * Tests the `form/<recordID>/dataForSigning` endpoint.
      */
     public function testDataForSigning() : void
     {
-        $results = self::$reqClient->get(array('a' => 'form/1/dataforsigning'));
+        $results = self::$reqClient->get(array('a' => 'form/1/dataForSigning'));
 
         $this->assertNotNull($results);
         $this->assertTrue(isset($results['form_id']));

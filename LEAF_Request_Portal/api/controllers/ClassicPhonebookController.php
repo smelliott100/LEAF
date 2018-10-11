@@ -22,17 +22,17 @@ class ClassicPhonebookController extends RESTfulResponse
     {
         $this->index['GET'] = new ControllerMap();
         $cm = $this->index['GET'];
-        $this->index['GET']->register('classicphonebook/version', function () {
+        $this->index['GET']->register('classicPhonebook/version', function () {
             return $this->API_VERSION;
         });
 
-        $this->index['GET']->register('classicphonebook/search', function ($args) {
+        $this->index['GET']->register('classicPhonebook/search', function ($args) {
             $data = $this->phonebook->search($_GET['q']);
 
             return $data;
         });
 
-        $this->index['GET']->register('classicphonebook/search/[text]', function ($args) {
+        $this->index['GET']->register('classicPhonebook/search/[text]', function ($args) {
             $data = $this->phonebook->search($args[0]);
 
             return $data;

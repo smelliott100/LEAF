@@ -41,7 +41,7 @@ class SystemController extends RESTfulResponse
             return $this->API_VERSION;
         });
 
-        $this->index['GET']->register('system/dbversion', function () use ($system) {
+        $this->index['GET']->register('system/dbVersion', function () use ($system) {
             return $system->getDatabaseVersion();
         });
 
