@@ -14,6 +14,7 @@ include '../globals.php';
 include '../Login.php';
 include '../db_mysql.php';
 include '../db_config.php';
+require 'JSONResponse.php';
 require 'RESTfulResponse.php';
 require '../sources/Exception.php';
 require 'ControllerMap.php';
