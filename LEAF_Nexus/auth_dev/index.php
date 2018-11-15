@@ -26,5 +26,9 @@ $res = $db->query('SELECT * FROM employee
 					   WHERE empUID = 1');
 
 $_SESSION['userID'] = $res[0]['userName'];
+$protocol = 'http://';
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+    $protocol = 'https://';
+}
 
 header('Location: ' . $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/../');
