@@ -103,7 +103,7 @@ function randInt(min, max) {
 
 var labels = [];
 var labelColors = [];
-var niceColors = ['#00a6d2', '#f9c642', '#4aa564', '#4773aa', '#9bdaf1', '#cd2026', '#fad980', '#94bfa2', '#8ba6ca', '#4c2c92'];
+var niceColors = ['#0071bc', '#fad980', '#2e8540', '#e31c3d', '#00AEE8', '#92F098', '#FFF700', '#e59393', '#1EE7FD', '#B31EFD', '#e7f4e4', '#8ba6ca', '#6800E8', '#4DE800', '#FFDBDB', '#112e51', '#fdb81e', '#E800D9', '#FFFEDB', '#140DD6'];
 function getLabelColor(label) {
     var idx = labels.indexOf(label);
     if(idx >= 0) {
