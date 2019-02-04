@@ -8,6 +8,7 @@
   <link rel="icon" href="../../favicon.ico">
   <link href="../../../libs/uswds-1.6.9/css/uswds.min.css" rel="stylesheet">
   <link href="../../../libs/uswds-1.6.9/css/bootstrap-grid.css" rel="stylesheet">
+  <link href="../../../libs/js/vue/dialog/dialog.css" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 
@@ -109,7 +110,7 @@
                 aria-controls="b-a1">
                 Active Forms
               </button>
-              <button class="usa-button create-form-btn"><i class="fas fa-plus"></i> Create Form</button>
+              <button class="usa-button create-form-btn" @click="showDialog"><i class="fas fa-plus"></i> Create Form</button>
             </div>
               <div id="b-a1" class="usa-accordion-content">
                 <div class="row">
@@ -192,11 +193,30 @@
       </div>
     </div>
 </main>
+<script id="custom-view-template" type="text/template">
+<p :class="options.customClass">
+	test
+  <br/>
+  <ul>
+  	<li v-for="(item, index) in items" :key="item.name">
+    	<a href="#" @click="handleSelect(index)">
+      	test
+        <span v-if="item.count">(2)</span>
+      </a>
+  	</li>
+  </ul>
+  <br/>
+  <a href="#" @click="handleDismiss()">cancel</a>
+  <a href="#" @click="handleProceed()">Save</a>
+</p>
+</script>
 </div>
   <script src="../../../libs/uswds-1.6.9/js/uswds.min.js"></script>
   <script src="../../../libs/js/vue/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
   <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+  <script type="text/javascript" src="../../../libs/js/vue/dialog/dialog.js"></script>
+  <script type="text/javascript" src="../../../libs/js/vue/dialog/dialog-mixin.js"></script>
   <script src="js/app.js"></script>
 </body>
 
