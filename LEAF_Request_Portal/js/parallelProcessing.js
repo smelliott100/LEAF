@@ -360,7 +360,14 @@ function parallelProcessing(recordID, orgChartPath, CSRFToken)
                 }
                 if(('indicatorID' in thisRow) && ('value' in thisRow))
                 {
-                    ajaxData[thisRow['indicatorID']] = thisRow['value']; 
+                    if(thisRow['format'] == 'fileupload') {
+                        ajaxData[thisRow['indicatorID']] = thisRow['raw'];
+                        // iterate through files in thisRow['value']
+                        // upload files -- can probably use this API POST:/api/form/[newRecordID]
+                    }
+                    else {
+                        ajaxData[thisRow['indicatorID']] = thisRow['value'];
+                    }
                 }
             });
         });
