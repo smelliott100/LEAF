@@ -361,7 +361,7 @@ function parallelProcessing(recordID, orgChartPath, CSRFToken)
                 if(('indicatorID' in thisRow) && ('value' in thisRow))
                 {
                     if(thisRow['format'] == 'fileupload') {
-                        ajaxData[thisRow['indicatorID']] = thisRow['raw'];
+                        ajaxData[thisRow['indicatorID']] = thisRow['raw']; // raw data from database. This is an ordered \n separated list of filenames.
                         // iterate through files in thisRow['value']
                         // upload files -- can probably use this API POST:/api/form/[newRecordID]
                     }
