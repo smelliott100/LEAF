@@ -281,6 +281,7 @@ stat-links{
 
 .question {
     background: #d6d7d9;
+    margin-bottom: 1rem;
 }
 
 .new-section {
@@ -302,6 +303,7 @@ h3 {
     text-align: center;
     vertical-align: middle;
 }
+
 textarea {
     max-width: 100%;
     min-width: 100%;
@@ -310,10 +312,6 @@ textarea {
 #questions-container {
     min-height:3rem;
     margin: 1rem;
-}
-
-.drag {
-    background-color: green;
 }
 
 .dragArea {
