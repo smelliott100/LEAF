@@ -114,7 +114,7 @@
           <div id="form-editor-layout" ><!-- draggable container -->
             <draggable class="dragArea" :move="checkMove" :list="state.sections">
               <editable-section v-for="(section, index) in state.sections" :key="section.id" :section="section"></editable-section>
-              <toggleable-section :sections="state.sections"></toggleable-section>
+              <toggleable-section ></toggleable-section>
             </draggable>
           </div>
         </div>

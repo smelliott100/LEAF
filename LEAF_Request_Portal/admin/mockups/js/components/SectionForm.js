@@ -56,7 +56,6 @@ var section = Vue.component('section-form', {
             ret.title = this.title;
             ret.description = this.description;
             ret.questions = [];
-            ret.rawQuestions = [];
 
             return ret;
         },

@@ -6,7 +6,7 @@ var toggleableQuestion = Vue.component('toggleable-question', {
         }
     },
     template:
-        '<div class="col-6">' +
+        '<div class="col-4">' +
             '<question-form v-if="isOpen" :create="true" :sectionId="sectionId"></question-form>' +
             '<div v-else class="card question new-question" @click="toggleQuestionView">' +
                 '<h3>+ Add Question</h3>' +

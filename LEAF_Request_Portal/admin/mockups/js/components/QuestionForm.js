@@ -74,11 +74,11 @@ var question = Vue.component('question-form', {
             if (this.create) {
                 var question = this.createQuestionData();
                 var section = FormEditorStore.getSectionById(this.sectionId);
-                section.rawQuestions.push(question);
+                section.questions.push(question);
                 this.resetQuestionForm();
                 this.$parent.isOpen = false;
             } else {
-                this.$parent.updateQuestion(this.text, this.type, this.answer, this.required, this.sensitive);
+                this.$emit('update-question', this.text, this.type, this.multiInputOptions, this.answer, this.required, this.sensitive);
             }
         },
         cancelEdit: function () {
@@ -86,6 +86,7 @@ var question = Vue.component('question-form', {
         },
         createQuestionData: function () {
             var ret = {};
+            ret.id = this._uid;
             ret.text = this.text;
             ret.type = this.type;
             ret.multiInputOptions = this.parseMultiInputOptions();

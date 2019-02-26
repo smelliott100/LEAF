@@ -7,12 +7,6 @@ var vm = new Vue({
     methods: {
         checkMove: function (evt) {
             return (evt.draggedContext.element.name !== 'toggleable-section');
-        },
-        addSectionToStore: function (section) {
-            FormEditorStore.addSection(section);
-        },
-        removeSectionFromStore: function (index) {
-            FormEditorStore.removeSection(index);
         }
     }
 });

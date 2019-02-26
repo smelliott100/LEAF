@@ -60,20 +60,32 @@ var FormEditorStore = {
 		this.state.sections.push(newSection);
 	},
 	removeSectionById: function(id) {
-		var i = this.state.sections.map(function(item) {
-			return item.id === id;
-		});
-		this.state.sections.splice(i, 1);
+		var idx = this.getSectionIndex(id);
+
+		if (idx !== -1) {
+			this.state.sections.splice(idx, 1);
+		}
 	},
 	removeSection: function(index) {
 		this.state.sections.splice(index, 1);
 	},
-	getSectionById: function(id) {
-		var i = this.state.sections.filter(function(section) {
-			if(section.id === id) {
-				return section;
-			}
+	getSectionIndex: function(id) {
+		return this.state.sections.findIndex(function(element) {
+			return element.id === id;
 		});
-		return i[0] || {};
-	}
+	},
+	getSectionById: function(id) {
+		var idx = this.getSectionIndex(id);
+
+		if (idx === -1) {
+			return {};
+		}
+
+		return this.state.sections[idx];
+	},
+	getQuestionIndex: function(section, questionId) {
+		return section.questions.findIndex(function(element) {
+			return element.id === questionId;
+		});
+	},
 };

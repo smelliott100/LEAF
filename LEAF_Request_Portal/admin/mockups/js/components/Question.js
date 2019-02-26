@@ -5,12 +5,20 @@ var question = Vue.component('question-pane', {
             default: function () {
                 return {};
             }
+        },
+        'sectionId': {
+            type: Number,
+            default: 0
+        },
+        'questionNumber': {
+            type: Number,
+            default: 0
         }
     },
     template:
         '<div class="card question">' +
-            '<h4>{{text}} <a href="#" @click="editQuestion"><i class="fas fa-edit"></i></a></h4>' +
-            '<div class="card-icons"><a href="#"><i class="fas fa-times"></i></a></div>' +
+            '<h4>{{questionNumber}}. {{text}} <a href="#" @click="editQuestion"><i class="fas fa-edit"></i></a></h4>' +
+            '<div class="card-icons"><a href="#" @click="removeQuestion"><i class="fas fa-times"></i></a></div>' +
             '<div class="card-body">' +
                 '<fieldset v-if="type === \'radio\'">' +
                     '<input v-for="option in multiInputOptions" :type="type" :value="option.value">' +
@@ -25,6 +33,7 @@ var question = Vue.component('question-pane', {
         '</div>',
     data: function () {
         return {
+            id: this.question.id,
             text: this.question.text,
             type: this.question.type,
             answer: this.question.answer,
@@ -37,6 +46,9 @@ var question = Vue.component('question-pane', {
     methods: {
         editQuestion: function () {
             this.$parent.toggleQuestionView();
+        },
+        removeQuestion: function() {
+            this.$emit('remove-question', this.id);
         }
     }
 });
