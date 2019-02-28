@@ -148,7 +148,7 @@ foreach ($res as $pos)
             $packet['fteCeiling'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['FTE Ceiling']);
             $packet['currentFte'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['Current FTE']);
             $packet['pdNumber'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['PD Number']);
-            $packet['hrSmartPosition#'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['HR Smart Position #']);
+            $packet['hrSmartPosition'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['HR Smart Position #']);
             $jsonOut[] = $packet;
         }
         else
@@ -185,7 +185,7 @@ foreach ($res as $pos)
             $packet['fteCeiling'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['FTE Ceiling']);
             $packet['currentFte'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['Current FTE']);
             $packet['pdNumber'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['PD Number']);
-            $packet['hrSmartPosition#'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['HR Smart Position #']);
+            $packet['hrSmartPosition'] = XSSHelpers::xscrub($output[$pos['positionID']]['data']['HR Smart Position #']);
             $jsonOut[] = $packet;
         }
     }
