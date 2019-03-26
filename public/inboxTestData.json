@@ -1,0 +1,70 @@
+{
+    "columns": [
+        {
+            "key": "date",
+            "sortable": true,
+            "variant": "",
+            "colType": "date"
+        },
+        {
+            "key": "site",
+            "sortable": true,
+            "variant": "",
+            "colType": "link"
+        },
+        {
+            "key": "request",
+            "sortable": true,
+            "variant": "",
+            "colType": ""
+        },{
+            "key": "status",
+            "sortable": true,
+            "variant": "",
+            "colType": ""
+        },
+        {
+            "key": "action",
+            "sortable": true,
+            "variant": "",
+            "colType": "action"
+        }],
+    "requests": [
+        {
+            "date": 1552497837,
+            "site": "Site 1",
+            "request": 1,
+            "status": "Pending",
+            "action": "Approve",
+            "_rowVariant": "",
+            "_cellVariants": {
+            }
+        },
+        {
+            "date": 1552497837,
+            "site": "Site 2",
+            "request": 3,
+            "status": "Not Submitted",
+            "action": "Approve",
+            "_rowVariant": "",
+            "_cellVariants": {}
+        },
+        {
+            "date": 1552497837,
+            "site": "Site 1",
+            "request": 3,
+            "status": "Not Submitted",
+            "action": "Approve",
+            "_rowVariant": "",
+            "_cellVariants": {}
+        },
+        {
+            "date": 1552497837,
+            "site": "Site 4",
+            "request": 4,
+            "status": "Pending",
+            "action": "Approve",
+            "_rowVariant": "",
+            "_cellVariants": {}
+        }]
+}

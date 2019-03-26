@@ -19,8 +19,13 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+import BTable from 'bootstrap-vue/es/components/table/table'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+Vue.component('b-table', BTable);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('inbox', require('./components/inbox.vue').default);
+Vue.component('requests', require('./components/requests.vue').default);
+Vue.component('adv-search', require('./components/advancedSearch.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -1,0 +1,82 @@
+{
+    "requests": [
+        {
+            "date": 1552497837,
+            "id": 24,
+            "title": "Form 1",
+            "status": "Pending",
+            "service": "GEC",
+            "indicatorData": "data is here",
+            "_rowVariant": "",
+            "_cellVariants": {}
+        },
+        {
+            "date": 1552497837,
+            "id": 32,
+            "title": "Form 2",
+            "status": "Not Submitted",
+            "service": "CDQ",
+            "indicatorData": "data is here",
+            "_rowVariant": "",
+            "_cellVariants": {}
+        },
+        {
+            "date": 1552497837,
+            "id": 64,
+            "title": "Form 3",
+            "status": "Pending",
+            "service": "CDQ",
+            "indicatorData": "data is here",
+            "_rowVariant": "",
+            "_cellVariants": {}
+        },
+        {
+            "date": 1552497837,
+            "id": 128,
+            "title": "Form 4",
+            "status": "Pending",
+            "service": "ABC",
+            "indicatorData": "data is here",
+            "_rowVariant": "",
+            "_cellVariants": {}
+        }
+    ],
+    "columns": [
+        {
+            "key": "date",
+            "sortable": true,
+            "variant": "red",
+            "colType": "date"
+        },
+        {
+            "key": "id",
+            "sortable": true,
+            "variant": "",
+            "colType": ""
+        },
+        {
+            "key": "title",
+            "sortable": true,
+            "variant": "",
+            "colType": "link"
+        },
+        {
+            "key": "service",
+            "sortable": true,
+            "variant": "",
+            "colType": ""
+        },
+        {
+            "key": "status",
+            "sortable": true,
+            "variant": "",
+            "colType": ""
+        },
+        {
+            "key": "indicatorData",
+            "sortable": true,
+            "variant": "",
+            "colType": ""
+        }
+    ]
+}

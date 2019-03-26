@@ -36,13 +36,10 @@
             time: function(date) {
                 let temp = new Date(date * 1000);
                 return temp.getMonth() + '/' + temp.getDate() + '/' + temp.getFullYear()
-            },
-            showAlert: function(event){
-                alert('How can I help you!');
             }
         },
         created() {
-            testApi.getInbox()
+            testApi.getRequests()
                 .then(test =>{
                     this.requests = test.data.requests;
                     this.columns = test.data.columns;
