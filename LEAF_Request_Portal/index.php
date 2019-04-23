@@ -441,6 +441,7 @@ switch ($action) {
             'js/lz-string/lz-string.min.js',
             '../libs/js/filesaver/FileSaver.min.js',
             '../libs/js/LEAF/XSSHelpers.js',
+            '../libs/js/exceljs/exceljs.min.js',
         ));
         $main->assign('useUI', true);
 

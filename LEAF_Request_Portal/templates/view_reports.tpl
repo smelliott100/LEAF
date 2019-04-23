@@ -580,131 +580,78 @@ function showJSONendpoint() {
 }
 
 /**
+ * Parses FormGrid/HTML Report data into exportable spreadsheet format
  * Exports current report into a .XLS spreadsheet file
  */
 function exportSpreadsheet() {
-    /**
-     * Parses FormGrid/HTML Report data into exportable spreadsheet format
-     * Array(
-     *   Object(name: String, table: Array(Array)),
-     *   ...
-     * )
-     */
-    function parseHTMLReportData() {
-        var records = grid.getCurrentData();
-        // if report had no entries, no data to convert to spreadsheet
-        if (records.length == 0) {
-            return null;
-        }
+    var now = new Date().getTime();
+    var records = grid.getCurrentData();
+    var fileName = 'Exported_' + now;
+    var workbook = new ExcelJS.Workbook();
+    var gridIndicators = [];
 
-        var gridIndicators = [];
-        var workbook = [];
-        var sheetName1 = 'Exported_' + now;
-        var sheet1 = {
-            name: sheetName1,
-            table: []
-        };
-
-        var worksheets = {};
-
-        // traverses html elements to determine grid input indicator values
-        headers.forEach(function (value) {
-            if ($.isNumeric(value.indicatorID)) {
-                var defaultSheetHeaders = ['RecordID', 'tableRow'];
-                records.forEach(function (recValue) {
-                    var data = typeof (recValue.s1['id' + value.indicatorID]) !== 'undefined' ? recValue.s1['id' + value.indicatorID] : '';
-                    if (recValue.s1[data] !== undefined && data.search("gridInput")) {
-                        if (typeof worksheets[data] === 'undefined') { // add grid input indicator to sheets if new
-                            gridIndicators.push(value);
-                            worksheets[data] = {
-                                name: value.name + '_' + value.indicatorID,
-                                table: []
-                            };
-
-                            var sheetHeaders = defaultSheetHeaders.concat(recValue.s1[data].names);
-                            sheetHeaders.pop(); // removes ' ' at end of 'names' array
-                            worksheets[data].table.push(sheetHeaders);
-                        }
-
-                        recValue.s1[data].cells.forEach(function (value, index) {
-                            var row = [recValue.recordID];
-                            row.push(index + 1); // tableRow
-                            row = row.concat(value);
-                            worksheets[data].table.push(row);
-                        });
-                    }
-                });
-            }
-        });
-
-        // sheet 1 creation
-        var noGridHeaders = headers.filter(function (indicator) {
-            return gridIndicators.indexOf(indicator) < 0;
-        });
-
-        var sheet1Headers = noGridHeaders.map(function (indicator) {
-            return indicator.name;
-        });
-
-        sheet1Headers.unshift("UID");
-        sheet1.table.push(sheet1Headers);
-
-        records.forEach(function (record) {
-            var row = [record.recordID];
-            noGridHeaders.forEach(function (indicator) {
-                row.push($('#' + grid.getPrefixID() + record.recordID + '_' + indicator.indicatorID).text().trim());
-            });
-            sheet1.table.push(row);
-        });
-
-        workbook.push(sheet1);
-
-        $.each(worksheets, function(key) {
-            workbook.push(worksheets[key]);
-        });
-
-        return workbook;
-
+    // if report had no entries, no data to convert to spreadsheet
+    if (records.length == 0) {
+        createAndSaveFile(workbook, fileName);
     }
 
-    var now = new Date().getTime();
-    var spreadsheetData = parseHTMLReportData();
+    // traverses html elements to determine grid input indicator values
+    headers.forEach(function (value) {
+        if ($.isNumeric(value.indicatorID)) {
+            var defaultSheetHeaders = ['RecordID', 'tableRow'];
+            records.forEach(function (recValue) {
+                var data = typeof (recValue.s1['id' + value.indicatorID]) !== 'undefined' ? recValue.s1['id' + value.indicatorID] : '';
+                if (recValue.s1[data] !== undefined && data.search("gridInput")) {
+                    // add gridInput, if new, to list of grid indicators
+                    if (gridIndicators.indexOf(value) === -1) {
+                        gridIndicators.push(value);
+                        var worksheet = workbook.addWorksheet(value.name + '_' + value.indicatorID);
+                        var sheetHeaders = defaultSheetHeaders.concat(recValue.s1[data].names);
+                        sheetHeaders.pop(); // removes ' ' at end of 'names' array
+                        worksheet.addRow(sheetHeaders);
+                    }
 
-    postSpreadsheet(spreadsheetData, now);
+                    var worksheet = workbook.getWorksheet(value.name + '_' + value.indicatorID);
+                    recValue.s1[data].cells.forEach(function (value, index) {
+                        var row = [recValue.recordID];
+                        row.push(index + 1); // tableRow
+                        row = row.concat(value);
+                        worksheet.addRow(row);
+                    });
+                }
+            });
+        }
+    });
+
+    // overall sheet creation with remaining headers
+    var noGridHeaders = headers.filter(function (indicator) {
+        return gridIndicators.indexOf(indicator) < 0;
+    });
+
+    var noGridHeaderNames = noGridHeaders.map(function (indicator) {
+        return indicator.name;
+    });
+
+    noGridHeaderNames.unshift("UID");
+
+    var overallWorksheet = workbook.addWorksheet(fileName);
+    overallWorksheet.addRow(noGridHeaderNames);
+
+    records.forEach(function (record) {
+        var row = [record.recordID];
+        noGridHeaders.forEach(function (indicator) {
+            row.push($('#' + grid.getPrefixID() + record.recordID + '_' + indicator.indicatorID).text().trim());
+        });
+        overallWorksheet.addRow(row);
+    });
+
+    createAndSaveFile(workbook, fileName);
 }
 
-/**
- * Makes request to endpoint with desired data to be generated
- * @param request Array an array of worksheets
- * @param time Date timestamp of when export began
- */
-function postSpreadsheet(request, time) {
-    var fileName = 'Exported_' + time + '.xls';
-    $.ajax({
-        type: 'POST',
-        data: {
-            CSRFToken: CSRFToken,
-            'spreadsheetData': request
-        },
-        dataType: 'json',
-        url: './api/export/xls'
-    }).then(function (response) {
-        // var data = JSON.parse(response);
-        var data = response;
-        var download = document.createElement('a');
-
-        document.body.appendChild(download);
-        download.setAttribute('href', data.file);
-        download.setAttribute('download', fileName);
-        download.style.display = 'none';
-
-        if (navigator.msSaveOrOpenBlob) {
-            var blob = new Blob([data.file], {type:'application/vnd.ms-excel'});
-            saveAs(blob, fileName);
-        } else {
-            download.click();
-        }
-        document.body.removeChild(download);
+function createAndSaveFile(workbook, fileName) {
+    workbook.xlsx.writeBuffer().then(function (data) {
+        var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+        saveAs(blob, fileName);
     });
 }
 
