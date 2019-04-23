@@ -581,7 +581,7 @@ function showJSONendpoint() {
 
 /**
  * Parses FormGrid/HTML Report data into exportable spreadsheet format
- * Exports current report into a .XLS spreadsheet file
+ * Exports current report into a .XLSX spreadsheet file
  */
 function exportSpreadsheet() {
     var now = new Date().getTime();
@@ -592,7 +592,9 @@ function exportSpreadsheet() {
 
     // if report had no entries, no data to convert to spreadsheet
     if (records.length == 0) {
+        workbook.addWorksheet(fileName);
         createAndSaveFile(workbook, fileName);
+        return;
     }
 
     // traverses html elements to determine grid input indicator values
@@ -648,10 +650,15 @@ function exportSpreadsheet() {
     createAndSaveFile(workbook, fileName);
 }
 
+/**
+ * Writes the buffer of workbook into a savable blob
+ * @param workbook ExcelJS.Workbook object used to store spreadsheet
+ * @param fileName String the file name
+ */
 function createAndSaveFile(workbook, fileName) {
     workbook.xlsx.writeBuffer().then(function (data) {
         var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-        saveAs(blob, fileName);
+        saveAs(blob, fileName + '.xlsx');
     });
 }
 
