@@ -155,12 +155,6 @@ $controllerMap->register('open', function() use ($db, $login, $action) {
     $SignatureController->handler($action);
 });
 
-$controllerMap->register('export', function() use ($db, $login, $action) {
-    require 'controllers/ExportController.php';
-    $exportController = new ExportController($db, $login);
-    $exportController->handler($action);
-});
-
 $controllerMap->runControl($key);
 
 //echo '<br />' . memory_get_peak_usage();
