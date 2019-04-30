@@ -1,7 +1,7 @@
 <?php
 header('X-UA-Compatible: IE=edge');
 
-$https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? true : false;
+$https = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? true : false;
 setcookie('PHPSESSID', '', time() - 3600, '/', null, $https, true);
 
 include '../db_mysql.php';

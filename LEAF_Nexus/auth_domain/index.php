@@ -22,7 +22,7 @@ $login = new Orgchart\Login($db, $db);
 if (isset($_SERVER['REMOTE_USER']) && (!isset(Orgchart\Config::$leafSecure) || Orgchart\Config::$leafSecure == false))
 {
     $protocol = 'http://';
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+    if (isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on')
     {
         $protocol = 'https://';
     }

@@ -1,11 +1,11 @@
 <?php
 /*
- * As a work of the United States government, this project is in the public domain within the United States.
- */
+* As a work of the United States government, this project is in the public domain within the United States.
+*/
 
 /*
-    Authenticator for domain accounts
-    Date Created: March 8, 2013
+    Cookie Based Auth
+    Date Created: April 30, 2019
 
 */
 
@@ -21,13 +21,10 @@ $db_phonebook = new DB($config->phonedbHost, $config->phonedbUser, $config->phon
 
 $login = new Login($db_phonebook, $db);
 
-if (isset($_SERVER['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$leafSecure == false))
+$protocol = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? 'https://' : 'http://';
+
+if (isset($_COOKIE['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$leafSecure == false))
 {
-    $protocol = 'http://';
-    if (isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on')
-    {
-        $protocol = 'https://';
-    }
     $redirect = '';
     if (isset($_GET['r']))
     {
@@ -38,13 +35,13 @@ if (isset($_SERVER['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
         $redirect = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/../';
     }
 
-    list($domain, $user) = explode('\\', $_SERVER['REMOTE_USER']);
+    list($domain, $user) = explode('\\', $_COOKIE['REMOTE_USER']);
 
     // see if user is valid
     $vars = array(':userName' => $user);
     $res = $db_phonebook->prepared_query('SELECT * FROM employee
-    										WHERE userName=:userName
-												AND deleted=0', $vars);
+                                            WHERE userName=:userName
+                                            AND deleted=0', $vars);
 
     if (count($res) > 0)
     {
@@ -59,10 +56,10 @@ if (isset($_SERVER['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
         $globalDB = new DB(DIRECTORY_HOST, DIRECTORY_USER, DIRECTORY_PASS, DIRECTORY_DB);
         $vars = array(':userName' => $user);
         $res = $globalDB->prepared_query('SELECT * FROM employee
-											LEFT JOIN employee_data USING (empUID)
-											WHERE userName=:userName
-    											AND indicatorID = 6
-												AND deleted=0', $vars);
+                                          LEFT JOIN employee_data USING (empUID)
+                                          WHERE userName=:userName
+                                          AND indicatorID = 6
+                                                  AND deleted=0', $vars);
         // add user to local DB
         if (count($res) > 0)
         {
@@ -75,15 +72,16 @@ if (isset($_SERVER['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
                     ':domain' => $res[0]['domain'],
                     ':lastUpdated' => time(), );
             $db_phonebook->prepared_query('INSERT INTO employee (firstName, lastName, middleName, userName, phoneticFirstName, phoneticLastName, domain, lastUpdated)
-        							VALUES (:firstName, :lastName, :middleName, :userName, :phoFirstName, :phoLastName, :domain, :lastUpdated)
-    								ON DUPLICATE KEY UPDATE deleted=0', $vars);
+                                            VALUES (:firstName, :lastName, :middleName, :userName, :phoFirstName, :phoLastName, :domain, :lastUpdated)
+                                            ON DUPLICATE KEY UPDATE deleted=0', $vars);
+
             $empUID = $db_phonebook->getLastInsertID();
 
             if ($empUID == 0)
             {
                 $vars = array(':userName' => $res[0]['userName']);
                 $empUID = $db_phonebook->prepared_query('SELECT empUID FROM employee
-                                                            WHERE userName=:userName', $vars)[0]['empUID'];
+                                                          WHERE userName=:userName', $vars)[0]['empUID'];
             }
 
             $vars = array(':empUID' => $empUID,
@@ -93,7 +91,7 @@ if (isset($_SERVER['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
                     ':timestamp' => time(),
             );
             $db_phonebook->prepared_query('INSERT INTO employee_data (empUID, indicatorID, data, author, timestamp)
-											VALUES (:empUID, :indicatorID, :data, :author, :timestamp)
+                                            VALUES (:empUID, :indicatorID, :data, :author, :timestamp)
                                             ON DUPLICATE KEY UPDATE data=:data', $vars);
 
             // redirect as usual
@@ -104,7 +102,7 @@ if (isset($_SERVER['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
         }
         else
         {
-            header('Refresh: 4;URL=' . $login->parseURL(dirname($_SERVER['PHP_SELF'])) . '/..' . '/login/index.php');
+            header('Refresh: 4;URL=' . $protocol . AUTH_URL . '/Login?r=' . base64_encode($_SERVER['REQUEST_URI']));
 
             echo 'Unable to log in: User not found in global database.  Redirecting back to PIV login screen.';
         }
@@ -112,7 +110,5 @@ if (isset($_SERVER['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
 }
 else
 {
-    header('Refresh: 4;URL=' . $login->parseURL(dirname($_SERVER['PHP_SELF'])) . '/..' . '/login/index.php');
-
-    echo 'Unable to log in: Domain logon issue.  Redirecting back to PIV login screen.';
+    header('Location: ' . $protocol . AUTH_URL . '/?r=' . base64_encode($_SERVER['REQUEST_URI']));
 }

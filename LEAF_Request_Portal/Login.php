@@ -124,7 +124,7 @@ class Login
             $cookie = session_get_cookie_params();
             $id = session_id();
 
-            $https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? true : false;
+            $https = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? true : false;
             setcookie('PHPSESSID', $id, time() + 2592000, $cookie['path'], $cookie['domain'], $https, true);
         }
     }
@@ -199,7 +199,7 @@ class Login
             if (php_sapi_name() != 'cli')
             {
                 $protocol = 'http://';
-                if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+                if (isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on')
                 {
                     $protocol = 'https://';
                 }
@@ -211,11 +211,11 @@ class Login
                     || strpos($_SERVER['HTTP_USER_AGENT'], 'CriOS') > 0
                     || strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') > 0)
                 {
-                    header('Location: ' . $protocol . $_SERVER['SERVER_NAME'] . $this->parseURL(dirname($_SERVER['PHP_SELF']) . $this->baseDir) . '/auth_domain/?r=' . base64_encode($_SERVER['REQUEST_URI']));
+                    header('Location: ' . $protocol . $_SERVER['SERVER_NAME'] . $this->parseURL(dirname($_SERVER['PHP_SELF']) . $this->baseDir) . '/auth_cookie/?r=' . base64_encode($_SERVER['REQUEST_URI']));
                     exit();
                 }
 
-                header('Location: ' . $protocol . $_SERVER['SERVER_NAME'] . $this->parseURL(dirname($_SERVER['PHP_SELF']) . $this->baseDir) . '/login/?r=' . base64_encode($_SERVER['REQUEST_URI']));
+                header('Location: ' . $protocol . $_SERVER['SERVER_NAME'] . $this->parseURL(dirname($_SERVER['PHP_SELF']) . $this->baseDir) . '/auth_cookie/?r=' . base64_encode($_SERVER['REQUEST_URI']));
                 exit();
             }
 
@@ -254,7 +254,7 @@ class Login
             unset($_SESSION[$key]);
         }
         $cookie = session_get_cookie_params();
-        $https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? true : false;
+        $https = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? true : false;
         setcookie('PHPSESSID', '', time() - 3600, $cookie['path'], $cookie['domain'], $https, true);
     }
 

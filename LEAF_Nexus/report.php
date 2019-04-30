@@ -98,7 +98,7 @@ switch ($action) {
                 $t_form->assign('empMembership', $login->getMembership());
 
                 //url
-                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+                $protocol = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? 'https' : 'http';
                 $qrcodeURL = "{$protocol}://{$_SERVER['HTTP_HOST']}" . $_SERVER['REQUEST_URI'];
                 $main->assign('qrcodeURL', urlencode($qrcodeURL));
 

@@ -19,7 +19,7 @@ class Shortener
         $this->db = $db;
         $this->login = $login;
 
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        $protocol = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? 'https' : 'http';
         // todo: replace with config based URL
         $this->siteRoot = "{$protocol}://{$_SERVER['HTTP_HOST']}" . dirname($_SERVER['PHP_SELF']);
     }

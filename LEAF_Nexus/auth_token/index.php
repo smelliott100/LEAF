@@ -22,7 +22,7 @@ $login = new Orgchart\Login($db, $db);
 if ($_SERVER['SSL_CLIENT_VERIFY'] == 'SUCCESS')
 {
     $protocol = 'http://';
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+    if (isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on')
     {
         $protocol = 'https://';
     }

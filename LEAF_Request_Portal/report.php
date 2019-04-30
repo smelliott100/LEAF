@@ -96,7 +96,7 @@ switch ($action) {
         $t_form->assign('CSRFToken', $_SESSION['CSRFToken']);
 
         //url
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        $protocol = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? 'https' : 'http';
         $qrcodeURL = "{$protocol}://{$_SERVER['HTTP_HOST']}" . $_SERVER['REQUEST_URI'];
         $main->assign('qrcodeURL', urlencode($qrcodeURL));
 
@@ -135,7 +135,7 @@ switch ($action) {
             $t_form->assign('LEAF_NEXUS_URL', LEAF_NEXUS_URL);
 
             //url
-            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+            $protocol = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? 'https' : 'http';
             $qrcodeURL = "{$protocol}://{$_SERVER['HTTP_HOST']}" . $_SERVER['REQUEST_URI'];
             $main->assign('qrcodeURL', urlencode($qrcodeURL));
 

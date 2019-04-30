@@ -33,7 +33,7 @@ class System
         $this->db = $db;
         $this->login = $login;
 
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        $protocol = isset($_SERVER['HTTP_X_PROTO']) && $_SERVER['HTTP_X_PROTO'] == 'on' ? 'https' : 'http';
         $this->siteRoot = "{$protocol}://{$_SERVER['HTTP_HOST']}" . dirname($_SERVER['REQUEST_URI']) . '/';
         $commonConfig = new CommonConfig();
         $this->fileExtensionWhitelist = $commonConfig->fileManagerWhitelist;
