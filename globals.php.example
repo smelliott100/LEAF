@@ -1,0 +1,14 @@
+<?php
+const PRODUCT_NAME = 'VA Light Electronic Action Framework';
+const VERSION_NUMBER = '4.0.0';
+
+const DIRECTORY_HOST = 'HOST';
+const DIRECTORY_DB = 'ORGCHART';
+const DIRECTORY_USER = 'ORGCHART_USER';
+const DIRECTORY_PASS = 'ORGCHART_PASS';
+
+const LEAF_NEXUS_URL = '../LEAF_Nexus/'; // trailing slash required
+
+const COOKIE_DOMAIN = 'localhost'; //Share session throughout domain
+
+const SITE_BASE_URL = 'localhost'; //site URL to redirect after successful authentication
