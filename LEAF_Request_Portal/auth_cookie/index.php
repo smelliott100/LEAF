@@ -35,7 +35,7 @@ if (isset($_COOKIE['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
         $redirect = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/../';
     }
 
-    list($domain, $user) = explode('\\', $_COOKIE['REMOTE_USER']);
+    $user = $_COOKIE['REMOTE_USER'];
 
     // see if user is valid
     $vars = array(':userName' => $user);
@@ -102,13 +102,9 @@ if (isset($_COOKIE['REMOTE_USER']) && (!isset(Config::$leafSecure) || Config::$l
         }
         else
         {
-            header('Refresh: 4;URL=' . $protocol . AUTH_URL . '/Login?r=' . base64_encode($_SERVER['REQUEST_URI']));
-
-            echo 'Unable to log in: User not found in global database.  Redirecting back to PIV login screen.';
+            header('Location: ' . $protocol . AUTH_URL . '/?r=' . base64_encode($_SERVER['REQUEST_URI']));
         }
     }
-}
-else
-{
-    header('Location: ' . $protocol . AUTH_URL . '/?r=' . base64_encode($_SERVER['REQUEST_URI']));
+}else{
+  header('Location: ' . $protocol . AUTH_URL . '/?r=' . base64_encode($_SERVER['REQUEST_URI']));
 }
