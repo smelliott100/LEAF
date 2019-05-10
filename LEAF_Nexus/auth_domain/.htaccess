@@ -1,0 +1,16 @@
+ AuthType SSPI
+ SSPIAuth On
+ SSPIAuthoritative On
+ SSPIOfferBasic On
+ SSPIPerRequestAuth Off
+
+#AuthType Basic
+#AuthUserFile C:/EXAMPLE_USERFILE.txt
+ Require valid-user
+
+ AuthName "Note: Non-PIV enforced accounts ONLY."
+
+ #comment out to allow IE to try NTLM login, but breaks chrome
+# ErrorDocument 401 /auth_module/index.php
+
+ ErrorDocument 403 /auth_module/index.php
