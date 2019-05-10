@@ -11,11 +11,12 @@
 
 class Email
 {
+
     public $emailSender = '';
 
     public $emailBody = '';
 
-    private $emailFrom = 'LEAF@localhost';
+    private $emailFrom = 'LEAF-noreply@va.gov';
 
     private $emailRecipient = '';
 
