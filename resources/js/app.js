@@ -21,6 +21,70 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 import BTable from 'bootstrap-vue/es/components/table/table'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import Vuex from 'vuex'
+
+const store = new Vuex.Store({
+    state: {
+        sharedData: {
+            requests: {
+                columns: [],
+                requests: [],
+                selected: []
+            },
+            inbox: {
+                columns: [],
+                requests: [],
+                selected: []
+            }
+        },
+    },
+    mutations: {
+        changeFilter(state, newFilters) {
+            if (typeof (state.sharedData.requests.selected) === "undefined") state.sharedData.requests.selected = [];
+            if (typeof (state.sharedData.inbox.selected) === "undefined") state.sharedData.inbox.selected = [];
+            let errors = [];
+            for(let i = 0; i < newFilters.length; i++) {
+                let tempObj = new Object();
+                if (typeof (newFilters[i]) !== "undefined" && typeof (newFilters[i].type) !== "undefined" && newFilters[i].type !== null) {
+                    switch (newFilters[i].type) {
+                        case 'inbox':
+                            tempObj = {
+                                field: newFilters[i].field,
+                                operator: newFilters[i].operator,
+                                data: newFilters[i].data
+                            };
+                            state.sharedData.inbox.selected.push(tempObj);
+                            break;
+                        case 'request':
+                            tempObj = {
+                                field: newFilters[i].field,
+                                operator: newFilters[i].operator,
+                                data: newFilters[i].data
+                            };
+                            state.sharedData.requests.selected.push(tempObj);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    errors.push(i+1);
+                }
+            }
+            if (errors.length > 0) {
+                alert('Filter number ' + errors.join(', ') + ' must have associated type.');
+            }
+        },
+        addSharedData(state, newData) {
+            let keys = Object.keys(newData);
+            for (let i = 0; i < keys.length; i++) {
+                if (typeof (newData[keys[i]]) !==  "undefined" && newData[keys[i]] !== null) {
+                    state.sharedData[keys[i]] = newData[keys[i]];
+                }
+            }
+        }
+    }
+});
+
 Vue.component('b-table', BTable);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('inbox', require('./components/inbox.vue').default);
@@ -36,8 +100,9 @@ Vue.component('adv-search', require('./components/advancedSearch.vue').default);
 const app = new Vue({
   // app initial state
   el: '.leaf-app',
+    store,
   data: {
-    isShowing:false
+      isShowing:false
   },
   methods: {
     showAlert: function(event){
