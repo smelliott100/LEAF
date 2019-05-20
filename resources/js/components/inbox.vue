@@ -38,21 +38,29 @@
                 let temp = new Date(date * 1000);
                 return temp.getMonth() + '/' + temp.getDate() + '/' + temp.getFullYear()
             },
-            fieldKeys: function() {
-                let keys = [];
-                for(let i = 0; i < this.columns.length; i++) {
-                    if (typeof (this.columns[i].key) !== "undefined" && this.columns[i].key !== null) {
-                        keys.push(this.columns[i].key);
-                    }
-                }
-                return keys;
-            },
             filtering: function(request) {
                 let keep = true;
-                let tempObj = request;
+                let filter = this.filter;
 
-                for(let i = 0; i < this.filter.length; i++) {
-                    keep = (typeof(this.filter[i].field) === "undefined" || this.filter[i].field === null|| request.key === this.filter[i].field);
+                for(let i = 0; i < filter.length; i++) {
+                    if (typeof(filter[i].field) !== "undefined" || filter[i].field !== null) {
+                        switch (filter[i].operator) {
+                            case 'equals':
+                                keep = (request[filter[i].field].toString() === filter[i].data.toString());
+                                break;
+                            case 'contains':
+                                keep = (request[filter[i].field].toString().indexOf(filter[i].data.toString().trim()) !== -1);
+                                break;
+                            case 'greaterThan':
+                                keep = (Number(request[filter[i].field]) > Number(filter[i].data));
+                                break;
+                            case 'lessThan':
+                                keep = (Number(request[filter[i].field]) < Number(filter[i].data));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
                 return keep;
             }
@@ -79,12 +87,17 @@
             },
             filteredItems: function(){
                 let tempArr = [];
-                for(let i = 0; i < this.requests.length; i++) {
-                    if (this.filtering(this.requests[i])) {
-                        tempArr.push(this.requests[i]);
+
+                if (typeof (this.filter) !== "undefined" && this.filter !== null && this.filter.length > 0) {
+                    for(let i = 0; i < this.requests.length; i++) {
+                        if (this.filtering(this.requests[i])) {
+                            tempArr.push(this.requests[i]);
+                        }
                     }
+                    return tempArr;
+                } else {
+                    return this.requests;
                 }
-                return tempArr;
             }
         },
         mounted() {

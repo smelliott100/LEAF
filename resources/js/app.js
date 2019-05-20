@@ -40,34 +40,36 @@ const store = new Vuex.Store({
     },
     mutations: {
         changeFilter(state, newFilters) {
-            if (typeof (state.sharedData.requests.selected) === "undefined") state.sharedData.requests.selected = [];
-            if (typeof (state.sharedData.inbox.selected) === "undefined") state.sharedData.inbox.selected = [];
             let errors = [];
-            for(let i = 0; i < newFilters.length; i++) {
-                let tempObj = new Object();
-                if (typeof (newFilters[i]) !== "undefined" && typeof (newFilters[i].type) !== "undefined" && newFilters[i].type !== null) {
-                    switch (newFilters[i].type) {
-                        case 'inbox':
-                            tempObj = {
-                                field: newFilters[i].field,
-                                operator: newFilters[i].operator,
-                                data: newFilters[i].data
-                            };
-                            state.sharedData.inbox.selected.push(tempObj);
-                            break;
-                        case 'request':
-                            tempObj = {
-                                field: newFilters[i].field,
-                                operator: newFilters[i].operator,
-                                data: newFilters[i].data
-                            };
-                            state.sharedData.requests.selected.push(tempObj);
-                            break;
-                        default:
-                            break;
+            state.sharedData.inbox.selected = [];
+            state.sharedData.requests.selected = [];
+            if (newFilters.length !== 0) {
+                for (let i = 0; i < newFilters.length; i++) {
+                    let tempObj = new Object();
+                    if (typeof (newFilters[i]) !== "undefined" && typeof (newFilters[i].type) !== "undefined" && newFilters[i].type !== null) {
+                        switch (newFilters[i].type) {
+                            case 'inbox':
+                                tempObj = {
+                                    field: newFilters[i].field,
+                                    operator: newFilters[i].operator,
+                                    data: newFilters[i].data
+                                };
+                                state.sharedData.inbox.selected.push(tempObj);
+                                break;
+                            case 'request':
+                                tempObj = {
+                                    field: newFilters[i].field,
+                                    operator: newFilters[i].operator,
+                                    data: newFilters[i].data
+                                };
+                                state.sharedData.requests.selected.push(tempObj);
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        errors.push(i + 1);
                     }
-                } else {
-                    errors.push(i+1);
                 }
             }
             if (errors.length > 0) {

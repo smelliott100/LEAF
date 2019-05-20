@@ -10,11 +10,11 @@
         <div v-if="isOn" id="advSearch">
             <div class="clearfix"><button @click="toggle" class="closeSearch float-right"><i class="fas fa-times"></i></button></div>
             <div v-for="(filter, index) in filters" class="row">
-                <div class="w-10"><button v-if="filters.length > 1" @click="removeFilter(index)" class="removeFilter"><i class="fas fa-minus"></i></button></div>
-                <div class="w-10"><b-form-select v-model="filter.type" :options="filterTypeOptions"></b-form-select></div>
-                <div class="w-25"><b-form-select v-model="filter.field" :options="inboxFieldOptions"></b-form-select></div>
-                <div class="w-25"><b-form-select v-model="filter.operator" :options="operatorOptions"></b-form-select></div>
-                <div class="w-25"><b-form-input v-model="filter.data"></b-form-input></div>
+                <div class="w-10 px-2"><button v-if="filters.length > 1" @click="removeFilter(index)" class="removeFilter"><i class="fas fa-minus"></i></button></div>
+                <div class="w-10 px-2"><b-form-select v-model="filter.type" :options="filterTypeOptions"></b-form-select></div>
+                <div class="w-25 px-2"><b-form-select v-model="filter.field" :options="inboxFieldOptions"></b-form-select></div>
+                <div class="w-25 px-2"><b-form-select v-model="filter.operator" :options="operatorOptions"></b-form-select></div>
+                <div class="w-25 px-2"><b-form-input v-model="filter.data"></b-form-input></div>
             </div>
             <div><button @click="newFilter" v-bind:class="operatorAddShift">AND</button></div>
             <div class="search"><button @click="applyFilter">Search</button></div>
@@ -62,7 +62,10 @@
         },
         methods: {
             toggle() {
-                this.isOn = !this.isOn
+                if (this.isOn) {
+                    this.$store.commit('changeFilter', []);
+                }
+                this.isOn = !this.isOn;
             },
             newFilter() {
                 this.filters.push({
@@ -97,12 +100,12 @@
             },
             advSearchToggle: function () {
                 return {
-                    'col-8': !this.isOn,
+                    'col-5': !this.isOn,
                     'col-sm-12': !this.isOn,
                     'col-md-3': !this.isOn,
                     'col-lg-3': !this.isOn,
-                    'offset-lg-3': !this.isOn,
-                    'w-50': this.isOn
+                    'offset-lg-5': !this.isOn,
+                    'flex-fill ml-4': this.isOn
                 }
             },
             operatorAddShift: function () {
