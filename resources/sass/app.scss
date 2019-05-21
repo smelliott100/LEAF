@@ -414,7 +414,15 @@ a.stat-links{
   width:15% !important;
 }
 
+@media (min-width: 992px) {
+    .ml-lg-8{
+        margin-left: ($spacer * 7.5) !important;
+    }
 
+    .close-button-lg{
+        font-size: 3rem;
+    }
+}
 
 
 /* cards */

@@ -100,8 +100,6 @@
                 }
             }
         },
-        mounted() {
-        },
         watch: {
             filters (data) {
                 this.filter = data;

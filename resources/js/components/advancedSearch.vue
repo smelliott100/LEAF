@@ -8,15 +8,17 @@
             </form>
         </div>
         <div v-if="isOn" id="advSearch">
-            <div class="clearfix"><button @click="toggle" class="closeSearch float-right"><i class="fas fa-times"></i></button></div>
+            <div class="clearfix"><button title="Close" @click="toggle" class="closeSearch float-right p-1"><i class="fas fa-times close-button-lg"></i></button></div>
             <div v-for="(filter, index) in filters" class="row">
-                <div class="w-10 px-2"><button v-if="filters.length > 1" @click="removeFilter(index)" class="removeFilter"><i class="fas fa-minus"></i></button></div>
-                <div class="w-10 px-2"><b-form-select v-model="filter.type" :options="filterTypeOptions"></b-form-select></div>
-                <div class="w-25 px-2"><b-form-select v-model="filter.field" :options="inboxFieldOptions"></b-form-select></div>
-                <div class="w-25 px-2"><b-form-select v-model="filter.operator" :options="operatorOptions"></b-form-select></div>
-                <div class="w-25 px-2"><b-form-input v-model="filter.data"></b-form-input></div>
+                <div class="w-10 px-2"><button title="Remove filter" v-if="filters.length > 1" @click="removeFilter(index)" class="removeFilter"><i class="fas fa-minus"></i></button></div>
+                <div class="w-10 px-2"><b-form-select title="Please select a type to filter" v-model="filter.type" :options="filterTypeOptions"></b-form-select></div>
+                <div class="w-25 px-2" v-if="filter.type === 'inbox'"><b-form-select title="Please select an inbox field" v-model="filter.field" :options="inboxFieldOptions"></b-form-select></div>
+                <div class="w-25 px-2" v-else-if="filter.type === 'request'"><b-form-select title="Please select a request filter" v-model="filter.field" :options="requestFieldOptions"></b-form-select></div>
+                <div class="w-25 px-2 mt-3 ml-3" v-else><span class="text-center">Please select a type first</span></div>
+                <div class="w-25 px-2"><b-form-select title="Please select an operator" v-model="filter.operator" :options="operatorOptions"></b-form-select></div>
+                <div class="w-25 px-2"><b-form-input title="Please enter a parameter" v-model="filter.data"></b-form-input></div>
             </div>
-            <div><button @click="newFilter" v-bind:class="operatorAddShift">AND</button></div>
+            <div class="ml-lg-8"><button title="Add new filter" @click="newFilter" class="operatorAnd p-2 mx-sm-0 mx-md-0">AND</button></div>
             <div class="search"><button @click="applyFilter">Search</button></div>
         </div>
     </div>
@@ -106,11 +108,6 @@
                     'col-lg-3': !this.isOn,
                     'offset-lg-5': !this.isOn,
                     'flex-fill ml-4': this.isOn
-                }
-            },
-            operatorAddShift: function () {
-                return {
-                    'operatorAnd mx-lg-4 p-2 mx-sm-0 mx-md-0': true
                 }
             }
         },
