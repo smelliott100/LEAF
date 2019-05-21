@@ -413,6 +413,7 @@ a.stat-links{
   width:15% !important;
 }
 
+/* only applied on large screens, not mobile */
 @media (min-width: 992px) {
     .ml-lg-8{
         margin-left: ($spacer * 7.5) !important;
@@ -420,6 +421,10 @@ a.stat-links{
 
     .close-button-lg{
         font-size: 3rem;
+    }
+
+    .search-lg{
+        margin-top: -3rem;
     }
 }
 
