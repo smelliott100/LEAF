@@ -30,50 +30,29 @@ const store = new Vuex.Store({
                 columns: [],
                 entries: [],
                 selected: []
-            },
-            inbox: {
-                columns: [],
-                entries: [],
-                selected: []
             }
         },
     },
     mutations: {
         changeFilter(state, newFilters) {
             let errors = [];
-            state.sharedData.inbox.selected = [];
             state.sharedData.requests.selected = [];
             if (newFilters.length !== 0) {
                 for (let i = 0; i < newFilters.length; i++) {
-                    let tempObj = new Object();
-                    if (typeof (newFilters[i]) !== "undefined" && typeof (newFilters[i].type) !== "undefined" && newFilters[i].type !== null) {
-                        switch (newFilters[i].type) {
-                            case 'inbox':
-                                tempObj = {
-                                    field: newFilters[i].field,
-                                    operator: newFilters[i].operator,
-                                    data: newFilters[i].data
-                                };
-                                state.sharedData.inbox.selected.push(tempObj);
-                                break;
-                            case 'request':
-                                tempObj = {
-                                    field: newFilters[i].field,
-                                    operator: newFilters[i].operator,
-                                    data: newFilters[i].data
-                                };
-                                state.sharedData.requests.selected.push(tempObj);
-                                break;
-                            default:
-                                break;
-                        }
+                    if (typeof (newFilters[i]) !== "undefined" && typeof (newFilters[i].field) !== "undefined" && newFilters[i].field !== null) {
+                        let tempObj = {
+                            field: newFilters[i].field,
+                            operator: newFilters[i].operator,
+                            data: newFilters[i].data
+                        };
+                        state.sharedData.requests.selected.push(tempObj);
                     } else {
                         errors.push(i + 1);
                     }
                 }
             }
             if (errors.length > 0) {
-                alert('Filter number ' + errors.join(', ') + ' must have associated type.');
+                alert('Must select field for filter ' + errors.join(', ') + '.');
             }
         },
         addSharedData(state, newData) {

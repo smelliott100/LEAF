@@ -11,10 +11,7 @@
             <div class="clearfix"><button title="Close" @click="toggle" class="closeSearch float-right p-1"><i class="fas fa-times close-button-lg"></i></button></div>
             <div v-for="(filter, index) in filters" class="row">
                 <div class="w-10 px-2"><button title="Remove filter" v-if="filters.length > 1" @click="removeFilter(index)" class="removeFilter"><i class="fas fa-minus"></i></button></div>
-                <div class="w-15 px-2"><b-form-select title="Please select a type to filter" v-model="filter.type" :options="filterTypeOptions"></b-form-select></div>
-                <div class="w-15 px-2" v-if="filter.type === 'inbox'"><b-form-select title="Please select an inbox field" v-model="filter.field" :options="inboxFieldOptions"></b-form-select></div>
-                <div class="w-15 px-2" v-else-if="filter.type === 'request'"><b-form-select title="Please select a request filter" v-model="filter.field" :options="requestFieldOptions"></b-form-select></div>
-                <div class="w-15 px-2" v-else><select title="Please select a type to filter first"><option>Please select a type first</option></select></div>
+                <div class="w-25 px-2"><b-form-select title="Please select a request filter" v-model="filter.field" :options="requestFieldOptions"></b-form-select></div>
                 <div class="w-25 px-2"><b-form-select title="Please select an operator" v-model="filter.operator" :options="operatorOptions"></b-form-select></div>
                 <div class="w-25 px-2"><b-form-input placeholder="Please enter a parameter" title="Please enter a parameter" v-model="filter.data"></b-form-input></div>
             </div>
@@ -37,28 +34,19 @@
             return {
                 isOn: false,
                 filters: [{
-                    type: null,
                     field: null,
                     operator: null,
                     data: null
                 }],
-                inboxFieldOptions: [
-                    { value: null, text: 'fields' }
-                ],
                 requestFieldOptions: [
-                    { value: null, text: 'fields' }
+                    { value: null, text: 'Select a field' }
                 ],
                 operatorOptions: [
-                    { value: null, text: 'operators' },
+                    { value: null, text: 'Select an Operator' },
                     { value: 'equals', text: '=' },
                     { value: 'contains', text: 'Contains' },
                     { value: 'greaterThan', text: '>' },
                     { value: 'lessThan', text: '<' }
-                ],
-                filterTypeOptions: [
-                    { value: null, text: 'types' },
-                    { value: 'inbox', text: 'Inbox' },
-                    { value: 'request', text: 'Requests' }
                 ]
             }
         },
@@ -71,7 +59,6 @@
             },
             newFilter() {
                 this.filters.push({
-                    type: null,
                     field: null,
                     operator: null,
                     data: null
@@ -83,20 +70,13 @@
             applyFilter() {
                 this.$store.commit('changeFilter', this.filters);
             },
-            populateFieldOptions(columns, type) {
+            populateFieldOptions(columns) {
                 for(let i = 0; i < columns.length; i++) {
-                    if (typeof (columns[i].key) !== "undefined" && columns[i].key !== null && type === 'inbox') {
-                        this.inboxFieldOptions.push(columns[i].key);
-                    } else if (typeof (columns[i].key) !== "undefined" && columns[i].key !== null && type === 'requests'){
-                        this.requestFieldOptions.push(columns[i].key);
-                    }
+                    this.requestFieldOptions.push(columns[i].key);
                 }
             }
         },
         computed: {
-            inboxFields: function () {
-                return this.$store.state.sharedData.inbox.columns;
-            },
             requestFields: function () {
                 return this.$store.state.sharedData.requests.columns;
             },
@@ -112,11 +92,8 @@
             }
         },
         watch: {
-            inboxFields (values) {
-                this.populateFieldOptions(values, 'inbox')
-            },
             requestFields (values) {
-                this.populateFieldOptions(values, 'requests')
+                this.populateFieldOptions(values)
             }
         }
     }
