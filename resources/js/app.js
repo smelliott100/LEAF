@@ -28,12 +28,12 @@ const store = new Vuex.Store({
         sharedData: {
             requests: {
                 columns: [],
-                requests: [],
+                entries: [],
                 selected: []
             },
             inbox: {
                 columns: [],
-                requests: [],
+                entries: [],
                 selected: []
             }
         },
