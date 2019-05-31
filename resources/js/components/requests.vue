@@ -7,7 +7,7 @@
                 </span>
                 <span v-else-if="column.colType === 'link'">
                     <a href="#">{{data.value}}</a>
-                    <!--links to request could be generated using {{ data.item.id}}-->
+                    <!--links to request could be generated using {{ data.column.id}}-->
                 </span>
                 <span v-else-if="column.colType === 'date'">
                     {{time(data.value)}}
@@ -49,17 +49,28 @@
                             case 'equals':
                                 keep = (entry[filter[i].field].toString() === filter[i].data.toString());
                                 break;
+                            case 'notEquals':
+                                keep = (entry[filter[i].field].toString() !== filter[i].data.toString());
+                                break;
                             case 'contains':
                                 keep = (entry[filter[i].field].toString().indexOf(filter[i].data.toString().trim()) !== -1);
                                 break;
-                            case 'greaterThan':
-                                keep = (Number(entry[filter[i].field]) > Number(filter[i].data));
+                            case 'notContains':
+                                keep = (entry[filter[i].field].toString().indexOf(filter[i].data.toString().trim()) === -1);
                                 break;
-                            case 'lessThan':
-                                keep = (Number(entry[filter[i].field]) < Number(filter[i].data));
+                            case 'greaterThanEq':
+                                keep = (Number(entry[filter[i].field]) >= Number(filter[i].data));
+                                break;
+                            case 'lessThanEq':
+                                keep = (Number(entry[filter[i].field]) <= Number(filter[i].data));
                                 break;
                             default:
                                 break;
+                        }
+
+                        //if false for any filter, it is not included in the tempArr
+                        if (!keep) {
+                            return keep;
                         }
                     }
                 }

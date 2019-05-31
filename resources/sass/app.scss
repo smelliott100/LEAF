@@ -279,11 +279,17 @@ h4{
   }
 
   .search-btn{
-    position: absolute;
+    margin-top: 0.3rem;
     top:52px;
     right: 0;
     padding:8px;
   }
+}
+
+.fakeButton{
+    color: #0071bc;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .inbox-form{

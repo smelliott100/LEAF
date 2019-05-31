@@ -1,10 +1,10 @@
 <template>
     <div v-bind:class="advSearchToggle">
         <div v-if="!isOn" class="search-box mt-5">
-            <a @click="toggle" href="/#">Advanced Search</a>
-            <form>
-                <input id="search" name="search" type="text" placeholder="Search...">
-                <button class="usa-button leaf-btn search-btn"><i class="fas fa-search"></i></button>
+            <span title="Toggle advanced search" tabindex="0" role="button" @click="toggle" class="fakeButton">Advanced Search</span>
+            <form class="row d-flex flex-nowrap">
+                <input id="search" name="search" type="text" placeholder="Search..." class="flex-fill">
+                <button class="usa-button leaf-btn search-btn flex-shrink-1 rounded-left"><i class="fas fa-search"></i></button>
             </form>
         </div>
         <div v-if="isOn" id="advSearch">
@@ -12,7 +12,7 @@
             <div v-for="(filter, index) in filters" class="row">
                 <div class="w-10 px-2"><button title="Remove filter" v-if="filters.length > 1" @click="removeFilter(index)" class="removeFilter"><i class="fas fa-minus"></i></button></div>
                 <div class="w-25 px-2"><b-form-select title="Please select a request filter" v-model="filter.field" :options="requestFieldOptions"></b-form-select></div>
-                <div class="w-25 px-2"><b-form-select title="Please select an operator" v-model="filter.operator" :options="operatorOptions"></b-form-select></div>
+                <div class="w-25 px-2"><b-form-select title="Please select an operator" v-model="filter.operator" :options="operatorOption(filter)"></b-form-select></div>
                 <div class="w-25 px-2"><b-form-input placeholder="Please enter a parameter" title="Please enter a parameter" v-model="filter.data"></b-form-input></div>
             </div>
             <div class="ml-lg-8"><button title="Add new filter" @click="newFilter" class="operatorAnd py-3 px-4 mx-sm-0 mx-md-0">AND</button></div>
@@ -41,12 +41,47 @@
                 requestFieldOptions: [
                     { value: null, text: 'Select a field' }
                 ],
-                operatorOptions: [
+                operatorNames: [
                     { value: null, text: 'Select an Operator' },
                     { value: 'equals', text: '=' },
+                    { value: 'notEquals', text: '!=' },
                     { value: 'contains', text: 'Contains' },
-                    { value: 'greaterThan', text: '>' },
-                    { value: 'lessThan', text: '<' }
+                    { value: 'notContains', text: 'Does not contain' }
+                ],
+                operatorNumbers: [
+                    { value: null, text: 'Select an Operator' },
+                    { value: 'equals', text: '=' },
+                    { value: 'greaterThanEq', text: '>=' },
+                    { value: 'lessThanEq', text: '<=' }
+                ],
+                operatorOrgchart: [
+                    { value: 'equals', text: 'Is' }
+                ],
+                operatorWorkflow: [
+                    { value: 'equals', text: '=' }
+                ],
+                operatorBoolean: [
+                    { value: null, text: 'Select an Operator' },
+                    { value: 'equals', text: 'Is' },
+                    { value: 'notEquals', text: 'Is not' }
+                ],
+                operatorDates: [
+                    { value: null, text: 'Select an Operator' },
+                    { value: 'equals', text: 'On' },
+                    { value: 'greaterThanEq', text: 'On or after' },
+                    { value: 'lessThanEq', text: 'On or before' }
+                ],
+                operatorGeneric: [
+                    { value: null, text: 'Select an Operator' },
+                    { value: 'equals', text: '=' },
+                    { value: 'notEquals', text: '!=' },
+                    { value: 'contains', text: 'Contains' },
+                    { value: 'notContain', text: 'Does not contain' },
+                    { value: 'greaterThanEq', text: '>=' },
+                    { value: 'lessThanEq', text: '<=' }
+                ],
+                operatorGenericNull: [
+                    { value: null, text: 'Select a Field First' },
                 ]
             }
         },
@@ -74,6 +109,43 @@
                 for(let i = 0; i < columns.length; i++) {
                     this.requestFieldOptions.push(columns[i].key);
                 }
+            },
+            operatorOption(input) {
+                let filter = input;
+                let options = [];
+                if (typeof(filter) === "undefined" || filter === null || typeof(filter.field) === "undefined") {
+                    return this.operatorGenericNull;
+                }
+                //will need further filtering based on indicator data.  Right now, using generic operator
+                //options that allow use of all operators if no type is found for it
+                switch (filter.field) {
+                    case 'title':
+                        options = this.operatorNames;
+                        break;
+                    case 'initiator':
+                        options = this.operatorOrgchart;
+                        break;
+                    case 'id':
+                        options = this.operatorNumbers;
+                        break;
+                    case 'date':
+                        options = this.operatorDates;
+                        break;
+                    case 'service':
+                    case 'status':
+                    case 'form':
+                        options = this.operatorBoolean;
+                        break;
+                    case 'requirement':
+                        options = this.operatorWorkflow;
+                        break;
+                    case null:
+                        options = this.operatorGenericNull;
+                        break;
+                    default:
+                        options = this.operatorGeneric;
+                }
+                return options;
             }
         },
         computed: {
@@ -82,12 +154,8 @@
             },
             advSearchToggle: function () {
                 return {
-                    'col-5': !this.isOn,
-                    'col-sm-12': !this.isOn,
-                    'col-md-3': !this.isOn,
-                    'col-lg-3': !this.isOn,
-                    'offset-lg-5': !this.isOn,
-                    'flex-fill ml-4': this.isOn
+                    'flex-fill ml-4': this.isOn,
+                    'flex-shrink ml-4': !this.isOn
                 }
             }
         },

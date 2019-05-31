@@ -33,11 +33,13 @@
             </div>
          </div>
        </div>
-        <adv-search></adv-search>
     </div>
     <br />
     <inbox></inbox>
-    <h2>My Requests</h2>
+        <div class="row d-flex px-5">
+            <h2 class="flex-fill align-self-end">My Requests</h2>
+            <adv-search></adv-search>
+        </div>
     <br />
     <requests></requests>
 
