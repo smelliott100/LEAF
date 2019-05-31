@@ -177,7 +177,7 @@ class VAMC_Directory_maintenance_AD {
     // Name	Business Phone	Description	Modified	E-Mail Address	User Logon Name
     public function importADData($file)
     {
-        $rawdata = mb_convert_encoding(file_get_contents($file), 'UTF-8', 'UTF-16'); // csvde unicode is in UTF-16
+        $rawdata = file_get_contents($file);
         $rawdata = explode("\r\n", $rawdata);
 
         // workaround for csvde inconsistency
