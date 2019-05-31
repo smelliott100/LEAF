@@ -40,12 +40,7 @@ const store = new Vuex.Store({
             if (newFilters.length !== 0) {
                 for (let i = 0; i < newFilters.length; i++) {
                     if (typeof (newFilters[i]) !== "undefined" && typeof (newFilters[i].field) !== "undefined" && newFilters[i].field !== null) {
-                        let tempObj = {
-                            field: newFilters[i].field,
-                            operator: newFilters[i].operator,
-                            data: newFilters[i].data
-                        };
-                        state.sharedData.requests.selected.push(tempObj);
+                        state.sharedData.requests.selected.push(newFilters[i]);
                     } else {
                         errors.push(i + 1);
                     }
