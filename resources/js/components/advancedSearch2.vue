@@ -1,5 +1,11 @@
 <template>
-    <div v-bind:class="advSearchToggle">
+    <div v-bind:class="advSearchToggle" style="margin-bottom: -25px;">
+        <div class="flex-fill col-lg-2">
+            <button class="usa-button leaf-btn leaf-btn-green"><i class="fas fa-plus"></i> Create Request</button>
+        </div>
+        <div class="flex-fill mr-5 col-lg-7">
+            <button class="usa-button leaf-btn ml-n5"><i class="fas fa-file"></i> Report Builder</button>
+        </div>
         <div v-if="!isOn" class="search-box mt-5">
             <span title="Toggle advanced search" tabindex="0" role="button" @click="toggle" class="fakeButton">Advanced Search</span>
             <form class="row d-flex flex-nowrap">
@@ -7,7 +13,7 @@
                 <button class="usa-button leaf-btn search-btn flex-shrink-1 rounded-left"><i class="fas fa-search"></i></button>
             </form>
         </div>
-        <div v-if="isOn" id="advSearch">
+        <div v-if="isOn" id="advSearch" class="w-100 mx-4">
             <div class="clearfix"><button title="Close" @click="toggle" class="closeSearch float-right p-1"><i class="fas fa-times close-button-lg"></i></button></div>
             <div v-for="(filter, index) in filters" class="row d-flex mx-2">
                 <div class="flex-shrink px-2"><button title="Remove filter" v-if="filters.length > 1" @click="removeFilter(index)" class="removeFilter"><i class="fas fa-minus"></i></button></div>
@@ -42,14 +48,14 @@
                     { value: null, text: 'Select a field' }
                 ],
                 operatorNames: [
-                    { value: null, text: 'Select an Operator' },
+                    { value: null, text: 'Select an operator' },
                     { value: 'equals', text: '=' },
                     { value: 'notEquals', text: '!=' },
                     { value: 'contains', text: 'Contains' },
                     { value: 'notContains', text: 'Does not contain' }
                 ],
                 operatorNumbers: [
-                    { value: null, text: 'Select an Operator' },
+                    { value: null, text: 'Select an operator' },
                     { value: 'equals', text: '=' },
                     { value: 'greaterThanEq', text: '>=' },
                     { value: 'lessThanEq', text: '<=' }
@@ -61,18 +67,18 @@
                     { value: 'equals', text: '=' }
                 ],
                 operatorBoolean: [
-                    { value: null, text: 'Select an Operator' },
+                    { value: null, text: 'Select an operator' },
                     { value: 'equals', text: 'Is' },
                     { value: 'notEquals', text: 'Is not' }
                 ],
                 operatorDates: [
-                    { value: null, text: 'Select an Operator' },
+                    { value: null, text: 'Select an operator' },
                     { value: 'equals', text: 'On' },
                     { value: 'greaterThanEq', text: 'On or after' },
                     { value: 'lessThanEq', text: 'On or before' }
                 ],
                 operatorGeneric: [
-                    { value: null, text: 'Select an Operator' },
+                    { value: null, text: 'Select an operator' },
                     { value: 'equals', text: '=' },
                     { value: 'notEquals', text: '!=' },
                     { value: 'contains', text: 'Contains' },
@@ -81,7 +87,7 @@
                     { value: 'lessThanEq', text: '<=' }
                 ],
                 operatorGenericNull: [
-                    { value: null, text: 'Select a Field First' },
+                    { value: null, text: 'Select a field first' },
                 ]
             }
         },
@@ -154,8 +160,8 @@
             },
             advSearchToggle: function () {
                 return {
-                    'flex-fill ml-4': this.isOn,
-                    'flex-shrink ml-4': !this.isOn
+                    'flex-fill': this.isOn,
+                    'row': true
                 }
             }
         },

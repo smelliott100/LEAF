@@ -64,6 +64,8 @@ const store = new Vuex.Store({
 Vue.component('b-table', BTable);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('inbox', require('./components/inbox.vue').default);
+Vue.component('inbox-alt', require('./components/inbox2.vue').default);
+Vue.component('adv-search-alt', require('./components/advancedSearch2.vue').default);
 Vue.component('requests', require('./components/requests.vue').default);
 Vue.component('adv-search', require('./components/advancedSearch.vue').default);
 

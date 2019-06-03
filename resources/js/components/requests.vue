@@ -18,6 +18,8 @@
                 <span v-else-if="column.colType === ''">
                     {{data.value}}
                 </span>
+                <!--html will need XSS sanitizing-->
+                <div v-else-if="column.colType === 'html'" v-html="data.value"></div>
             </template>
         </b-table>
     </div>
