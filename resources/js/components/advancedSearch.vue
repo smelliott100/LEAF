@@ -76,7 +76,7 @@
                     { value: 'equals', text: '=' },
                     { value: 'notEquals', text: '!=' },
                     { value: 'contains', text: 'Contains' },
-                    { value: 'notContain', text: 'Does not contain' }
+                    { value: 'notContains', text: 'Does not contain' }
                 ],
                 operatorGenericNull: [
                     { value: null, text: 'Select a Field First' },
