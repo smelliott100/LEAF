@@ -55,10 +55,10 @@
                                 keep = (entry[filter[i].field].toString() !== filter[i].data.toString());
                                 break;
                             case 'contains':
-                                keep = (entry[filter[i].field].toString().indexOf(filter[i].data.toString().trim()) !== -1);
+                                keep = (entry[filter[i].field].toString().indexOf(filter[i].data.toString()) !== -1);
                                 break;
                             case 'notContains':
-                                keep = (entry[filter[i].field].toString().indexOf(filter[i].data.toString().trim()) === -1);
+                                keep = (entry[filter[i].field].toString().indexOf(filter[i].data.toString()) === -1);
                                 break;
                             case 'greaterThanEq':
                                 keep = (Number(entry[filter[i].field]) >= Number(filter[i].data));
