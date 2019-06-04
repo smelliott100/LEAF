@@ -6,7 +6,7 @@
         <div class="flex-fill mr-5 col-lg-7">
             <button class="usa-button leaf-btn ml-n5"><i class="fas fa-file"></i> Report Builder</button>
         </div>
-        <div v-if="!isOn" class="search-box mt-5">
+        <div v-if="!isOn" class="search-box">
             <span title="Toggle advanced search" tabindex="0" role="button" @click="toggle" class="fakeButton">Advanced Search</span>
             <form class="row d-flex flex-nowrap">
                 <input id="search" name="search" type="text" placeholder="Search..." class="flex-fill">
@@ -82,9 +82,7 @@
                     { value: 'equals', text: '=' },
                     { value: 'notEquals', text: '!=' },
                     { value: 'contains', text: 'Contains' },
-                    { value: 'notContain', text: 'Does not contain' },
-                    { value: 'greaterThanEq', text: '>=' },
-                    { value: 'lessThanEq', text: '<=' }
+                    { value: 'notContain', text: 'Does not contain' }
                 ],
                 operatorGenericNull: [
                     { value: null, text: 'Select a field first' },
