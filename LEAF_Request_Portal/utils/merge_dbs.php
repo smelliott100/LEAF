@@ -2,7 +2,7 @@
 // Merges databases from firstDB to secondDB
 include '../db_mysql.php';
 include '../db_config.php';
-
+define('LF', "\r\n");
 $db_config = new DB_Config();
 
 $time_server_brought_offline_for_migration = '';
@@ -12,7 +12,7 @@ $firstDB_host = $db_config->dbHost;
 $firstDB_user = $db_config->dbUser;
 $firstDB_pass = $db_config->dbPass;
 
-$secondDB = 'leaf_data';
+$secondDB = 'leaf_data_temp';
 $secondDB_host = $db_config->dbHost;
 $secondDB_user = $db_config->dbUser;
 $secondDB_pass = $db_config->dbPass;
@@ -20,8 +20,8 @@ $secondDB_pass = $db_config->dbPass;
 $db = new DB($firstDB_host, $firstDB_user, $firstDB_pass, $firstDB);
 $db2 = new DB($secondDB_host, $secondDB_user, $secondDB_pass, $secondDB);
 
-// Return last record index that match between the two databases
-function findDivergedRecordID($res1, $res2) {
+// Return the first index that differs between the two databases
+function findDivergedIndex($res1, $res2) {
     $countRes1 = count($res1);
     $countRes2 = count($res2);
     $maxCount = $countRes1 > $countRes2 ? $countRes1 : $countRes2;
@@ -41,22 +41,82 @@ function findDivergedRecordID($res1, $res2) {
     }
 }
 
-function mergeRecordFromIndex() {
-    
+function copyTableByRecordID($table, $oldRecordID, $newRecordID = 0) {
+    global $db, $db2;
+    $vars = [':recordID' => $oldRecordID];
+    $res = $db->prepared_query('SELECT * FROM '. $table .' WHERE recordID=:recordID', $vars);
+    foreach($res as $item) {
+        $keys = array_keys($item);
+        $vars = [];
+        $cols = [];
+        foreach($keys as $key) {
+            if($table == 'records'
+                && ($key == 'recordID'
+                    || $key == 'actionID')
+            ) {
+                continue;
+            }
+            elseif($key == 'recordID') {
+                $vars[':' . $key] = $newRecordID;
+            }
+            else {
+                $vars[':' . $key] = $item[$key];
+            }
+            
+            $cols[] = $key;
+        }
+        
+        $keys = array_keys($vars);
+        $paraSQL = implode(',', $keys);
+        $colSQL = implode(',', $cols);
+        $db2->prepared_query('INSERT INTO '. $table .' ('. $colSQL .') VALUES ('. $paraSQL .')', $vars);
+        if($table == 'records') {
+            return $db2->getLastInsertID();
+        }
+    }
+
+    return true;
 }
 
-// Load records
-$res = $db->query('SELECT * FROM records');
-$res2 = $db2->query('SELECT * FROM records');
+function mergeRecordFromIndex($res1, $res2, $index) {
+    global $db;
+    $diffs = array_slice($res1, $index);
+    foreach($diffs as $diff) {
+        $recordID = $diff['recordID'];
+        // add records
+        $newRecordID = copyTableByRecordID('records', $recordID);
+        echo "Copying {$recordID} to new ID {$newRecordID}" . LF;
 
-echo findDivergedRecordID($res, $res2);
+        // add data
+        copyTableByRecordID('data', $recordID, $newRecordID);
 
-// Load action_history
-$res = $db->query('SELECT max(time) action_history');
-$res2 = $db2->query('SELECT max(time) action_history');
+        // add data_history
+        copyTableByRecordID('data_history', $recordID, $newRecordID);
 
+        // add action_history
+        copyTableByRecordID('action_history', $recordID, $newRecordID);
 
+        // add category_count
+        copyTableByRecordID('category_count', $recordID, $newRecordID);
 
-// Load data
-$res = $db->query('SELECT max(timestamp) `data`');
-$res2 = $db2->query('SELECT max(timestamp) `data`');
+        // add records_dependencies
+        copyTableByRecordID('records_dependencies', $recordID, $newRecordID);
+
+        // add records_step_fulfillment
+        copyTableByRecordID('records_step_fulfillment', $recordID, $newRecordID);
+
+        // add records_workflow_state
+        copyTableByRecordID('records_workflow_state', $recordID, $newRecordID);
+    }
+}
+
+// find records point of divergence
+$resR = $db->query('SELECT * FROM records');
+$resR2 = $db2->query('SELECT * FROM records');
+
+$divRecordID = findDivergedIndex($resR, $resR2);
+
+// merge records
+if($divRecordID != false) {
+    mergeRecordFromIndex($resR, $resR2, $divRecordID);
+}
