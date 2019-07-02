@@ -34,6 +34,11 @@ function findDivergedIndex($res1, $res2) {
             $keys = array_keys($res1[0]);
         }
         foreach($keys as $key) {
+            if($key == 'lastStatus'
+                || $key == 'submitted'
+                || $key == 'deleted') {
+                continue;
+            }
             if($res1[$i][$key] != $res2[$i][$key]) {
                 return $i;
             }
