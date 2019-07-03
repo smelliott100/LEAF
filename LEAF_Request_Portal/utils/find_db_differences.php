@@ -2,7 +2,7 @@
 
 include '../db_mysql.php';
 include '../db_config.php';
-
+define('LF', "\r\n");
 $db_config = new DB_Config();
 
 $time_server_brought_offline_for_migration = '';
@@ -31,22 +31,35 @@ function isResDiff($arr1, $arr2) {
     }
 }
 
+$hasDiff = 0;
+
 // Check differences in records
 $res = $db->query('SELECT max(date), max(submitted), max(deleted), count(*) FROM records');
 $res2 = $db2->query('SELECT max(date), max(submitted), max(deleted), count(*) FROM records');
 
 if(isResDiff($res, $res2)) {
-    // merge dbs
+    echo $firstDB . LF;
+    $hasDiff = 1;
 }
 
 // Check differences in action_history
 $res = $db->query('SELECT max(time) FROM action_history');
 $res2 = $db2->query('SELECT max(time) FROM action_history');
 
-isResDiff($res, $res2);
+if(isResDiff($res, $res2)
+    && $hasDiff == 0
+) {
+    echo $firstDB . LF;
+    $hasDiff = 1;
+}
 
 // Check differences in data
 $res = $db->query('SELECT max(timestamp) FROM `data`');
 $res2 = $db2->query('SELECT max(timestamp) FROM `data`');
 
-isResDiff($res, $res2);
+if(isResDiff($res, $res2)
+    && $hasDiff == 0
+) {
+    echo $firstDB . LF;
+    $hasDiff = 1;
+}
