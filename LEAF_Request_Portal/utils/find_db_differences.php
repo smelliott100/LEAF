@@ -66,17 +66,20 @@ function findRecords() {
 
   $res = $db->query('SELECT recordID, userID, date FROM records WHERE recordID = (SELECT MAX(recordID) FROM records)');
   $targetID = $res[0]['recordID'];
-  //echo "Checking {$targetID}" . LF;
+//  echo "Checking {$targetID}" . LF;
+ // var_dump($res[0]);
 
   $res2 = $db2->query('SELECT recordID, userID, date FROM records WHERE recordID = ' . $targetID);
 
+ //  echo "Checking src" . LF;
+ //  var_dump($res[0]);
+ //  echo "Checking dest" . LF;
+ //  var_dump($res2[0]);
 
-  //echo "Checking src" . LF;
-  //var_dump($res[0]);
-  //echo "Checking dest" . LF;
-  //var_dump($res2[0]);
-
-  if($res[0]['userID'] != $res2[0]['userID']) {
+  if(!isset($res2[0])) {
+    echo $firstDB . LF;
+    $hasDiff = 1;
+  } else if($res[0]['userID'] != $res2[0]['userID']) {
      echo $res[0]['userID'] . " != " . $res2[0]['userID'] . LF;
      echo $firstDB . LF;
      $hasDiff = 1;
