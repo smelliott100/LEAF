@@ -54,27 +54,11 @@ function findRecords() {
   global $db, $db2, $firstDB;
 
   $hasDiff = 0;
-
-  // Check differences in records
- //$res = $db->query('SELECT max(date), max(submitted), max(deleted), count(*) FROM records');
- //$res2 = $db2->query('SELECT max(date), max(submitted), max(deleted), count(*) FROM records');
-//  if(isResDiff($res, $res2)) {
-//      echo $firstDB . LF;
-//      $hasDiff = 1;
-//  }
-
-
+  
   $res = $db->query('SELECT recordID, userID, date FROM records WHERE recordID = (SELECT MAX(recordID) FROM records)');
   $targetID = $res[0]['recordID'];
-//  echo "Checking {$targetID}" . LF;
- // var_dump($res[0]);
 
   $res2 = $db2->query('SELECT recordID, userID, date FROM records WHERE recordID = ' . $targetID);
-
- //  echo "Checking src" . LF;
- //  var_dump($res[0]);
- //  echo "Checking dest" . LF;
- //  var_dump($res2[0]);
 
   if(!isset($res2[0])) {
     echo $firstDB . LF;
@@ -89,25 +73,5 @@ function findRecords() {
      $hasDiff = 1;
   }
    
-  /*
-  for ($i = $res[0]['recordID']; $i >= 0 ; $i--) {
- //     echo "Checking {$i}\n";
-      $res2 = $db2->query('SELECT recordID, userID, date FROM records WHERE recordID = ' . $targetID);
-
-      //var_dump($res2[0]);
-
-      if($res[0]['userID'] != $res2[0]['userID']) {
-        echo $res[0]['userID'] . " != " . $res2[0]['userID'];
-        echo $firstDB . LF;
-        $hasDiff = 1;
-      }
-     
-      if($res[0]['date'] != $res2[0]['date']) {
-        echo $res[0]['date'] . " != " . $res2[0]['date'];
-        echo $firstDB . LF;
-        $hasDiff = 1;
-      }
-  }
-   */
 }
 

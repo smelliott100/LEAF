@@ -1,24 +1,35 @@
 <?php
 // Merges databases from firstDB to secondDB
-include '../db_mysql.php';
-include '../db_config.php';
+include 'src/db_mysql.php';
+include 'src/db_mysql2.php';
+include 'src/db_config.php';
+include 'src/db_config2.php';
 define('LF', "\r\n");
+
+ini_set('display_errors', 1);
 $db_config = new DB_Config();
+$db_config2 = new DB_Config2();
 
-$time_server_brought_offline_for_migration = '';
+$db = null;
+$db2 = null;
 
-$firstDB = 'leaf_workflow';
+//$firstDB = 'leaf_workflow';
 $firstDB_host = $db_config->dbHost;
 $firstDB_user = $db_config->dbUser;
 $firstDB_pass = $db_config->dbPass;
 
-$secondDB = 'leaf_data_temp';
-$secondDB_host = $db_config->dbHost;
-$secondDB_user = $db_config->dbUser;
-$secondDB_pass = $db_config->dbPass;
+//$secondDB = 'leaf_data';
+$secondDB_host = $db_config2->dbHost;
+$secondDB_user = $db_config2->dbUser;
+$secondDB_pass = $db_config2->dbPass;
 
-$db = new DB($firstDB_host, $firstDB_user, $firstDB_pass, $firstDB);
-$db2 = new DB($secondDB_host, $secondDB_user, $secondDB_pass, $secondDB);
+$dbs_with_changes = file('./dbs_with_changes.txt');
+foreach($dbs_with_changes as $name) {
+//    $db = new DB($firstDB_host, $firstDB_user, $firstDB_pass, trim($name) . "_on_cloud");
+    $db = new DB($firstDB_host, $firstDB_user, $firstDB_pass, trim($name));
+    $db2 = new DB2($secondDB_host, $secondDB_user, $secondDB_pass, trim($name));
+    mergeRecords();
+}
 
 // Return the first index that differs between the two databases
 function findDivergedIndex($res1, $res2) {
@@ -36,7 +47,14 @@ function findDivergedIndex($res1, $res2) {
         foreach($keys as $key) {
             if($key == 'lastStatus'
                 || $key == 'submitted'
-                || $key == 'deleted') {
+                || $key == 'deleted'
+				        || $key == 'isWritableUser'
+				        || $key == 'isWritableGroup'
+				        || $key == 'title'
+				        || $key == 'serviceID'
+				        || $key == 'priority'
+                || $key == 'userID'
+				        ) {
                 continue;
             }
             if($res1[$i][$key] != $res2[$i][$key]) {
@@ -56,8 +74,12 @@ function copyTableByRecordID($table, $oldRecordID, $newRecordID = 0) {
         $cols = [];
         foreach($keys as $key) {
             if($table == 'records'
-                && ($key == 'recordID'
-                    || $key == 'actionID')
+                && $key == 'recordID'
+            ) {
+                continue;
+            }
+            elseif($table == 'action_history'
+                && $key == 'actionID'
             ) {
                 continue;
             }
@@ -84,8 +106,12 @@ function copyTableByRecordID($table, $oldRecordID, $newRecordID = 0) {
 }
 
 function mergeRecordFromIndex($res1, $res2, $index) {
-    global $db;
     $diffs = array_slice($res1, $index);
+    //echo "res1:";
+    //var_dump($res1);
+    //echo "Index";
+    //var_dump($index);
+
     foreach($diffs as $diff) {
         $recordID = $diff['recordID'];
         // add records
@@ -115,13 +141,17 @@ function mergeRecordFromIndex($res1, $res2, $index) {
     }
 }
 
-// find records point of divergence
-$resR = $db->query('SELECT * FROM records');
-$resR2 = $db2->query('SELECT * FROM records');
-
-$divRecordID = findDivergedIndex($resR, $resR2);
-
-// merge records
-if($divRecordID != false) {
-    mergeRecordFromIndex($resR, $resR2, $divRecordID);
+function mergeRecords() {
+    global $db, $db2;
+    // find records point of divergence
+    $resR = $db->query('SELECT * FROM records');
+    $resR2 = $db2->query('SELECT * FROM records');
+    
+    $divRecordID = findDivergedIndex($resR, $resR2);
+ 
+    // merge records
+    if($divRecordID != false) {
+        mergeRecordFromIndex($resR, $resR2, $divRecordID);
+    }
 }
+
