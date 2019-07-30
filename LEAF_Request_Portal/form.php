@@ -232,7 +232,7 @@ class Form
 
         foreach ($form as $item)
         {
-            $fullForm = array_merge($fullForm, $this->getIndicator($item['indicatorID'], 1, $recordID, $parseTemplate));
+            $fullForm = array_merge($fullForm, $this->getIndicator($item['indicatorID'], 1, null, $parseTemplate));
         }
 
         return $fullForm;
@@ -2025,97 +2025,118 @@ class Form
             }
         }
 
-        $vars2 = array('recordIDs' => $recordIDs);
-        $res = $this->db->prepared_query("SELECT * FROM data
-                                    WHERE indicatorID IN ({$indicatorID_list})
-                                        AND recordID IN ({$recordIDs})", $vars2);
-
-        if (is_array($res) && count($res) > 0)
-        {
-            foreach ($res as $item)
+        // helper to split large bundles of requests
+        $splitLargeQuery = function($recordIDs, $indicatorID_list, $indicators, $indicatorMasks, &$out) {
+            $res = $this->db->query("SELECT * FROM data
+                                        WHERE indicatorID IN ({$indicatorID_list})
+                                            AND recordID IN ({$recordIDs})");
+    
+            if (is_array($res) && count($res) > 0)
             {
-                // handle special data types
-                switch($indicators[$item['indicatorID']]['format']) {
-                    case 'date':
-                        if ($item['data'] != '' && !is_numeric($item['data']))
-                        {
-                            $parsedDate = strtotime($item['data']);
-                            if ($parsedDate !== false)
+                foreach ($res as $item)
+                {
+                    // handle special data types
+                    switch($indicators[$item['indicatorID']]['format']) {
+                        case 'date':
+                            if ($item['data'] != '' && !is_numeric($item['data']))
                             {
-                                $item['data'] = date('n/j/Y', $parsedDate);
-                            }
-                        }
-                        break;
-                    case 'orgchart_employee':
-                        $empRes = $this->employee->lookupEmpUID($item['data']);
-                        if (isset($empRes[0]))
-                        {
-                            $item['data'] = "{$empRes[0]['firstName']} {$empRes[0]['lastName']}";
-                            $item['dataOrgchart'] = $empRes[0];
-                        }
-                        else
-                        {
-                            $item['data'] = '';
-                        }
-                        break;
-                    case 'orgchart_position':
-                        $positionTitle = $this->position->getTitle($item['data']);
-                        $positionData = $this->position->getAllData($item['data']);
-
-                        $item['dataOrgchart'] = $positionData;
-                        $item['dataOrgchart']['positionID'] = $item['data'];
-                        $item['data'] = "{$positionTitle} ({$positionData[2]['data']}-{$positionData[13]['data']}-{$positionData[14]['data']})";
-                        break;
-                    case 'orgchart_group':
-                        $groupTitle = $this->group->getTitle($item['data']);
-
-                        $item['data'] = $groupTitle;
-                        break;
-                    default:
-                        if (substr($indicators[$item['indicatorID']]['format'], 0, 10) == 'checkboxes')
-                        {
-                            $tData = @unserialize($item['data']);
-                            $item['data'] = '';
-                            if (is_array($tData))
-                            {
-                                foreach ($tData as $tItem)
+                                $parsedDate = strtotime($item['data']);
+                                if ($parsedDate !== false)
                                 {
-                                    if ($tItem != 'no')
-                                    {
-                                        $item['data'] .= "{$tItem}, ";
-                                        $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_array'][] = $tItem;
-                                    }
+                                    $item['data'] = date('n/j/Y', $parsedDate);
                                 }
                             }
-                            $item['data'] = trim($item['data'], ', ');
-                        }
-                        if (substr($indicators[$item['indicatorID']]['format'], 0, 4) == 'grid')
-                        {
-                            $values = @unserialize($item['data']);
-                            $format = json_decode(substr($indicators[$item['indicatorID']]['format'], 5, -1) . ']');
-                            $item['gridInput'] = array_merge($values, array("format" => $format));
-                            $item['data'] = 'id' . $item['indicatorID'] . '_gridInput';
-                        }
-                        break;
+                            break;
+                        case 'orgchart_employee':
+                            $empRes = $this->employee->lookupEmpUID($item['data']);
+                            if (isset($empRes[0]))
+                            {
+                                $item['data'] = "{$empRes[0]['firstName']} {$empRes[0]['lastName']}";
+                                $item['dataOrgchart'] = $empRes[0];
+                            }
+                            else
+                            {
+                                $item['data'] = '';
+                            }
+                            break;
+                        case 'orgchart_position':
+                            $positionTitle = $this->position->getTitle($item['data']);
+                            $positionData = $this->position->getAllData($item['data']);
+    
+                            $item['dataOrgchart'] = $positionData;
+                            $item['dataOrgchart']['positionID'] = $item['data'];
+                            $item['data'] = "{$positionTitle} ({$positionData[2]['data']}-{$positionData[13]['data']}-{$positionData[14]['data']})";
+                            break;
+                        case 'orgchart_group':
+                            $groupTitle = $this->group->getTitle($item['data']);
+    
+                            $item['data'] = $groupTitle;
+                            break;
+                        default:
+                            if (substr($indicators[$item['indicatorID']]['format'], 0, 10) == 'checkboxes')
+                            {
+                                $tData = @unserialize($item['data']);
+                                $item['data'] = '';
+                                if (is_array($tData))
+                                {
+                                    foreach ($tData as $tItem)
+                                    {
+                                        if ($tItem != 'no')
+                                        {
+                                            $item['data'] .= "{$tItem}, ";
+                                            $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_array'][] = $tItem;
+                                        }
+                                    }
+                                }
+                                $item['data'] = trim($item['data'], ', ');
+                            }
+                            if (substr($indicators[$item['indicatorID']]['format'], 0, 4) == 'grid')
+                            {
+                                $values = @unserialize($item['data']);
+                                $format = json_decode(substr($indicators[$item['indicatorID']]['format'], 5, -1) . ']');
+                                $item['gridInput'] = array_merge($values, array("format" => $format));
+                                $item['data'] = 'id' . $item['indicatorID'] . '_gridInput';
+                            }
+                            break;
+                    }
+    
+                    $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID']] = isset($indicatorMasks[$item['indicatorID']]) && $indicatorMasks[$item['indicatorID']] == 1 ? '[protected data]' : $item['data'];
+                    if (isset($item['dataOrgchart']))
+                    {
+                        $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_orgchart'] = $item['dataOrgchart'];
+                    }
+    
+                    if (isset($item['dataHtmlPrint']))
+                    {
+                        $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_htmlPrint'] = $item['dataHtmlPrint'];
+                    }
+                    if (isset($item['gridInput']))
+                    {
+                        $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_gridInput'] = $item['gridInput'];
+                    }
+    
+                    $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_timestamp'] = $item['timestamp'];
                 }
-
-                $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID']] = isset($indicatorMasks[$item['indicatorID']]) && $indicatorMasks[$item['indicatorID']] == 1 ? '[protected data]' : $item['data'];
-                if (isset($item['dataOrgchart']))
-                {
-                    $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_orgchart'] = $item['dataOrgchart'];
-                }
-
-                if (isset($item['dataHtmlPrint']))
-                {
-                    $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_htmlPrint'] = $item['dataHtmlPrint'];
-                }
-                if (isset($item['gridInput']))
-                {
-                    $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_gridInput'] = $item['gridInput'];
-                }
-
-                $out[$item['recordID']]['s' . $item['series']]['id' . $item['indicatorID'] . '_timestamp'] = $item['timestamp'];
             }
+        };
+
+        $counter = 0;
+        $queryLimit = 1000; // only pull N requests at a time
+        $recordIDs = '';
+        foreach ($recordID_list as $id)
+        {
+            $counter++;
+            $recordIDs .= $id['recordID'] . ',';
+            if($counter == $queryLimit) {
+                $counter = 0;
+                $recordIDs = trim($recordIDs, ',');
+                $splitLargeQuery($recordIDs, $indicatorID_list, $indicators, $indicatorMasks, $out);
+                $recordIDs = '';
+            }
+        }
+        if($recordIDs != '') {
+            $recordIDs = trim($recordIDs, ',');
+            $splitLargeQuery($recordIDs, $indicatorID_list, $indicators, $indicatorMasks, $out);
         }
 
         // fill out default data
