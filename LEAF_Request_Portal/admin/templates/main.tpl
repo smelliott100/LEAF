@@ -48,9 +48,9 @@
       <span id="headerDescription">{$title}</span>
     </div>
     <span id="headerHelp">
-        {if $onPrem === true}
+        {if $leafSecure == 0}
         <div class="alert" style="display: inline">
-            <span>This site is not on the VA Enterprise Cloud. Do not enter PHI/PII.</span>
+            <span>Do not enter PHI/PII.</span>
         </div>
         {/if}
         {$login}
