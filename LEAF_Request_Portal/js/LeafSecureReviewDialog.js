@@ -30,8 +30,8 @@ var LeafSecureReviewDialog = function(domId) {
         }
         else {
             $('#'+ prefixID +'sensitiveFields').html('<h3>No data fields have been marked as sensitive.</h3>');
-            if($('#'+ prefixID).val() == '') {
-                $('#'+ prefixID).val('N/A');
+            if($('#-2').val() == '') {
+                $('#-2').val('N/A');
             }
         }
 
