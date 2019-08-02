@@ -14,18 +14,16 @@ ALTER TABLE `workflow_routes` ADD CONSTRAINT `workflow_routes_ibfk_1` FOREIGN KE
 ALTER TABLE `categories` CHANGE `workflowID` `workflowID` SMALLINT NOT NULL;
 
 INSERT INTO `workflows` (`workflowID`, `initialStepID`, `description`) VALUES ('-1', '0', 'LEAF Secure Certification');
-INSERT INTO `indicators` (`indicatorID`, `name`, `format`, `description`, `default`, `parentID`, `categoryID`, `html`, `htmlPrint`, `jsSort`, `required`, `sort`, `timeAdded`, `disabled`, `is_sensitive`) VALUES ('-1', 'Privacy Officer', 'orgchart_employee', NULL, NULL, NULL, 'leaf_secure', NULL, NULL, NULL, '1', '1', current_timestamp(), '0', '0');
 INSERT INTO `workflow_steps` (`workflowID`, `stepID`, `stepTitle`, `stepBgColor`, `stepFontColor`, `stepBorder`, `jsSrc`, `posX`, `posY`, `indicatorID_for_assigned_empUID`, `indicatorID_for_assigned_groupID`, `requiresDigitalSignature`) VALUES ('-1', '-2', 'Review for LEAF-S Certification', '#82b9fe', 'black', '1px solid black', '', 630, 140, '-1', NULL, NULL);
 UPDATE `workflows` SET `initialStepID` = '-2' WHERE `workflows`.`workflowID` = -1;
 INSERT INTO `workflow_routes` (`workflowID`, `stepID`, `nextStepID`, `actionType`, `displayConditional`) VALUES ('-1', '-2', '0', 'approve', '');
 INSERT INTO `workflow_routes` (`workflowID`, `stepID`, `nextStepID`, `actionType`, `displayConditional`) VALUES ('-1', '-2', '0', 'sendback', '');
 INSERT INTO `step_dependencies` (`stepID`, `dependencyID`) VALUES ('-2', '-1');
 UPDATE `categories` SET `workflowID` = '-1' WHERE `categories`.`categoryID` = 'leaf_secure';
-INSERT INTO `indicators` (`indicatorID`, `name`, `format`, `description`, `default`, `parentID`, `categoryID`, `html`, `htmlPrint`, `jsSort`, `required`, `sort`, `timeAdded`, `disabled`, `is_sensitive`) VALUES ('-2', 'Justification for collection of sensitive data', 'text', NULL, NULL, NULL, 'leaf_secure', NULL, NULL, NULL, '0', '1', current_timestamp(), '0', '0');
-UPDATE `indicators` SET `sort` = '2' WHERE `indicators`.`indicatorID` = -2;
+INSERT INTO `indicators` (`indicatorID`, `name`, `format`, `description`, `default`, `parentID`, `categoryID`, `html`, `htmlPrint`, `jsSort`, `required`, `sort`, `timeAdded`, `disabled`, `is_sensitive`) VALUES
+(-2, 'Justification for collection of sensitive data', 'textarea', '', '', NULL, 'leaf_secure', '<div id=\"leafSecureDialogContent\"></div>\n\n<script src=\"js/LeafSecureReviewDialog.js\" />\n<script>\n$(function() {\n\n	LeafSecureReviewDialog(\'leafSecureDialogContent\');\n\n});\n</script>', '<div id=\"leafSecureDialogContentPrint\"></div>\n\n<script src=\"js/LeafSecureReviewDialog.js\" />\n<script>\n$(function() {\n\n	LeafSecureReviewDialog(\'leafSecureDialogContentPrint\');\n\n});\n</script>', NULL, 1, 2, '2019-07-30 20:25:06', 0, 0),
+(-1, 'Privacy Officer', 'orgchart_employee', NULL, NULL, NULL, 'leaf_secure', NULL, NULL, NULL, 1, 1, '2019-07-30 17:11:38', 0, 0);
 ALTER TABLE `indicators` CHANGE `parentID` `parentID` SMALLINT NULL DEFAULT NULL;
-UPDATE `indicators` SET `required` = '1' WHERE `indicators`.`indicatorID` = -2;
-UPDATE `indicators` SET `format` = 'textarea' WHERE `indicators`.`indicatorID` = -2;
 
 INSERT INTO `events` (`eventID`, `eventDescription`, `eventData`) VALUES ('LeafSecure_Certified', 'Marks site as LEAF Secure', '');
 INSERT INTO `route_events` (`workflowID`, `stepID`, `actionType`, `eventID`) VALUES ('-1', '-2', 'approve', 'LeafSecure_Certified');
