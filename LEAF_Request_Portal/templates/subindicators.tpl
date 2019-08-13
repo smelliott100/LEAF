@@ -43,6 +43,9 @@
                 [protected data]
             </span>
         <!--{/if}-->
+        <!--{if $indicator.format == null}-->
+            <!--{$indicator.html}-->
+        <!--{/if}-->
         <!--{if $indicator.format == 'grid' && ($indicator.isMasked == 0 || $indicator.value == '')}-->
             <span style="position: absolute; color: transparent" aria-atomic="true" aria-live="polite" id="tableStatus" role="status"></span>
             <div class="tableinput">
