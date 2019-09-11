@@ -103,7 +103,7 @@ pipeline {
     }
     stage('Run fortify') {
       when {
-        branch 'master'
+        branch 'feature-*'
       }
       steps {
         container('fortify-code-security') {
