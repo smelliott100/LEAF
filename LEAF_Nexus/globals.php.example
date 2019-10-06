@@ -2,6 +2,7 @@
 const PRODUCT_NAME = 'VA Light Electronic Action Framework (Orgchart)';
 const VERSION_NUMBER = '1.0.5';
 
+const JWT_KEY = 'ENTER JWT KEY HERE';
 const DIRECTORY_HOST = 'HOSTNAME';
 const DIRECTORY_DB = 'DB_NAME';
 const DIRECTORY_USER = 'USERNAME';

@@ -47,6 +47,7 @@ else
 
 $controllerMap = new ControllerMap();
 
+
 switch ($key) {
     case 'group':
         $controllerMap->register('group', function () use ($db, $login, $action) {

@@ -11,6 +11,12 @@
 
 namespace Orgchart;
 
+include_once '../../libs/jwt/BeforeValidException.php';
+include_once '../../libs/jwt/ExpiredException.php';
+include_once '../../libs/jwt/SignatureInvalidException.php';
+include_once '../../libs/jwt/JWT.php';
+use \Firebase\JWT\JWT;
+
 if (!class_exists('XSSHelpers'))
 {
     include_once dirname(__FILE__) . '/../../libs/php-commons/XSSHelpers.php';
@@ -211,6 +217,22 @@ class Login
 
     public function loginUser()
     {
+            if(!isset($_SESSION['userID']) || $_SESSION['userID'] == ''){
+    
+            if(isset($_GET['jwt'])){
+                $key = JWT_KEY;
+                $jwt=$_GET['jwt'];
+                $tks = explode('.', $jwt);
+                if (count($tks) == 3) {
+                    $decoded = JWT::decode($jwt, $key, array('HS256'));
+                        $_SESSION['userID'] = $decoded->name;
+                    }
+           }
+            
+        }
+
+
+
         if (!isset($_SESSION['userID']) || $_SESSION['userID'] == '')
         {
             if (php_sapi_name() != 'cli')
