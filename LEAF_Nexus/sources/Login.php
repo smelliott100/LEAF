@@ -217,18 +217,49 @@ class Login
 
     public function loginUser()
     {
+          
+            /*
+            *   If session userID not set, check for jwt
+            *
+            *   The idea is LEAF has the private Key, you would generate the 
+            *   jwt token and give to api user for calling api 
+            *   in the jwt payload is the userID of the token you have provided.
+            *   I would think that you would creat like a system account for use?
+            *
+            *   The downfall here is if the token is shared (lost), it can be used.
+            *   If you would prefer that there is an api call for a timed token
+            *   I could do that, but you would need a different aut scheme to 
+            *   get to token.
+            *
+            *   Another idea to "deactivate" tokens in some way.  I have a few ideas....
+            *
+            *   
+            *    I am skipping tokenizing the entire payload because it is not needed
+            *   (if you accept single token for auth).
+            *   
+            *   you could provide a sepereate signture and require the other side to 
+            *   tokenize the entire payload, but they you would need to rest the _POST 
+            *   fileds to not have to change any other code. 
+            *
+            *   As long as the private key is strong and not shared, I think this is
+            *   as good as passing basic auth?
+            *   
+            *   I can make a tokenizer for you or you could just use the jwt.io site
+            *   since with this idea, it is static.
+            *
+            */
             if(!isset($_SESSION['userID']) || $_SESSION['userID'] == ''){
-    
-            if(isset($_GET['jwt'])){
-                $key = JWT_KEY;
-                $jwt=$_GET['jwt'];
-                $tks = explode('.', $jwt);
-                if (count($tks) == 3) {
-                    $decoded = JWT::decode($jwt, $key, array('HS256'));
+                if(isset($_POST['jwt'])){
+                    //If jst exists and is decodeable, get the payload
+                    $decoded = JWT::decode($_POST['jwt'], JWT_KEY, array('HS256'));  
+                    //set userID to payload
+                    $_SESSION['userID'] = $decoded->name;
+                }
+                //same for get
+                elseif(isset($_GET['jwt'])){
+                        $decoded = JWT::decode($_GET['jwt'], JWT_KEY, array('HS256'));  
                         $_SESSION['userID'] = $decoded->name;
-                    }
-           }
-            
+                }   
         }
 
 
@@ -273,11 +304,28 @@ class Login
             $this->domain = $result[0]['domain'];
             $this->setSession();
 
+            /*
+            *   Since you cound on CSFRToken and I can verify who the user is, just
+            *   set to the right token so the posts work and no other code is needed
+            *   
+            *   An alternative is to verify the jwt again as an "else" on the 
+            *   /api/restfulResponse.
+            *
+            */
+
+            if(isset($_POST['jwt'])){
+                    $decoded = JWT::decode($_POST['jwt'], JWT_KEY, array('HS256'));  
+                    if($_SESSION['userID']==$decoded->name){
+                        $_POST['CSRFToken'] = $_SESSION['CSRFToken'];
+                }
+            }
+           
+        
             $this->isLogin = true;
 
             return true;
         }
-
+    
         // try to copy the user from the national DB
         $globalDB = new \DB(DIRECTORY_HOST, DIRECTORY_USER, DIRECTORY_PASS, DIRECTORY_DB);
         $vars = array(':userName' => $_SESSION['userID']);
